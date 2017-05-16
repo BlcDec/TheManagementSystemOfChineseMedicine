@@ -14,11 +14,17 @@
 <body class="login">
 	<section>
 		<h1><strong>中医门诊</strong> 管理系统</h1>
-		<form method="link" action="main.jsp">
-			<input type="text" placeholder="Email" />
-			<input placeholder="Password" type="password" />
+		<form method="post" action="login.php">
+			<input type="text" name="username" placeholder="Email" />
+			<input placeholder="Password" name="password" type="password" />
 			<button class="blue">Login</button>
 		</form>
+		<%if((Integer)request.getAttribute("code") == 0){%>
+
+		<%}//TODO
+		else if((Integer)request.getAttribute("code") == -2) {%>
+		<p><a href="#">用户名或密码错误</a></p>
+		<%}%>
 		<p><a href="#">Forgot your password?</a></p>
 	</section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>

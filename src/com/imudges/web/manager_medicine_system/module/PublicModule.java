@@ -26,22 +26,25 @@ public class PublicModule {
     @Ok("re")
     @Fail("http:500")
     @GET
-    public Object loginPage(){
+    public Object loginPage(HttpServletRequest request,
+                            HttpSession session){
 
-
+        request.setAttribute("code",0);
         return "jsp:public/login";
     }
 
     @At("public/login")
     @Ok("re")
     @Fail("http:500")
+    @POST
     public Object login(@Param("username") String username,
                         @Param("password") String password,
                         HttpSession session,
                         HttpServletRequest request){
         if(username == null || password == null || username.equals("") || password.equals("")){
             //请求参数错误
-            request.setAttribute("redirect_url","404.php");
+            request.setAttribute("redirect_url","login.php");
+            request.setAttribute("code",-1);
         } else {
             //请求参数正确
             User user = dao.fetch(User.class, Cnd.where("username","=",username).and("password","=",password));
@@ -70,13 +73,15 @@ public class PublicModule {
 //                            result.put("name",patient.getName());
                             session.setAttribute("patient",patient);
                             request.setAttribute("redirect_url","main.php");
+                            request.setAttribute("code",0);
                         } else {
 
                         }
                         break;
                 }
             } else {
-//                result.put("code",-2);
+                request.setAttribute("redirect_url","login.php");
+                request.setAttribute("code",-2);
             }
 
         }
