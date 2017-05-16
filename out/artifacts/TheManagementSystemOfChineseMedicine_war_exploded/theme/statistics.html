@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="">
 <head>
 	<meta charset="utf-8">
@@ -9,7 +9,6 @@
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
 	<link rel="stylesheet" href="css/style.css" media="all" />
 	<!--[if IE]><link rel="stylesheet" href="css/ie.css" media="all" /><![endif]-->
-	<!--[if lt IE 9]><link rel="stylesheet" href="css/lt-ie-9.css" media="all" /><![endif]-->
 </head>
 <body>
 <div class="testing">
@@ -86,14 +85,14 @@
 			</ul>
 		</span> 
 		<span class="button">Live</span>
-		<span class="button">Help</span>
-		<span class="button blue"><a href="index.jsp">Logout</a></span>
+		 <span class="button">Help</span>
+		 <span class="button blue"><a href="index.jsp">Logout</a></span>
 	</div>
 </section>
 </div>
 <nav>
 	<ul>
-		<li class="section"><a href="index.jsp"><span class="icon">&#128711;</span> Dashboard</a></li>
+		<li><a href="main.jsp"><span class="icon">&#128711;</span> Dashboard</a></li>
 		<li>
 			<a href="pages-table.html"><span class="icon">&#128196;</span> Pages</a>
 			<ul class="submenu">
@@ -116,7 +115,7 @@
 				<li><a href="comments-timeline.html">View comments</a></li>
 			</ul>
 		</li>
-		<li><a href="statistics.html"><span class="icon">&#128202;</span> Statistics</a></li>
+		<li class="section"><a href="statistics.html"><span class="icon">&#128202;</span> Statistics</a></li>
 		<li><a href="users.html"><span class="icon">&#128101;</span> Users <span class="pip">3</span></a></li>
 		<li>
 			<a href="ui-elements.html"><span class="icon">&#9881;</span> UI Elements</a>
@@ -151,74 +150,6 @@
 		</div>
 		</div>
 	</section>
-	
-	<div class="widget-container">
-		<section class="widget small">
-			<header>
-				<span class="icon">&#59168;</span>
-				<hgroup>
-					<h1>Latest comments</h1>
-					<h2>What they're saying</h2>
-				</hgroup>
-				<aside>
-					<span>
-						<a href="#">&#9881;</a>
-						<ul class="settings-dd">
-							<li><label>Option a</label><input type="checkbox" /></li>
-							<li><label>Option b</label><input type="checkbox" checked="checked" /></li>
-							<li><label>Option c</label><input type="checkbox" /></li>
-						</ul>
-					</span>
-				</aside>
-			</header>
-			<div class="content no-padding timeline">
-				<div class="tl-post comments">
-					<span class="icon">&#59168;</span>
-					<p>
-						<a href="#">John Doe says:</a> Lorem ipsum dolor sit amet, consecteteur adipiscing elit sed diam nonummy.
-						<span class="reply"><input type="text" value="Respond to comment..."/></span>
-					</p>
-				</div>
-				<div class="tl-post comments">
-					<span class="icon">&#59168;</span>
-					<p>
-						<a href="#">John Doe says:</a> Lorem ipsum dolor sit amet, consecteteur adipiscing elit sed diam nonummy.
-						<span class="reply"><input type="text" value="Respond to comment..."/></span>
-					</p>
-				</div>
-				<span class="show-more"><a	 href="#">More</a></span>
-			</div>
-		</section>
-		
-		<section class="widget 	small">
-			<header>
-				<span class="icon">&#128319;</span>
-				<hgroup>
-					<h1>Quick Post</h1>
-					<h2>Speed things up</h2>
-				</hgroup>
-				<aside>
-					<span>
-						<a href="#">&#9881;</a>
-						<ul class="settings-dd">
-							<li><label>Option a</label><input type="checkbox" /></li>
-							<li><label>Option b</label><input type="checkbox" checked="checked" /></li>
-							<li><label>Option c</label><input type="checkbox" /></li>
-						</ul>
-					</span>
-				</aside>
-			</header>
-			<div class="content">
-				<div class="field-wrap">
-					<input type="text" value="Title"/>
-				</div>
-				<div class="field-wrap">
-					<textarea id="quick_post" rows="5"></textarea>
-				</div>
-				<button type="submit" class="green">Post</button> <button type="submit" class="">Preview</button>
-			</div>
-		</section>
-	</div>
 	
 	<div class="widget-container">
 		<section class="widget small">
@@ -265,10 +196,10 @@
 		
 		<section class="widget small">
 			<header> 
-				<span class="icon">&#128363;</span>
+				<span class="icon">&#9716;</span>
 				<hgroup>
-					<h1>Timeline</h1>
-					<h2>Insiders news</h2>
+					<h1>Pie chart</h1>
+					<h2>Display data as pie charts</h2>
 				</hgroup>
 				<aside>
 					<span>
@@ -281,32 +212,12 @@
 					</span>
 				</aside>
 			</header>
-			<div class="content no-padding timeline">
-				<div class="tl-post">
-					<span class="icon">&#128206;</span>
-					<p><a href="#">John Doe</a> attached an image to a blog post.</p>
+			<div class="content">
+				<div class="pie graph-area">
+				
 				</div>
-				<div class="tl-post">
-					<span class="icon">&#59172;</span>
-					<p><a href="#">John Doe</a> added his location.</p>
-				</div>
-				<div class="tl-post">
-					<span class="icon">&#59170;</span>
-					<p><a href="#">John Doe</a> edited his profile.</p>
-				</div>
-				<div class="tl-post">
-					<span class="icon">&#9993;</span>
-					<p><a href="#">John Doe</a> has sent you  private message.</p>
-				</div>
-				<div class="pie graph-area"></div>
 			</div>
 		</section>
-		
-	</div>
-	<div class="widget-container">
-		<div style="height:80px">
-		Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a> - More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a>
-		</div>
 	</div>
 </section>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>

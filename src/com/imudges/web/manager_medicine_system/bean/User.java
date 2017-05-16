@@ -4,6 +4,8 @@ import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
+import javax.xml.ws.WebServiceClient;
+
 /**
  * Created by yangyang on 2017/5/16.
  */
@@ -17,6 +19,33 @@ public class User {
 
     @Column
     private String password;
+
+    /**
+     * 0 管理员
+     * 1 医生
+     * 2 患者
+     * */
+    @Column
+    private String type;
+
+    @Column
+    private int customerId;//用户id，可与Doctor Patient绑定
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
 
     public int getId() {
         return id;
