@@ -3,6 +3,7 @@ package com.imudges.web.manager_medicine_system;
 /**
  * Created by yangyang on 2017/4/23.
  */
+import com.imudges.web.manager_medicine_system.bean.User;
 import org.nutz.dao.Dao;
 import org.nutz.dao.util.Daos;
 import org.nutz.ioc.Ioc;
@@ -23,11 +24,9 @@ public class MainSetup implements Setup{
         Dao dao = ioc.get(Dao.class);
         Daos.createTablesInPackage(dao, "com.imudges.web.manager_medicine_system", false);
 
-//        User test = new User();
-//        test.setUsername("test");
-//        Toolkit.generatePasswd(test,"123456");
-//        test.setPrivilege(1);
-//        test.setRegisterTime(new Date(System.currentTimeMillis()));
-//        dao.insert(test);
+        User user = new User();
+        user.setUsername("test");
+        user.setPassword("123");
+        dao.insert(user);
     }
 }
