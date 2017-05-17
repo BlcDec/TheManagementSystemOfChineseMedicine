@@ -45,16 +45,6 @@ public class Doctor {
     @Column
     private String degree;//学位
 
-    @Column
-    private String ak;
-
-    public String getAk() {
-        return ak;
-    }
-
-    public void setAk(String ak) {
-        this.ak = ak;
-    }
 
     public int getId() {
         return id;

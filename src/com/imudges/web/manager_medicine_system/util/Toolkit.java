@@ -124,4 +124,8 @@ public class Toolkit {
         result.put("data",data);
         return result;
     }
+
+    public static String getSystemName(){
+        return new ConfigReader().read("system_name");
+    }
 }

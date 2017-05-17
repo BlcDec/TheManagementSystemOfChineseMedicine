@@ -2,7 +2,7 @@
 <html lang="">
 <head>
 	<meta charset="utf-8">
-	<title>Retina Dashboard</title>
+	<title>${system_name}</title>
 	<meta name="description" content="" />
 	<meta name="keywords" content="" />
 	<meta name="robots" content="" />
@@ -14,12 +14,12 @@
 <body>
 <div class="testing">
 <header class="main">
-	<h1><strong>Retina</strong> Dashboard</h1>
+	<h1><strong>${system_name}</strong></h1>
 	<input type="text" value="search" />
 </header>
 <section class="user">
 	<div class="profile-img">
-		<p><img src="../../theme/images/uiface2.png" alt="" height="40" width="40" /> Welcome back John Doe</p>
+		<p><img src="../../theme/images/uiface2.png" alt="" height="40" width="40" />${user_name}</p>
 	</div>
 	<div class="buttons">
 		<button class="ico-font">&#9206;</button>

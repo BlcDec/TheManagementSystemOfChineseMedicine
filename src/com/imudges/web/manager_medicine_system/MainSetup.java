@@ -31,7 +31,6 @@ public class MainSetup implements Setup {
         if (dao.count(Patient.class) == 0) {
             patient = new Patient();
             patient.setAddTime(new Date(System.currentTimeMillis()));
-            patient.setAk("123445");
             patient.setIdCard("152727199704062714");
             patient.setName("yy");
             patient.setNum("999999");
@@ -44,6 +43,7 @@ public class MainSetup implements Setup {
             User user = new User();
             user.setUsername("test");
             user.setPassword("123");
+            user.setAk("123456789");
             user.setType("2");
             if(patient!=null){
                 user.setCustomerId(patient.getId());

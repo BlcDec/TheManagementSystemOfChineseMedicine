@@ -18,6 +18,7 @@ import java.util.Map;
 
 
 @IocBean
+//@Filters(@By(type = AuthorityFilter.class, args = {"ioc:authorityFilter"}))
 public class PublicModule {
     @Inject
     Dao dao;
@@ -27,9 +28,12 @@ public class PublicModule {
     @Fail("http:500")
     @GET
     public Object loginPage(HttpServletRequest request,
-                            HttpSession session){
-
-        request.setAttribute("code",0);
+                            @Param("redirect_url") String redirectUrl) {
+        if (redirectUrl == null || redirectUrl.equals("")){
+            redirectUrl = request.getHeader("referer");
+        }
+        request.setAttribute("redirect_url",redirectUrl);
+        request.setAttribute("code", 0);
         return "jsp:public/login";
     }
 
@@ -40,65 +44,72 @@ public class PublicModule {
     public Object login(@Param("username") String username,
                         @Param("password") String password,
                         HttpSession session,
-                        HttpServletRequest request){
-        if(username == null || password == null || username.equals("") || password.equals("")){
+                        HttpServletRequest request) {
+        boolean isLogin = false;
+        if (username == null || password == null || username.equals("") || password.equals("")) {
             //请求参数错误
-            request.setAttribute("redirect_url","login.php");
-            request.setAttribute("code",-1);
+            request.setAttribute("redirect_url", "login.php");
+            request.setAttribute("code", -1);
         } else {
             //请求参数正确
-            User user = dao.fetch(User.class, Cnd.where("username","=",username).and("password","=",password));
-            if(user!=null){
-                switch (user.getType()){
+            User user = dao.fetch(User.class, Cnd.where("username", "=", username).and("password", "=", password));
+            if (user != null) {
+                switch (user.getType()) {
                     case "0":
                         //TODO 管理员逻辑
                         break;
                     case "1":
                         //医生
-                        Doctor doctor = dao.fetch(Doctor.class,Cnd.where("id","=",user.getCustomerId()));
-                        if(doctor!=null){
+                        Doctor doctor = dao.fetch(Doctor.class, Cnd.where("id", "=", user.getCustomerId()));
+                        if (doctor != null) {
 //                            result.put("code",0);
 //                            result.put("ak",doctor.getAk());
 //                            result.put("name",doctor.getName());
+                            isLogin = true;
                         } else {
-
+                            isLogin = false;
                         }
                         break;
                     case "2":
                         //患者
-                        Patient patient = dao.fetch(Patient.class,Cnd.where("id","=",user.getCustomerId()));
-                        if(patient!=null){
+                        Patient patient = dao.fetch(Patient.class, Cnd.where("id", "=", user.getCustomerId()));
+                        if (patient != null) {
 //                            result.put("code",0);
 //                            result.put("ak",patient.getAk());
 //                            result.put("name",patient.getName());
-                            session.setAttribute("patient",patient);
-                            request.setAttribute("redirect_url","main.php");
-                            request.setAttribute("code",0);
+                            session.setAttribute("patient", patient);
+                            request.setAttribute("redirect_url", "main.php");
+                            request.setAttribute("code", 0);
+                            isLogin = true;
                         } else {
-
+                            isLogin = false;
                         }
                         break;
                 }
             } else {
-                request.setAttribute("redirect_url","login.php");
-                request.setAttribute("code",-2);
+                request.setAttribute("redirect_url", "login.php");
+                request.setAttribute("code", -2);
             }
 
         }
 //        result.put("msg",new ConfigReader().read(result.get("code").toString()));
-        return "jsp:public/jump";
+        if (isLogin) {
+            return "jsp:public/main";
+        } else {
+            return "jsp:public/login";
+        }
     }
 
     @At("public/main")
     @Ok("re")
     @Fail("http:500")
     public Object main(HttpServletRequest request,
-                       HttpSession session){
+                       HttpSession session) {
         /**
          * 主界面只有患者可以访问
          * */
         Patient patient = (Patient) session.getAttribute("patient");
-        request.setAttribute("patient",patient);
+        request.setAttribute("patient", patient);
         return "jsp:public/main";
     }
 

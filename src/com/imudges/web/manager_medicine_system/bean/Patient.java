@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * 患者
  */
-@Table("PATIENT")
+@Table("PATIENTS")
 public class Patient {
 
     @Id
@@ -37,16 +37,7 @@ public class Patient {
     @Column
     private String phoneNum;//电话号
 
-    @Column
-    private String ak;
 
-    public String getAk() {
-        return ak;
-    }
-
-    public void setAk(String ak) {
-        this.ak = ak;
-    }
 
     public int getId() {
         return id;

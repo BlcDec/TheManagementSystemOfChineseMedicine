@@ -31,6 +31,17 @@ public class User {
     @Column
     private int customerId;//用户id，可与Doctor Patient绑定
 
+    @Column
+    private String ak;
+
+    public String getAk() {
+        return ak;
+    }
+
+    public void setAk(String ak) {
+        this.ak = ak;
+    }
+
     public String getType() {
         return type;
     }
