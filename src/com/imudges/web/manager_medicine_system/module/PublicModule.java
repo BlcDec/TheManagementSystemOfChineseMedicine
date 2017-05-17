@@ -113,4 +113,13 @@ public class PublicModule {
         return "jsp:public/main";
     }
 
+
+    @At("public/signIn")
+    @Ok("re")
+    @Fail("http:500")
+    public Object signIn(HttpServletRequest request){
+
+
+        return "jsp:public/signIn";
+    }
 }

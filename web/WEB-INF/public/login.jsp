@@ -30,7 +30,7 @@
     <p style="color: red;">请求参数错误</p>
     <%}%>
     <div>
-        <p><a href="signin.php">注册</a></p>
+        <p><a href="signIn.php">注册</a></p>
         <p><a href="forgetpsw.php">忘记密码</a></p>
     </div>
 </section>
