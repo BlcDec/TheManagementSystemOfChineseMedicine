@@ -34,6 +34,17 @@ public class User {
     @Column("A_AK")
     private String ak;
 
+    public User(Patient patient,String username,String password,String ak) {
+        this.username = username;
+        this.password = password;
+        this.customerId = patient.getId();
+        this.type = "2";
+        this.ak = ak;
+    }
+
+    public User() {
+    }
+
     public String getAk() {
         return ak;
     }

@@ -10,6 +10,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -127,5 +128,19 @@ public class Toolkit {
 
     public static String getSystemName(){
         return new ConfigReader().read("system_name");
+    }
+
+    public static String getCurrentYMD(){
+        String Year = Calendar.getInstance().get(Calendar.YEAR) + "";
+        String Month = "";
+        int monthNum = (Calendar.getInstance().get(Calendar.MONTH)+ 1);
+        if(monthNum<10){
+            Month = Month + "0" + monthNum;
+        } else {
+            Month = Month + monthNum;
+        }
+        String Day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "";
+        String res = Year + Month + Day;
+        return res;
     }
 }

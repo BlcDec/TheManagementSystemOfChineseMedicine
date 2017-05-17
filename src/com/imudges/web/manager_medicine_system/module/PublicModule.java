@@ -4,15 +4,19 @@ import com.imudges.web.manager_medicine_system.bean.Doctor;
 import com.imudges.web.manager_medicine_system.bean.Patient;
 import com.imudges.web.manager_medicine_system.bean.User;
 import com.imudges.web.manager_medicine_system.util.ConfigReader;
+import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;
+import sun.misc.Request;
 
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,9 +121,64 @@ public class PublicModule {
     @At("public/signIn")
     @Ok("re")
     @Fail("http:500")
-    public Object signIn(HttpServletRequest request){
+    @GET
+    public Object signInPage(HttpServletRequest request){
 
+        request.setAttribute("code",0);
+        return "jsp:public/signIn";
+    }
 
+    @At("public/signIn")
+    @Ok("re")
+    @Fail("http:500")
+    @POST
+    public Object signIn(@Param("name")String name,
+                         @Param("sex")String sex,
+                         @Param("id_card")String idCard,
+                         @Param("phone_num")String phoneNum,
+                         @Param("password")String password,
+                         HttpServletRequest request,
+                         HttpSession session){
+        if(idCard == null || idCard.equals("") || password == null || password.equals("")){
+            request.setAttribute("code",-1);//请求参数错误
+            return "jsp:public/signIn";
+        }
+        Patient patient = new Patient();
+        boolean isCreate = false;
+        try {
+            patient.setName(name);
+            patient.setSex(sex);
+            patient.setPhoneNum(phoneNum);
+            patient.setIdCard(idCard);
+            patient.setAddTime(new Date(System.currentTimeMillis()));
+            dao.insert(patient);
+            isCreate = true;
+        } catch (Exception e){}
+
+        if(isCreate){
+            Patient p = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",idCard));
+            if(p == null){
+                //添加用户失败
+                request.setAttribute("code",-3);
+                return "jsp:public/signIn";
+            } else {
+                //生成用户名
+                String salt = Toolkit.getCurrentYMD();
+                String idSalt = "";
+                for(int j = idCard.length()-6;j<idCard.length();j++){
+                    idSalt += idCard.charAt(j) + "";
+                }
+                String username = salt + idSalt;
+                //生成ak
+                String ak = Toolkit.getAccessKey();
+                User user = new User(p,username,password,ak);
+                dao.insert(user);
+                request.setAttribute("code",0);
+                request.setAttribute("username",username);
+            }
+        } else {
+            request.setAttribute("code",-4);
+        }
         return "jsp:public/signIn";
     }
 }
