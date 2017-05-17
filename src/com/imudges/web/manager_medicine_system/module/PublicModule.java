@@ -33,10 +33,10 @@ public class PublicModule {
     @GET
     public Object loginPage(HttpServletRequest request,
                             @Param("redirect_url") String redirectUrl) {
-        if (redirectUrl == null || redirectUrl.equals("")){
+        if (redirectUrl == null || redirectUrl.equals("")) {
             redirectUrl = request.getHeader("referer");
         }
-        request.setAttribute("redirect_url",redirectUrl);
+        request.setAttribute("redirect_url", redirectUrl);
         request.setAttribute("code", 0);
         return "jsp:public/login";
     }
@@ -122,9 +122,9 @@ public class PublicModule {
     @Ok("re")
     @Fail("http:500")
     @GET
-    public Object signInPage(HttpServletRequest request){
+    public Object signInPage(HttpServletRequest request) {
 
-        request.setAttribute("code",0);
+        request.setAttribute("code", 0);
         return "jsp:public/signIn";
     }
 
@@ -132,20 +132,30 @@ public class PublicModule {
     @Ok("re")
     @Fail("http:500")
     @POST
-    public Object signIn(@Param("name")String name,
-                         @Param("sex")String sex,
-                         @Param("id_card")String idCard,
-                         @Param("phone_num")String phoneNum,
-                         @Param("password")String password,
+    public Object signIn(@Param("name") String name,
+                         @Param("sex") String sex,
+                         @Param("id_card") String idCard,
+                         @Param("phone_num") String phoneNum,
+                         @Param("password") String password,
                          HttpServletRequest request,
-                         HttpSession session){
-        if(idCard == null || idCard.equals("") || password == null || password.equals("")){
-            request.setAttribute("code",-1);//请求参数错误
+                         HttpSession session) {
+        if (idCard == null || idCard.equals("") || password == null || password.equals("")) {
+            request.setAttribute("code", -1);//请求参数错误
             return "jsp:public/signIn";
         }
         Patient patient = new Patient();
         boolean isCreate = false;
         try {
+            if (idCard.length() != 18) {
+                request.setAttribute("code", -5);
+                request.setAttribute("msg","身份证号长度错误");
+                return "jsp:public/signIn";
+            }
+            if (dao.fetch(Patient.class, Cnd.where("A_IDCARD", "=", idCard)) != null) {
+                request.setAttribute("code",-6);
+                request.setAttribute("msg","您的身份证号已经注册！");
+                return "jsp:public/signIn";
+            }
             patient.setName(name);
             patient.setSex(sex);
             patient.setPhoneNum(phoneNum);
@@ -153,31 +163,32 @@ public class PublicModule {
             patient.setAddTime(new Date(System.currentTimeMillis()));
             dao.insert(patient);
             isCreate = true;
-        } catch (Exception e){}
+        } catch (Exception e) {
+        }
 
-        if(isCreate){
-            Patient p = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",idCard));
-            if(p == null){
+        if (isCreate) {
+            Patient p = dao.fetch(Patient.class, Cnd.where("A_IDCARD", "=", idCard));
+            if (p == null) {
                 //添加用户失败
-                request.setAttribute("code",-3);
+                request.setAttribute("code", -3);
                 return "jsp:public/signIn";
             } else {
                 //生成用户名
                 String salt = Toolkit.getCurrentYMD();
                 String idSalt = "";
-                for(int j = idCard.length()-6;j<idCard.length();j++){
+                for (int j = idCard.length() - 6; j < idCard.length(); j++) {
                     idSalt += idCard.charAt(j) + "";
                 }
                 String username = salt + idSalt;
                 //生成ak
                 String ak = Toolkit.getAccessKey();
-                User user = new User(p,username,password,ak);
+                User user = new User(p, username, password, ak);
                 dao.insert(user);
-                request.setAttribute("code",0);
-                request.setAttribute("username",username);
+                request.setAttribute("code", 0);
+                request.setAttribute("username", username);
             }
         } else {
-            request.setAttribute("code",-4);
+            request.setAttribute("code", -4);
         }
         return "jsp:public/signIn";
     }

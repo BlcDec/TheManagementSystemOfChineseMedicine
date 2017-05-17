@@ -4,6 +4,14 @@
 <head>
     <meta charset="utf-8">
     <title>${system_name}</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <%--<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->--%>
+    <%--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">--%>
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <meta name="description" content=""/>
     <meta name="keywords" content=""/>
     <meta name="robots" content=""/>
@@ -24,6 +32,9 @@
         <input id="re_password" placeholder="确认密码" name="re_password" type="password"/>
         <button class="blue" type="button" onclick="commit()">注册</button>
     </form>
+    <%if((Integer) request.getAttribute("code") <0 ){%>
+    <p style="color: red"><%=request.getAttribute("msg")%></p>
+    <%}%>
 </section>
 <% if ((Integer) request.getAttribute("code") == 0 && request.getAttribute("username") != null) {%>
 
