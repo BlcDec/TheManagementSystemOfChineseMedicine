@@ -42,8 +42,8 @@ public class MainSetup implements Setup {
         if (dao.count(User.class) == 0) {
             User user = new User();
             user.setUsername("test");
-            user.setPassword("123");
-            user.setAk("123456789");
+            user.setPassword("123456");
+            //user.setAk("123456789");
             user.setType("2");
             if(patient!=null){
                 user.setCustomerId(patient.getId());

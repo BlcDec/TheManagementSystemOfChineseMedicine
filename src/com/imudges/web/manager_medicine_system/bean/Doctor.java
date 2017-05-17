@@ -7,7 +7,7 @@ import org.nutz.dao.entity.annotation.Table;
 /**
  * 医生
  */
-@Table("DOCTOR")
+@Table("A_DOCTOR")
 public class Doctor {
     @Id
     private int id;
@@ -33,7 +33,7 @@ public class Doctor {
     @Column
     private String num;//编号
 
-    @Column
+    @Column("A_POSITION")
     private String position;//职位，身份
 
     @Column
@@ -42,7 +42,7 @@ public class Doctor {
     @Column
     private String departmentId;//部门id
 
-    @Column
+    @Column("A_DEGREE")
     private String degree;//学位
 
 

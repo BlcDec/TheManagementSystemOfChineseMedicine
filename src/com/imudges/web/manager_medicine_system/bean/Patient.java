@@ -10,33 +10,32 @@ import java.util.Date;
 /**
  * 患者
  */
-@Table("PATIENTS")
+@Table("A_PATIENTS")
 public class Patient {
 
     @Id
     private int id;
 
-    @Column
+    @Column("A_NAME")
     private String name;
 
-    @Column
+    @Column("A_NUM")
     private String num;//患者编号
 
-    @Column
+    @Column("A_SEX")
     private String sex;
 
-    @Column
+    @Column("A_RECORDID")
     private String recordId;//接诊单id
 
-    @Column
+    @Column("A_ADDTIME")
     private Date addTime;//住院时间
 
-    @Column
+    @Column("A_IDCARD")
     private String IdCard;//身份证
 
-    @Column
+    @Column("A_PHONENUM")
     private String phoneNum;//电话号
-
 
 
     public int getId() {

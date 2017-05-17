@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 @IocBean
-//@Filters(@By(type = AuthorityFilter.class, args = {"ioc:authorityFilter"}))
+@Filters(@By(type = AuthorityFilter.class, args = {"ioc:authorityFilter"}))
 public class PublicModule {
     @Inject
     Dao dao;

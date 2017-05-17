@@ -9,15 +9,15 @@ import javax.xml.ws.WebServiceClient;
 /**
  * Created by yangyang on 2017/5/16.
  */
-@Table("USERS")
+@Table("A_USERS")
 public class User {
     @Id
     private int id;
 
-    @Column
+    @Column("A_USRNAME")
     private String username;
 
-    @Column
+    @Column("A_PASSWORD")
     private String password;
 
     /**
@@ -25,13 +25,13 @@ public class User {
      * 1 医生
      * 2 患者
      * */
-    @Column
+    @Column("A_TYPE")
     private String type;
 
-    @Column
+    @Column("A_CUSTOMERID")
     private int customerId;//用户id，可与Doctor Patient绑定
 
-    @Column
+    @Column("A_AK")
     private String ak;
 
     public String getAk() {
