@@ -17,7 +17,7 @@ import javax.print.Doc;
 import javax.servlet.http.Cookie;
 
 /**
- * 主过滤器
+ * 主过滤器,验证用户的登录状态
  */
 @IocBean
 public class AuthorityFilter implements ActionFilter{
@@ -26,39 +26,11 @@ public class AuthorityFilter implements ActionFilter{
 
     @Override
     public View match(ActionContext actionContext) {
-//        String ak = null;
-//        Cookie[] cookies = actionContext.getRequest().getCookies();
-//        try {
-//            for(Cookie cookie : cookies){
-//                if("ak".equals(cookie.getName())){
-//                    ak = cookie.getValue();
-//                }
-//            }
-//        }catch (Exception e){
-//            return new ServerRedirectView("/public/login.php?redirect_url=" + actionContext.getRequest().getRequestURI());
-//        }
-//
-//        if (ak == null){
-//            return new ServerRedirectView("/public/login.php?redirect_url=" + actionContext.getRequest().getRequestURI());
-//        }
-//        User user = dao.fetch(User.class, Cnd.where("ak","=",ak));
-//        if (user == null){
-//            return new ServerRedirectView("/public/login.php?redirect_url=" + actionContext.getRequest().getRequestURI());
-//        }
-//
-//        //Session 中写入user对象以及patient对象
-//        actionContext.getRequest().getSession().setAttribute("user",user);
-//        if(user.getType().equals("1")){
-//            Doctor doctor = dao.fetch(Doctor.class,Cnd.where("id","=",user.getCustomerId()));
-//            actionContext.getRequest().getSession().setAttribute("doctor",doctor);
-//        }
-//        if(user.getType().equals("2")){
-//            Patient patient = dao.fetch(Patient.class,Cnd.where("id","=",user.getCustomerId()));
-//            actionContext.getRequest().getSession().setAttribute("doctor",patient);
-//        }
-
-        //Request中写入版权信息
-        actionContext.getRequest().setAttribute("system_name", Toolkit.getSystemName());
+        //获取User对象，如果获取失败，则说明用户未登录，跳转到login.php
+        User user = (User) actionContext.getRequest().getSession().getAttribute("user");
+        if (user == null){
+            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+        }
         return null;
     }
 }

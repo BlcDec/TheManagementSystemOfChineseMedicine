@@ -10,7 +10,7 @@ var ioc = {
             // url : "jdbc:oracle:thin:@localhost:1521:epsit",
             jdbcUrl : 'jdbc:oracle:thin:@127.0.0.1:1521:xe',
             username : "yy",
-            password : "",
+            password : "1228",
             testWhileIdle : true,
             validationQuery : "select 1 from dual" ,
             maxActive : 100

@@ -24,8 +24,8 @@
 <section>
     <h1><strong>${system_name}</strong></h1>
     <form method="post" action="login.php">
-        <input type="text" name="username" placeholder="邮箱"/>
-        <input placeholder="密码" name="password" type="password"/>
+        <input type="text" name="username" placeholder="身份证号" value="152727199704062711"/>
+        <input placeholder="密码" name="password" type="password" value="123"/>
         <button class="blue">登录</button>
     </form>
     <%if ((Integer) request.getAttribute("code") == 0) {%>

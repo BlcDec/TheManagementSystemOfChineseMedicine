@@ -27,6 +27,16 @@ public class MainSetup implements Setup {
         Dao dao = ioc.get(Dao.class);
         Daos.createTablesInPackage(dao, "com.imudges.web.manager_medicine_system", false);
 
+
+        User user = null;
+        if (dao.count(User.class) == 0) {
+            user = new User();
+            user.setUsername("test");
+            user.setPassword("123456");
+            user.setType("2");
+            dao.insert(user);
+        }
+
         Patient patient = null;
         if (dao.count(Patient.class) == 0) {
             patient = new Patient();
@@ -36,21 +46,10 @@ public class MainSetup implements Setup {
             patient.setNum("999999");
             patient.setPhoneNum("18647705052");
             patient.setSex("男");
-            dao.insert(patient);
-        }
-
-        if (dao.count(User.class) == 0) {
-            User user = new User();
-            user.setUsername("test");
-            user.setPassword("123456");
-            //user.setAk("123456789");
-            user.setType("2");
-            if(patient!=null){
-                user.setCustomerId(patient.getId());
-            } else {
-                user.setCustomerId(1);
+            if (user != null) {
+                patient.setUserId(user.getId() + "");
             }
-            dao.insert(user);
+            dao.insert(patient);
         }
     }
 }

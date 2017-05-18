@@ -7,9 +7,9 @@ import org.nutz.dao.entity.annotation.Table;
 import javax.xml.ws.WebServiceClient;
 
 /**
- * Created by yangyang on 2017/5/16.
+ * 用户表
  */
-@Table("A_USERS")
+@Table("AA_USERS")
 public class User {
     @Id
     private int id;
@@ -28,16 +28,12 @@ public class User {
     @Column("A_TYPE")
     private String type;
 
-    @Column("A_CUSTOMERID")
-    private int customerId;//用户id，可与Doctor Patient绑定
-
     @Column("A_AK")
     private String ak;
 
     public User(Patient patient,String username,String password,String ak) {
         this.username = username;
         this.password = password;
-        this.customerId = patient.getId();
         this.type = "2";
         this.ak = ak;
     }
@@ -59,14 +55,6 @@ public class User {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
     }
 
     public int getId() {

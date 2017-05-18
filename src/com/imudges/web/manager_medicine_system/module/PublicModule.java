@@ -3,6 +3,7 @@ package com.imudges.web.manager_medicine_system.module;
 import com.imudges.web.manager_medicine_system.bean.Doctor;
 import com.imudges.web.manager_medicine_system.bean.Patient;
 import com.imudges.web.manager_medicine_system.bean.User;
+import com.imudges.web.manager_medicine_system.util.Config;
 import com.imudges.web.manager_medicine_system.util.ConfigReader;
 import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Cnd;
@@ -27,20 +28,19 @@ public class PublicModule {
     @Inject
     Dao dao;
 
+    @Filters(@By(type = ConfigFilter.class))
     @At("public/login")
     @Ok("re")
     @Fail("http:500")
     @GET
     public Object loginPage(HttpServletRequest request,
                             @Param("redirect_url") String redirectUrl) {
-        if (redirectUrl == null || redirectUrl.equals("")) {
-            redirectUrl = request.getHeader("referer");
-        }
-        request.setAttribute("redirect_url", redirectUrl);
+
         request.setAttribute("code", 0);
         return "jsp:public/login";
     }
 
+    @Filters(@By(type = ConfigFilter.class))
     @At("public/login")
     @Ok("re")
     @Fail("http:500")
@@ -58,13 +58,15 @@ public class PublicModule {
             //请求参数正确
             User user = dao.fetch(User.class, Cnd.where("username", "=", username).and("password", "=", password));
             if (user != null) {
+                //登陆成功时向Sessionz中写入user对象
+                session.setAttribute("user", user);
                 switch (user.getType()) {
                     case "0":
-                        //TODO 管理员逻辑
+
                         break;
                     case "1":
                         //医生
-                        Doctor doctor = dao.fetch(Doctor.class, Cnd.where("id", "=", user.getCustomerId()));
+                        Doctor doctor = dao.fetch(Doctor.class, Cnd.where("A_USERID", "=", user.getId()));
                         if (doctor != null) {
 //                            result.put("code",0);
 //                            result.put("ak",doctor.getAk());
@@ -77,13 +79,11 @@ public class PublicModule {
                     case "2":
                         //患者
 
-                        Patient patient = dao.fetch(Patient.class, Cnd.where("id", "=", user.getCustomerId()));
+                        Patient patient = dao.fetch(Patient.class, Cnd.where("A_USERID", "=", user.getId()));
                         if (patient != null) {
-//                            result.put("code",0);
-//                            result.put("ak",patient.getAk());
-//                            result.put("name",patient.getName());
-                            session.setAttribute("patient", patient);
                             request.setAttribute("redirect_url", "main.php");
+                            request.setAttribute("name",patient.getName());
+                            session.setAttribute("patient",patient);
                             request.setAttribute("code", 0);
                             isLogin = true;
                         } else {
@@ -97,28 +97,14 @@ public class PublicModule {
             }
 
         }
-//        result.put("msg",new ConfigReader().read(result.get("code").toString()));
         if (isLogin) {
-            return "jsp:public/main";
+            return ">>:../patient/main.php";
         } else {
             return "jsp:public/login";
         }
     }
 
-    @At("public/main")
-    @Ok("re")
-    @Fail("http:500")
-    public Object main(HttpServletRequest request,
-                       HttpSession session) {
-        /**
-         * 主界面只有患者可以访问
-         * */
-        Patient patient = (Patient) session.getAttribute("patient");
-        request.setAttribute("patient", patient);
-        return "jsp:public/main";
-    }
-
-
+    @Filters(@By(type = ConfigFilter.class))
     @At("public/signIn")
     @Ok("re")
     @Fail("http:500")
@@ -129,6 +115,7 @@ public class PublicModule {
         return "jsp:public/signIn";
     }
 
+    @Filters(@By(type = ConfigFilter.class))
     @At("public/signIn")
     @Ok("re")
     @Fail("http:500")
@@ -175,16 +162,14 @@ public class PublicModule {
                 return "jsp:public/signIn";
             } else {
                 //生成用户名
-                String salt = Toolkit.getCurrentYMD();
-                String idSalt = "";
-                for (int j = idCard.length() - 6; j < idCard.length(); j++) {
-                    idSalt += idCard.charAt(j) + "";
-                }
-                String username = salt + idSalt;
+                String username = idCard;
                 //生成ak
                 String ak = Toolkit.getAccessKey();
                 User user = new User(p, username, password, ak);
                 dao.insert(user);
+                user = dao.fetch(User.class,Cnd.where("id","=",user.getId()));
+                patient.setUserId(user.getId() + "");
+                session.setAttribute("patient",p);
                 request.setAttribute("code", 0);
                 request.setAttribute("username", username);
                 request.setAttribute("redirect_url", "login.php");
@@ -193,5 +178,14 @@ public class PublicModule {
             request.setAttribute("code", -4);
         }
         return "jsp:public/signIn";
+    }
+
+    @At("public/jump")
+    @Ok("re")
+    @Fail("http:500")
+    @Filters
+    public String jump(@Param("redirect_url")String redirectUrl, HttpServletRequest request){
+        request.setAttribute("redirect_url",redirectUrl);
+        return "jsp:public/jump";
     }
 }

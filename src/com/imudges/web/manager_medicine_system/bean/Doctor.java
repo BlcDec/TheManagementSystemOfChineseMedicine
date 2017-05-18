@@ -7,7 +7,7 @@ import org.nutz.dao.entity.annotation.Table;
 /**
  * 医生
  */
-@Table("A_DOCTOR")
+@Table("AA_DOCTOR")
 public class Doctor {
     @Id
     private int id;
@@ -45,6 +45,16 @@ public class Doctor {
     @Column("A_DEGREE")
     private String degree;//学位
 
+    @Column("A_USERID")
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public int getId() {
         return id;
