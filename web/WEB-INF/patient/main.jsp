@@ -60,9 +60,9 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">
-					<img height="50" width="50" src="assets/img/logo.png"/>
-				</a>
+				<%--<a class="navbar-brand" href="#">--%>
+					<%--<img height="50" width="50" src="assets/img/logo.png"/>--%>
+				<%--</a>--%>
 
 			</div>
 
@@ -79,19 +79,16 @@
 
 
 				<li class="active-link">
-					<a href="index.php"><i class="glyphicon glyphicon-book"></i>在线预约</a>
+					<a href="main.php"><i class="glyphicon glyphicon-plus"></i>在线预约</a>
 				</li>
 				<li>
 					<a href="user.php"><i class="glyphicon glyphicon-user"></i>个人中心</a>
-				</li>
-				<li >
-					<a href="add.php"><i class="glyphicon glyphicon-plus"></i>个人中心</a>
 				</li>
 				<li>
 					<a href="search.php"><i class="glyphicon glyphicon-search"></i>药品检索</a>
 				</li>
 				<li>
-					<a href="../"><i class="fa fa-home"></i>返回主页</a>
+					<a href="../public/logout.php"><i class="fa fa-home"></i>注销登录</a>
 				</li>
 			</ul>
 		</div>

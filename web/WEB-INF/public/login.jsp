@@ -24,7 +24,7 @@
 <section>
     <h1><strong>${system_name}</strong></h1>
     <form method="post" action="login.php">
-        <input type="text" name="username" placeholder="身份证号" value="152727199704062711"/>
+        <input type="text" name="username" placeholder="身份证号" value="152727199704062710"/>
         <input placeholder="密码" name="password" type="password" value="123"/>
         <button class="blue">登录</button>
     </form>
@@ -44,41 +44,6 @@
 </section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 <script type="text/javascript">
-    // Page load delay by Curtis Henson - http://curtishenson.com/articles/quick-tip-delay-page-loading-with-jquery/
-    //$(function(){
-    //	$('.login button').click(function(e){
-    //		// Get the url of the link
-    //		var toLoad = $(this).attr('href');
-    //
-    //		// Do some stuff
-    //		$(this).addClass("loading");
-    //
-    //			// Stop doing stuff
-    //			// Wait 700ms before loading the url
-    //			setTimeout(function(){window.location = toLoad}, 10000);
-    //
-    //		// Don't let the link do its natural thing
-    //		e.preventDefault
-    //	});
-    //
-    //	$('input').each(function() {
-    //
-    //       var default_value = this.value;
-    //
-    //       $(this).focus(function(){
-    //               if(this.value == default_value) {
-    //                       this.value = '';
-    //               }
-    //       });
-    //
-    //       $(this).blur(function(){
-    //               if(this.value == '') {
-    //                       this.value = default_value;
-    //               }
-    //       });
-    //
-    //});
-    //});
 </script>
 </body>
 </html>

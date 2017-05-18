@@ -19,6 +19,7 @@ import sun.misc.Request;
 
 
 import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -221,5 +222,31 @@ public class PublicModule {
     public String jump(@Param("redirect_url")String redirectUrl, HttpServletRequest request){
         request.setAttribute("redirect_url",redirectUrl);
         return "jsp:public/jump";
+    }
+
+
+    @At("public/logout")
+    @Ok("re")
+    @Fail("http:500")
+    @Filters
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response,
+                         HttpSession session){
+        //清除用户的AK信息
+        User user = (User) session.getAttribute("user");
+        try {
+            user.setAk("");
+            dao.update(user);
+            String s = request.getContextPath();
+        }catch (Exception e){}
+        javax.servlet.http.Cookie cookie = new Cookie("ak", "hupeng");
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(365*24*3600);
+        response.addCookie(cookie);
+        session.removeAttribute("user");
+        request.setAttribute("redirect_url", "login.php");
+        request.setAttribute("msg","注销成功！");
+        return "jsp:public/graph_jump";
     }
 }
