@@ -5,7 +5,9 @@ import com.imudges.web.manager_medicine_system.bean.Patient;
 import com.imudges.web.manager_medicine_system.bean.User;
 import com.imudges.web.manager_medicine_system.util.Config;
 import com.imudges.web.manager_medicine_system.util.ConfigReader;
+import com.imudges.web.manager_medicine_system.util.MD5;
 import com.imudges.web.manager_medicine_system.util.Toolkit;
+import com.sun.deploy.net.HttpResponse;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -14,8 +16,7 @@ import org.nutz.mvc.annotation.*;
 import sun.misc.Request;
 
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ import java.util.Map;
 
 
 @IocBean
-@Filters(@By(type = AuthorityFilter.class, args = {"ioc:authorityFilter"}))
+//@Filters(@By(type = AuthorityFilter.class, args = {"ioc:authorityFilter"}))
 public class PublicModule {
     @Inject
     Dao dao;
@@ -48,7 +49,8 @@ public class PublicModule {
     public Object login(@Param("username") String username,
                         @Param("password") String password,
                         HttpSession session,
-                        HttpServletRequest request) {
+                        HttpServletRequest request,
+                        HttpServletResponse response) {
         boolean isLogin = false;
         if (username == null || password == null || username.equals("") || password.equals("")) {
             //请求参数错误
@@ -60,6 +62,15 @@ public class PublicModule {
             if (user != null) {
                 //登陆成功时向Sessionz中写入user对象
                 session.setAttribute("user", user);
+                //设置Cookie
+                String ak = MD5.encryptTimeStamp(System.currentTimeMillis() + "");
+                javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie("ak", ak);
+                cookie.setMaxAge(365*24*3600);//时间一年
+                cookie.setPath("/");
+                cookie.setHttpOnly(true);
+                response.addCookie(cookie);
+                user.setAk(ak);
+                dao.update(user);
                 switch (user.getType()) {
                     case "0":
 
@@ -163,9 +174,7 @@ public class PublicModule {
             } else {
                 //生成用户名
                 String username = idCard;
-                //生成ak
-                String ak = Toolkit.getAccessKey();
-                User user = new User(p, username, password, ak);
+                User user = new User(p, username, password);
                 dao.insert(user);
                 user = dao.fetch(User.class,Cnd.where("id","=",user.getId()));
                 patient.setUserId(user.getId() + "");

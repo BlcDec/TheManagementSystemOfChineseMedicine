@@ -5,6 +5,7 @@
   User: yangyang
   Date: 2017/4/7
   Time: 15:33
+
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -14,9 +15,9 @@
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>${system_name}</title>
-	<link href="assets/css/bootstrap.css" rel="stylesheet"/>
-	<link href="assets/css/font-awesome.css" rel="stylesheet"/>
-	<link href="assets/css/custom.css" rel="stylesheet"/>
+	<link href="../../theme/assets/css/bootstrap.css" rel="stylesheet"/>
+	<link href="../../theme/assets/css/font-awesome.css" rel="stylesheet"/>
+	<link href="../../theme/assets/css/custom.css" rel="stylesheet"/>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
 	<style>
 		@media(max-width:768px) {
@@ -33,16 +34,16 @@
 				padding: 0;
 			}
 			#main-menu a:hover{
-				color: #214761;
+				color: #31588A;
 			}
 			#main-menu a:active{
-				color: #214761 !important;
+				color: #31588A !important;
 			}
 			#main-menu a:link{
-				color: #214761;
+				color: #31588A;
 			}
 			#main-menu a:visited{
-				color: #214761;
+				color: #31588A;
 			}
 		}
 	</style>
@@ -78,16 +79,16 @@
 
 
 				<li class="active-link">
-					<a href="index.php"><i class="glyphicon glyphicon-book"></i>在漂书籍</a>
+					<a href="index.php"><i class="glyphicon glyphicon-book"></i>在线预约</a>
 				</li>
 				<li>
-					<a href="user.php"><i class="glyphicon glyphicon-user"></i>个人中心 <%if((Integer)request.getAttribute("system_remind_number") != 0) {%><span class="badge" style="background-color: #67b168;" ><%=request.getAttribute("system_remind_number")%></span><%}%></a>
+					<a href="user.php"><i class="glyphicon glyphicon-user"></i>个人中心</a>
 				</li>
 				<li >
-					<a href="add.php"><i class="glyphicon glyphicon-plus"></i>漂流书籍</a>
+					<a href="add.php"><i class="glyphicon glyphicon-plus"></i>个人中心</a>
 				</li>
 				<li>
-					<a href="search.php"><i class="glyphicon glyphicon-search"></i>检索书籍</a>
+					<a href="search.php"><i class="glyphicon glyphicon-search"></i>药品检索</a>
 				</li>
 				<li>
 					<a href="../"><i class="fa fa-home"></i>返回主页</a>
@@ -102,12 +103,12 @@
 		<div id="page-inner">
 			<div class="row">
 				<div class="col-lg-12">
-					<h2>图书漂流区</h2>
+					<h2>在线预约</h2>
 				</div>
 			</div>
 			<ol class="breadcrumb">
-				<li class="active">图书漂流区</li>
-				<li class="active">在漂书籍</li>
+				<li class="active">中医药管理系统</li>
+				<li class="active">在线预约</li>
 			</ol>
 			<%--<% if ((Integer) request.getAttribute("code") == 0) {--%>
 				<%--DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");--%>
@@ -211,9 +212,9 @@
 </div>
 
 
-<script src="assets/js/jquery-1.10.2.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
-<script src="assets/js/custom.js"></script>
+<script src="../../theme/assets/js/jquery-1.10.2.js"></script>
+<script src="../../theme/assets/js/bootstrap.min.js"></script>
+<script src="../../theme/assets/js/custom.js"></script>
 <script>
     function take_book(book_id) {
         if (book_id == null) {

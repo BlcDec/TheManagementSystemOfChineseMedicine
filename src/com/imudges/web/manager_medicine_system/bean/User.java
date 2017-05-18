@@ -31,11 +31,10 @@ public class User {
     @Column("A_AK")
     private String ak;
 
-    public User(Patient patient,String username,String password,String ak) {
+    public User(Patient patient,String username,String password) {
         this.username = username;
         this.password = password;
         this.type = "2";
-        this.ak = ak;
     }
 
     public User() {

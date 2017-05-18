@@ -31,6 +31,47 @@ public class AuthorityFilter implements ActionFilter{
         if (user == null){
             return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
         }
+
+        String ak = null;
+        Cookie[] cookies = actionContext.getRequest().getCookies();
+        try {
+            for(Cookie cookie : cookies){
+                if("ak".equals(cookie.getName())){
+                    ak = cookie.getValue();
+                }
+            }
+        }catch (Exception e){
+            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+        }
+
+        if(ak == null){
+            //获取ak失败，返回登录页面
+            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+        }
+        //注册之后设置一个ak
+        if(user.getAk() == null || user.getAk().equals("")){
+            user.setAk(ak);
+            return null;
+        }
+
+        //多端登录时，返回登录页面
+        user = dao.fetch(User.class,Cnd.where("ak","=",ak));
+        if(user == null){
+            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+        }
+        if(!user.getAk().equals(ak)){
+            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+        }
+
+//        user = dao.fetch(User.class,Cnd.where("A_AK","=",ak));
+//        if(user == null){
+//            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+//        }
+//
+//        if(actionContext.getRequest().getAttribute("ak")!=user.getAk()){
+//            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+//        }
+
         return null;
     }
 }
