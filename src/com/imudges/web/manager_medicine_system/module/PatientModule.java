@@ -23,15 +23,37 @@ public class PatientModule {
     @At("patient/main")
     @Ok("re")
     @Fail("http:500")
-
     public Object main(HttpServletRequest request,
                        HttpSession session) {
-        /**
-         * 主界面只有患者可以访问
-         * */
+
         Patient patient = (Patient) session.getAttribute("patient");
         request.setAttribute("name",patient.getName());
         request.setAttribute("patient", patient);
         return "jsp:patient/main";
+    }
+
+    @At("patient/user")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object userPage(HttpServletRequest request,
+                       HttpSession session) {
+        Patient patient = (Patient) session.getAttribute("patient");
+        request.setAttribute("name",patient.getName());
+        request.setAttribute("patient", patient);
+        return "jsp:patient/user";
+    }
+
+    @At("patient/search")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object searchPage(HttpServletRequest request,
+                           HttpSession session) {
+
+        Patient patient = (Patient) session.getAttribute("patient");
+        request.setAttribute("name",patient.getName());
+        request.setAttribute("patient", patient);
+        return "jsp:patient/search";
     }
 }
