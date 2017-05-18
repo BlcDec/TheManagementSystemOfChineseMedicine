@@ -24,7 +24,7 @@
             <div class="form-group" align="left">
                 <div class="input-group">
                     <span class="input-group-addon">姓名</span>
-                    <input id="name" name="name" type="text"  class="form-control"
+                    <input id="name" name="name" type="text" class="form-control" placeholder="请输入姓名"
                            aria-describedby="sizing-addon2">
                 </div>
             </div>
@@ -32,7 +32,7 @@
                 <div class="input-group">
                     <span class="input-group-addon">性别</span>
                     <input id="sex" name="sex" type="text"
-                           class="form-control"
+                           class="form-control" placeholder="请输入性别"
                            aria-describedby="sizing-addon2">
                 </div>
             </div>
@@ -40,16 +40,26 @@
                 <div class="input-group">
                     <span class="input-group-addon">手机号</span>
                     <input id="phone_num" name="phone_num" type="text"
-                           class="form-control"
+                           class="form-control" placeholder="请输入手机号"
                            aria-describedby="sizing-addon2">
                 </div>
             </div>
-            <%//TODO 是否需要获取验证码%>
+            <div class="form-group" align="left">
+                <div class="input-group">
+                    <input id="check_code" name="check_code" type="text"
+                           class="form-control" placeholder="请输入短信验证码"
+                           aria-describedby="sizing-addon2">
+                    <span class="input-group-btn">
+                            <button id="check-code-button" class="btn btn-info" type="button"
+                                    onclick="get_check_code()">获取验证码</button>
+                    </span>
+                </div>
+            </div>
             <div class="form-group" align="left">
                 <div class="input-group">
                     <span class="input-group-addon">输入密码</span>
                     <input id="password" name="password" type="password"
-                           class="form-control"
+                           class="form-control" placeholder="请输入密码"
                            aria-describedby="sizing-addon2">
                 </div>
             </div>
@@ -57,14 +67,15 @@
                 <div class="input-group">
                     <span class="input-group-addon">确认密码</span>
                     <input type="password" id="re_password" name="re_password"
-                           class="form-control"
-                           aria-describedby="sizing-addon2" >
+                           class="form-control" placeholder="请再次输入密码"
+                           aria-describedby="sizing-addon2">
                 </div>
             </div>
             <div class="form-group" align="left">
                 <div class="input-group">
                     <span class="input-group-addon">身份证号</span>
                     <input id="id_card" name="id_card" type="text" class="form-control"
+                           placeholder="请输入身份证号"
                            aria-describedby="sizing-addon2">
                 </div>
             </div>
@@ -114,7 +125,7 @@
 
 <script type="text/javascript">
     function goHome() {
-        window.location.href='${ redirect_url}';
+        window.location.href = '${ redirect_url}';
     }
     function commit() {
         if (document.getElementById("password").value == null || document.getElementById("password").value == "" || document.getElementById("re_password").value == null || document.getElementById("re_password").value == "") {
@@ -122,8 +133,41 @@
         } else if (document.getElementById("password").value != document.getElementById("re_password").value) {
             alert("两次输入的密码不相同，请确认后提交");
         } else {
+            //TODO 添加验证码
             document.getElementById("sign_in_form").submit();
         }
+    }
+    function get_check_code() {
+        var phoneNum = document.getElementById('phone_num').value;
+        var idCard = document.getElementById('id_card').value;
+        if(phoneNum == null || phoneNum == "" || idCard == null || idCard == ""){
+            alert('请填写手机号码和身份证号后获取验证码');
+            return ;
+        }
+        var arr = Object.keys(phoneNum);
+        var count = 0;
+        for(var temp in arr){
+            count ++;
+        }
+        if(count<11) {
+            alert('请填写正确的手机号码');
+            return ;
+        }
+        var button = document.getElementById('check-code-button');
+        button.disabled = "disabled";
+        var times = 60;
+        var timer = setInterval(function () {
+            //console.log(times)
+            //TODO ajax请求验证码
+            if (times--) {
+                button.innerHTML = times + "秒后可获取验证码"
+            } else {
+                clearInterval(timer)
+                times = 10
+                button.removeAttribute('disabled')
+                button.innerHTML = '获取验证码'
+            }
+        }, 1000);
     }
 </script>
 </body>

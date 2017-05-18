@@ -1,5 +1,6 @@
 package com.imudges.web.manager_medicine_system.module;
 
+import com.imudges.web.manager_medicine_system.bean.CheckCode;
 import com.imudges.web.manager_medicine_system.bean.Doctor;
 import com.imudges.web.manager_medicine_system.bean.Patient;
 import com.imudges.web.manager_medicine_system.bean.User;
@@ -12,6 +13,7 @@ import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.json.JsonParser;
 import org.nutz.mvc.annotation.*;
 import sun.misc.Request;
 
@@ -136,6 +138,7 @@ public class PublicModule {
                          @Param("id_card") String idCard,
                          @Param("phone_num") String phoneNum,
                          @Param("password") String password,
+                         @Param("check_code") String checkCode,
                          HttpServletRequest request,
                          HttpSession session) {
         if (idCard == null || idCard.equals("") || password == null || password.equals("")) {
@@ -155,6 +158,7 @@ public class PublicModule {
                 request.setAttribute("msg","您的身份证号已经注册！");
                 return "jsp:public/signIn";
             }
+            //TODO 如果需要验证码，在此处检测
             patient.setName(name);
             patient.setSex(sex);
             patient.setPhoneNum(phoneNum);
@@ -187,6 +191,27 @@ public class PublicModule {
             request.setAttribute("code", -4);
         }
         return "jsp:public/signIn";
+    }
+
+    @At("public/signIn")
+    @Ok("json")
+    @Fail("http:500")
+    @Filters
+    public Object getCheckCode(@Param("id_card")String idCard,
+                               @Param("phone_num")String phoneNum,
+                               HttpServletRequest request){
+        Map<String,Object> res = new HashMap<>();
+        if(idCard == null || idCard.equals("") || phoneNum == null || phoneNum.equals("")){
+            res.put("code",-6);
+            return res;
+        }
+        CheckCode checkCode = new CheckCode();
+        checkCode.setContent("1234");
+        checkCode.setStartTime(System.currentTimeMillis() + "");
+        //过期时间 三十分钟之后
+        checkCode.setEndTime(System.currentTimeMillis() + 1800000 + "");
+        dao.insert(checkCode);
+        return "str";
     }
 
     @At("public/jump")
