@@ -76,6 +76,7 @@ public class PublicModule {
                         break;
                     case "2":
                         //患者
+
                         Patient patient = dao.fetch(Patient.class, Cnd.where("id", "=", user.getCustomerId()));
                         if (patient != null) {
 //                            result.put("code",0);
