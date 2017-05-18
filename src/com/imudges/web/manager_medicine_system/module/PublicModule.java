@@ -186,6 +186,7 @@ public class PublicModule {
                 dao.insert(user);
                 request.setAttribute("code", 0);
                 request.setAttribute("username", username);
+                request.setAttribute("redirect_url", "login.php");
             }
         } else {
             request.setAttribute("code", -4);

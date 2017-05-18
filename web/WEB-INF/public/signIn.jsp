@@ -4,14 +4,6 @@
 <head>
     <meta charset="utf-8">
     <title>${system_name}</title>
-    <%--<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->--%>
-    <%--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">--%>
-
-    <%--&lt;%&ndash;&lt;%&ndash;<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->&ndash;%&gt;&ndash;%&gt;--%>
-    <%--&lt;%&ndash;&lt;%&ndash;<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">&ndash;%&gt;&ndash;%&gt;--%>
-
-    <%--<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->--%>
-    <%--<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>--%>
     <meta name="description" content=""/>
     <meta name="keywords" content=""/>
     <meta name="robots" content=""/>
@@ -105,6 +97,7 @@
                     <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="goHome()"
                             style="margin-left: 5px;margin-right: 5px">跳转到登陆页面
                     </button>
+                    <hr/>
                     <button type="button" class="btn btn-default" data-dismiss="modal"
                             style="margin-top: 10px; margin-right: 5px">关闭
                     </button>
@@ -121,7 +114,7 @@
 
 <script type="text/javascript">
     function goHome() {
-
+        window.location.href='${ redirect_url}';
     }
     function commit() {
         if (document.getElementById("password").value == null || document.getElementById("password").value == "" || document.getElementById("re_password").value == null || document.getElementById("re_password").value == "") {
