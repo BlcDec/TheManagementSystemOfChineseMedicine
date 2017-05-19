@@ -261,11 +261,20 @@
         if(_department == -1){
             document.getElementById('submit_info').style.display = "";
             document.getElementById('submit_info').innerText = "请选择预约科室后提交";
+            return ;
         }
         //TODO 发送请求
+        var form = new FormData();
+        form.append("name",name);
+        form.append("sex",sex);
+        form.append("year",year);
+        form.append("phone_num",phoneNum);
+        form.append("appear_time",apperaTime);
+        form.append("department",_department);
         $.ajax({
-            url: 'main.php?book_id=' + book_id,
-            type: 'GET',
+            url: 'main.php',
+            type: 'POST',
+            //data:;
             async: true,
             cache: false,
             contentType: false,
