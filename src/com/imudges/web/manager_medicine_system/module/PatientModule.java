@@ -1,6 +1,7 @@
 package com.imudges.web.manager_medicine_system.module;
 
 import com.imudges.web.manager_medicine_system.bean.Patient;
+import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -27,7 +28,14 @@ public class PatientModule {
                        HttpSession session) {
 
         Patient patient = (Patient) session.getAttribute("patient");
+
+        String year = "";
+        for(int i = 6;i<=9;i++){
+            year +=patient.getIdCard().charAt(i) + "";
+        }
+
         request.setAttribute("name",patient.getName());
+        request.setAttribute("year", (Integer.parseInt(Toolkit.getCurrentYear()) - Integer.parseInt(year)) + "");
         request.setAttribute("patient", patient);
         return "jsp:patient/main";
     }

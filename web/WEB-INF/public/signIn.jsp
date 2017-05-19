@@ -50,8 +50,9 @@
                            class="form-control" placeholder="请输入短信验证码"
                            aria-describedby="sizing-addon2">
                     <span class="input-group-btn">
+                        <%//TODO 使用图片验证码通过后才能获取验证码%>
                             <button id="check-code-button" class="btn btn-info" type="button"
-                                    onclick="get_check_code()">获取验证码</button>
+                                    onclick="get_check_code()" >获取验证码</button>
                     </span>
                 </div>
             </div>

@@ -129,13 +129,13 @@
         } else {
             $.ajax({
                 url: 'get_crossingbook.php?book_id=' + book_id,
-                type: 'GET',
+                type: 'POST',
                 async: true,
                 cache: false,
                 contentType: false,
                 processData: false,
                 success: function (returndata) {
-                    document.getElementById(book_id).style.display = "none";
+
                 },
                 fail: function (returndata) {
 
