@@ -210,7 +210,7 @@
                 <div class="form-group" align="left">
                     <div>
                         <h4><span class="label label-warning" id="submit_info"
-                                  style="display: none;">请检查个人信息，完善预约信息后提交</span></h4>
+                                  style="display: none;">${msg}</span></h4>
                         <div>
                             <button type="button" class="btn btn-primary" onclick="do_upload()">提交</button>
                         </div>
@@ -244,16 +244,16 @@
         document.getElementById('department').value = department;
     }
     function do_upload() {
-        var name = document.getElementById('name');
-        var sex = document.getElementById('sex');
-        var year = document.getElementById('year');
-        var phoneNum = document.getElementById('phone_num');
-        var apperaTime = document.getElementById('appear_time');
-        if (name.value.length == 0 ||
-            sex.value.length == 0 ||
-            year.value.length == 0 ||
-            phoneNum.value.length == 0 ||
-            apperaTime.value.length == 0) {
+        var name = document.getElementById('name').value;
+        var sex = document.getElementById('sex').value;
+        var year = document.getElementById('year').value;
+        var phoneNum = document.getElementById('phone_num').value;
+        var apperaTime = document.getElementById('appear_time').value;
+        if (name.length == 0 ||
+            sex.length == 0 ||
+            year.length == 0 ||
+            phoneNum.length == 0 ||
+            apperaTime.length == 0) {
             document.getElementById('submit_info').style.display = "";
             document.getElementById('submit_info').innerText = "请完善信息后提交";
             return ;
@@ -263,27 +263,32 @@
             document.getElementById('submit_info').innerText = "请选择预约科室后提交";
             return ;
         }
-        //TODO 发送请求
-        var form = new FormData();
-        form.append("name",name);
-        form.append("sex",sex);
-        form.append("year",year);
-        form.append("phone_num",phoneNum);
-        form.append("appear_time",apperaTime);
-        form.append("department",_department);
         $.ajax({
-            url: 'main.php',
-            type: 'POST',
-            //data:;
+            url: 'main.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
+            type: 'GET',
             async: true,
             cache: false,
             contentType: false,
             processData: false,
             success: function (returndata) {
-                document.getElementById(book_id).style.display = "none";
+                var json = returndata;
+                var code = json.code;
+                if(code == 0){
+                    document.getElementById('submit_info').style.display = "";
+                    document.getElementById('submit_info').class = "label label-success";
+                    document.getElementById('submit_info').innerText = "预约成功！";
+                    return ;
+                }
+                if(code == -7){
+                    document.getElementById('submit_info').style.display = "";
+                    document.getElementById('submit_info').class = "label label-danger";
+                    document.getElementById('submit_info').innerText = "预约失败，每个用户只可预约一次";
+                    return ;
+                }
             },
             fail: function (returndata) {
-
+                document.getElementById('submit_info').innerText = "网络错误，预约失败";
+                document.getElementById('submit_info').style.display = "inline";
             }
         });
     }
