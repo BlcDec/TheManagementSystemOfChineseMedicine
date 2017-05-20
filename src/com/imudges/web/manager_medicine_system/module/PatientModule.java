@@ -22,7 +22,7 @@ import java.util.Map;
  */
 
 @IocBean
-@Filters({@By(type = AuthorityFilter.class, args = {"ioc:authorityFilter"})})
+@Filters({@By(type = PatientFilter.class, args = {"ioc:patientFilter"})})
 public class PatientModule {
     @Inject
     private Dao dao;

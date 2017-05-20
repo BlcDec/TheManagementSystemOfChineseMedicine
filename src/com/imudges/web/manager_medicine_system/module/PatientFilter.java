@@ -1,9 +1,6 @@
 package com.imudges.web.manager_medicine_system.module;
 
-import com.imudges.web.manager_medicine_system.bean.Doctor;
-import com.imudges.web.manager_medicine_system.bean.Patient;
 import com.imudges.web.manager_medicine_system.bean.User;
-import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -13,14 +10,13 @@ import org.nutz.mvc.ActionFilter;
 import org.nutz.mvc.View;
 import org.nutz.mvc.view.ServerRedirectView;
 
-import javax.print.Doc;
 import javax.servlet.http.Cookie;
-
+//TODO 需要重构，医患过滤器分开写，医生患者登录逻辑分开
 /**
- * 主过滤器,验证用户的登录状态
+ * 患者过滤器，验证用户的登录状态
  */
 @IocBean
-public class AuthorityFilter implements ActionFilter{
+public class PatientFilter implements ActionFilter{
     @Inject
     Dao dao;
 
@@ -29,7 +25,7 @@ public class AuthorityFilter implements ActionFilter{
         //获取User对象，如果获取失败，则说明用户未登录，跳转到login.php
         User user = (User) actionContext.getRequest().getSession().getAttribute("user");
         if (user == null){
-            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+            return new ServerRedirectView("/public/jump.php?redirect_url=patient_login.php");
         }
 
         String ak = null;
@@ -41,12 +37,12 @@ public class AuthorityFilter implements ActionFilter{
                 }
             }
         }catch (Exception e){
-            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+            return new ServerRedirectView("/public/jump.php?redirect_url=patient_login.php");
         }
 
         if(ak == null){
             //获取ak失败，返回登录页面
-            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+            return new ServerRedirectView("/public/jump.php?redirect_url=patient_login.php");
         }
         //注册之后设置一个ak
         if(user.getAk() == null || user.getAk().equals("")){
@@ -57,10 +53,10 @@ public class AuthorityFilter implements ActionFilter{
         //多端登录时，返回登录页面
         user = dao.fetch(User.class,Cnd.where("ak","=",ak));
         if(user == null){
-            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+            return new ServerRedirectView("/public/jump.php?redirect_url=patient_login.php");
         }
         if(!user.getAk().equals(ak)){
-            return new ServerRedirectView("/public/jump.php?redirect_url=login.php");
+            return new ServerRedirectView("/public/jump.php?redirect_url=patient_login.php");
         }
 
 //        user = dao.fetch(User.class,Cnd.where("A_AK","=",ak));
