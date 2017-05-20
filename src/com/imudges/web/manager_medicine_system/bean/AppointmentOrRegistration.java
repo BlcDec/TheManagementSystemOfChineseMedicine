@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * 预约/挂号信息
  */
-@Table("AA_APPONITMENT")
+@Table("AAAA_APPONITMENT")
 public class AppointmentOrRegistration {
     @Id
     private int id;
@@ -48,13 +48,11 @@ public class AppointmentOrRegistration {
     private int registrationFeeState;
 
     /**
-     * 患者是否缴纳药品费用
-     * -1：由于应该先缴纳挂号费，故默认初始值
-     * 1：已缴纳
-     * 0：未缴纳
+     * 缴纳预约费用时间
      * */
     @Column
-    private int medicalFeeState;
+    private Date payForTime;
+
 
     /**
      * 在线预约还是现场挂号
@@ -64,13 +62,19 @@ public class AppointmentOrRegistration {
     @Column
     private boolean isAppointment;
 
+    public Date getPayForTime() {
+        return payForTime;
+    }
+
+    public void setPayForTime(Date payForTime) {
+        this.payForTime = payForTime;
+    }
+
     public AppointmentOrRegistration() {
-        medicalFeeState = -1;
     }
 
     public AppointmentOrRegistration(boolean isAppointment) {
         this.isAppointment = isAppointment;
-        medicalFeeState = -1;
     }
 
     public int getId() {
@@ -119,14 +123,6 @@ public class AppointmentOrRegistration {
 
     public void setRegistrationFeeState(int registrationFeeState) {
         this.registrationFeeState = registrationFeeState;
-    }
-
-    public int getMedicalFeeState() {
-        return medicalFeeState;
-    }
-
-    public void setMedicalFeeState(int medicalFeeState) {
-        this.medicalFeeState = medicalFeeState;
     }
 
     public boolean isAppointment() {

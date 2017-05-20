@@ -208,7 +208,9 @@
                 </div>
                 <div class="form-group" align="left">
                     <div>
-                        <h4><span class="label label-warning" id="submit_info"
+                        <h4><span class="label label-success" id="success_info"
+                                  style="display: none;">${msg}</span></h4>
+                        <h4><span class="label label-warning" id="fail_info"
                                   style="display: none;">${msg}</span></h4>
                         <div>
                             <button type="button" class="btn btn-primary" onclick="do_upload()">提交</button>
@@ -255,13 +257,13 @@
             year.length == 0 ||
             phoneNum.length == 0 ||
             apperaTime.length == 0) {
-            document.getElementById('submit_info').style.display = "";
-            document.getElementById('submit_info').innerText = "请完善信息后提交";
+            document.getElementById('fail_info').style.display = "";
+            document.getElementById('fail_info').innerText = "请完善信息后提交";
             return ;
         }
         if(_department == -1){
-            document.getElementById('submit_info').style.display = "";
-            document.getElementById('submit_info').innerText = "请选择预约科室后提交";
+            document.getElementById('fail_info').style.display = "";
+            document.getElementById('fail_info').innerText = "请选择预约科室后提交";
             return ;
         }
         $.ajax({
@@ -275,21 +277,21 @@
                 var json = returndata;
                 var code = json.code;
                 if(code == 0){
-                    document.getElementById('submit_info').style.display = "";
-//                    document.getElementById('submit_info').class = "label label-success";
-                    document.getElementById('submit_info').innerText = "预约成功！";
+                    document.getElementById('success_info').style.display = "";
+                    document.getElementById('fail_info').style.display = "none";
+                    document.getElementById('success_info').innerText = "预约成功！";
                     return ;
                 }
                 if(code == -7){
-                    document.getElementById('submit_info').style.display = "";
-//                    document.getElementById('submit_info').class = "label label-danger";
-                    document.getElementById('submit_info').innerText = "预约失败，每个用户只可预约一次";
+                    document.getElementById('fail_info').style.display = "";
+                    document.getElementById('success_info').style.display = "none";
+                    document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
                     return ;
                 }
             },
             fail: function (returndata) {
-                document.getElementById('submit_info').innerText = "网络错误，预约失败";
-                document.getElementById('submit_info').style.display = "inline";
+                document.getElementById('fail_info').innerText = "网络错误，预约失败";
+                document.getElementById('fail_info').style.display = "inline";
             }
         });
     }

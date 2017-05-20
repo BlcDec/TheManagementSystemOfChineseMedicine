@@ -111,9 +111,12 @@
                 <a href="#" class="list-group-item disabled">
                     用户基本信息
                 </a>
-                <%--<a href="javascript:void(0);" class="list-group-item">用户名：${user.username}</a>--%>
-                <%--<a href="javascript:void(0);" class="list-group-item">姓名：${student.name}</a>--%>
-                <%--<a href="javascript:void(0);" class="list-group-item">专业：${student.profession}</a>--%>
+
+                <a href="javascript:void(0);" class="list-group-item">用户名：${user.username}</a>
+                <a href="javascript:void(0);" class="list-group-item">姓名：${patient.name}</a>
+                <a href="javascript:void(0);" class="list-group-item">身份证号：${patient.idCard}</a>
+                <a href="effect_appointment.php" class="list-group-item">已生效预约：${effective_appointment}条</a>
+                <a href="underway_appointment.php" class="list-group-item">正在进行中的预约：${underway_appointment}条</a>
                 <%--<a href="system_message.php" class="list-group-item">系统提醒--%>
                     <%--<%if((Integer)request.getAttribute("system_remind_number") != 0) {%>--%>
                     <%--<span class="badge" style="background-color: #67b168;">--%>

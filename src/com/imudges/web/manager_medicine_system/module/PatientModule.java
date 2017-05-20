@@ -2,6 +2,7 @@ package com.imudges.web.manager_medicine_system.module;
 
 import com.imudges.web.manager_medicine_system.bean.AppointmentOrRegistration;
 import com.imudges.web.manager_medicine_system.bean.Patient;
+import com.imudges.web.manager_medicine_system.bean.User;
 import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,7 +66,7 @@ public class PatientModule {
         Patient patient = (Patient) session.getAttribute("patient");
         Map<String, Object> map = new HashMap<>();
         //一个用户不可多次预约
-        if(dao.count(AppointmentOrRegistration.class, Cnd.where("patientIdCard","=",patient.getIdCard()))!=0){
+        if(dao.count(AppointmentOrRegistration.class, Cnd.where("patientIdCard","=",patient.getIdCard()).and("registrationFeeState","=","0"))!=0){
             map.put("code",-7);
             map.put("msg","预约失败，每个用户只可预约一次");
             request.setAttribute("patient", patient);
@@ -93,9 +95,89 @@ public class PatientModule {
     public Object userPage(HttpServletRequest request,
                            HttpSession session) {
         Patient patient = (Patient) session.getAttribute("patient");
+        //已生效的预约
+        List<AppointmentOrRegistration> lists = dao.query(AppointmentOrRegistration.class,
+                Cnd.where("patientIdCard","=",patient.getIdCard())
+                        .and("registrationFeeState","=","1")
+                        .and("isAppointment","=",true));
+        //正在进行中的预约
+        List<AppointmentOrRegistration> list = dao.query(AppointmentOrRegistration.class,
+                Cnd.where("patientIdCard","=",patient.getIdCard())
+                        .and("registrationFeeState","=","0")
+                        .and("isAppointment","=",true));
+
+        request.setAttribute("user",session.getAttribute("user"));
         request.setAttribute("name", patient.getName());
         request.setAttribute("patient", patient);
+        request.setAttribute("effective_appointment",lists.size());
+        request.setAttribute("underway_appointment",list.size());
         return "jsp:patient/user";
+    }
+
+    /**
+     * 正在进行的预约信息
+     * */
+    @At("patient/underway_appointment")
+    @Ok("re")
+    @Fail("http:500")
+    public Object underwayAppointment(HttpServletRequest request,
+                                      HttpSession session){
+        Patient patient = (Patient) session.getAttribute("patient");
+        User user = (User) session.getAttribute("user");
+        List<AppointmentOrRegistration> list = dao.query(AppointmentOrRegistration.class,
+                Cnd.where("patientIdCard","=",patient.getIdCard())
+                        .and("registrationFeeState","=","0")
+                        .and("isAppointment","=",true));
+        request.setAttribute("code",0);
+        request.setAttribute("msg","pageOk");
+        request.setAttribute("underway_appointment",list);
+        return "jsp:patient/underway_appointment";
+    }
+
+    /**
+     * 已生效的预约信息页面
+     * */
+    @At("patient/effect_appointment")
+    @Ok("re")
+    @Fail("http:500")
+    public Object effectAppointment(HttpServletRequest request,
+                                      HttpSession session){
+        Patient patient = (Patient) session.getAttribute("patient");
+        User user = (User) session.getAttribute("user");
+        List<AppointmentOrRegistration> list = dao.query(AppointmentOrRegistration.class,
+                Cnd.where("patientIdCard","=",patient.getIdCard())
+                        .and("registrationFeeState","=","1")
+                        .and("isAppointment","=",true));
+        request.setAttribute("code",0);
+        request.setAttribute("msg","pageOk");
+        request.setAttribute("effect_appointment",list);
+        return "jsp:patient/effect_appointment";
+    }
+
+
+    /**
+     * 在线支付挂号费
+     * */
+    @At("patient/pay_for_appointment")
+    @Ok("json")
+    @Fail("http:50")
+    public Object payForAppointment(@Param("appointment_id")String appointmentId,
+                                    HttpServletRequest request,
+                                    HttpSession session){
+        Patient patient = (Patient) session.getAttribute("patient");
+        Map<String ,String >res = new HashMap<>();
+        AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class
+                ,Cnd.where("id","=",appointmentId)
+                        .and("patientIdCard","=",patient.getIdCard()));
+        if(appointmentOrRegistration!=null){
+            appointmentOrRegistration.setRegistrationFeeState(1);
+            appointmentOrRegistration.setPayForTime(new Date(System.currentTimeMillis()));
+            dao.update(appointmentOrRegistration);
+            res.put("code","0");
+        } else {
+            res.put("code","-8");
+        }
+        return res;
     }
 
     @At("patient/search")
