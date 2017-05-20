@@ -107,6 +107,35 @@
                 <li class="active">个人中心</li>
             </ol>
 
+            <div class="list-group">
+                <a href="#" class="list-group-item disabled">
+                    用户基本信息
+                </a>
+                <%--<a href="javascript:void(0);" class="list-group-item">用户名：${user.username}</a>--%>
+                <%--<a href="javascript:void(0);" class="list-group-item">姓名：${student.name}</a>--%>
+                <%--<a href="javascript:void(0);" class="list-group-item">专业：${student.profession}</a>--%>
+                <%--<a href="system_message.php" class="list-group-item">系统提醒--%>
+                    <%--<%if((Integer)request.getAttribute("system_remind_number") != 0) {%>--%>
+                    <%--<span class="badge" style="background-color: #67b168;">--%>
+                        <%--<%=request.getAttribute("system_remind_number")%></span>--%>
+                    <%--<%} else {%>--%>
+                    <%--<%if((Integer)request.getAttribute("already_read_message") != 0) {%>--%>
+                    <%--<span class="badge">--%>
+                            <%--<%=request.getAttribute("already_read_message")%></span>--%>
+                    <%--<%}%>--%>
+                    <%--<%}%>--%>
+                <%--</a>--%>
+                <%--<a href="remind_me.php" class="list-group-item">帮我留意</a>--%>
+                <%--<a href="cancel_remind.php" class="list-group-item">我的留意<span class="badge"><%=request.getAttribute("remind_count")%></span></a>--%>
+                <%--<a href="user_books.php" class="list-group-item">我的书籍</a>--%>
+                <%--<a href="user_my_book_by_drift.php" class="list-group-item">已经接受的漂流<%if((Integer) request.getAttribute("code_record") == 0){%>--%>
+                    <%--<%List<BookCrossingBookRecord> bookCrossingBookRecords = (List<BookCrossingBookRecord>) request.getAttribute("book_list_record");%>--%>
+                    <%--<span class="badge"><%=bookCrossingBookRecords.size()%></span>--%>
+                    <%--<%} else {%>--%>
+                    <%--<span class="badge"><%=0%></span>--%>
+                    <%--<%}%></a>--%>
+            </div>
+
         </div>
     </div>
 </div>
