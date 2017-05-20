@@ -264,7 +264,7 @@
             return ;
         }
         $.ajax({
-            url: 'main.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
+            url: 'upload_appointment.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
             type: 'GET',
             async: true,
             cache: false,
@@ -275,13 +275,13 @@
                 var code = json.code;
                 if(code == 0){
                     document.getElementById('submit_info').style.display = "";
-                    document.getElementById('submit_info').class = "label label-success";
+//                    document.getElementById('submit_info').class = "label label-success";
                     document.getElementById('submit_info').innerText = "预约成功！";
                     return ;
                 }
                 if(code == -7){
                     document.getElementById('submit_info').style.display = "";
-                    document.getElementById('submit_info').class = "label label-danger";
+//                    document.getElementById('submit_info').class = "label label-danger";
                     document.getElementById('submit_info').innerText = "预约失败，每个用户只可预约一次";
                     return ;
                 }

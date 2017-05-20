@@ -12,6 +12,8 @@ import org.nutz.mvc.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by yangyang on 2017/5/18.
@@ -30,12 +32,7 @@ public class PatientModule {
     @GET
     public Object mainPage(HttpServletRequest request,
                            HttpSession session,
-                           @Param("name") String name,
-                           @Param("sex") String sex,
-                           @Param("year") String year,
-                           @Param("phone_num") String phoneNum,
-                           @Param("appear_time") String appearTime,
-                           @Param("department") String department) {
+                           @Param("year") String year) {
 
         Patient patient = (Patient) session.getAttribute("patient");
 
@@ -45,30 +42,6 @@ public class PatientModule {
                 year += patient.getIdCard().charAt(i) + "";
             }
         }
-        if(department != null && !department.equals("")){
-            //进入if表示从在线预约提交来的数据
-
-            //一个用户不可多次预约
-            if(dao.count(AppointmentOrRegistration.class, Cnd.where("patientIdCard","=",patient.getIdCard()))!=0){
-                request.setAttribute("code",-7);
-                request.setAttribute("msg","预约失败，每个用户只可预约一次");
-                request.setAttribute("patient", patient);
-                request.setAttribute("name", patient.getName());
-                return "jsp:patient/main";
-            }
-            AppointmentOrRegistration appointmentOrRegistration = new AppointmentOrRegistration(true);
-            appointmentOrRegistration.setAddTime(new Date(System.currentTimeMillis()));
-            appointmentOrRegistration.setAppearTime(appearTime);
-            appointmentOrRegistration.setDepartment(department);
-            appointmentOrRegistration.setPatientIdCard(patient.getIdCard());
-            appointmentOrRegistration.setRegistrationFeeState(0);//未支付挂号费
-            dao.insert(appointmentOrRegistration);
-            request.setAttribute("code",0);
-            request.setAttribute("msg","预约成功");
-            request.setAttribute("patient", patient);
-            request.setAttribute("name", patient.getName());
-            return "jsp:patient/main";
-        }
 
         request.setAttribute("name", patient.getName());
         request.setAttribute("year", (Integer.parseInt(Toolkit.getCurrentYear()) - Integer.parseInt(year)) + "");
@@ -77,6 +50,41 @@ public class PatientModule {
         return "jsp:patient/main";
     }
 
+    @At("patient/upload_appointment")
+    @Ok("json")
+    @Fail("http:500")
+    public Object uploadAppointment(HttpServletRequest request,
+                                    HttpSession session,
+                                    @Param("name") String name,
+                                    @Param("sex") String sex,
+                                    @Param("year") String year,
+                                    @Param("phone_num") String phoneNum,
+                                    @Param("appear_time") String appearTime,
+                                    @Param("department") String department){
+        Patient patient = (Patient) session.getAttribute("patient");
+        Map<String, Object> map = new HashMap<>();
+        //一个用户不可多次预约
+        if(dao.count(AppointmentOrRegistration.class, Cnd.where("patientIdCard","=",patient.getIdCard()))!=0){
+            map.put("code",-7);
+            map.put("msg","预约失败，每个用户只可预约一次");
+            request.setAttribute("patient", patient);
+            request.setAttribute("name", patient.getName());
+            return map;
+        }
+        AppointmentOrRegistration appointmentOrRegistration = new AppointmentOrRegistration(true);
+        appointmentOrRegistration.setAddTime(new Date(System.currentTimeMillis()));
+        appointmentOrRegistration.setAppearTime(appearTime);
+        appointmentOrRegistration.setDepartment(department);
+        appointmentOrRegistration.setPatientIdCard(patient.getIdCard());
+        appointmentOrRegistration.setRegistrationFeeState(0);//未支付挂号费
+        dao.insert(appointmentOrRegistration);
+
+        map.put("code",0);
+        map.put("msg","预约成功");
+        request.setAttribute("patient", patient);
+        request.setAttribute("name", patient.getName());
+        return map;
+    }
 
     @At("patient/user")
     @Ok("re")
