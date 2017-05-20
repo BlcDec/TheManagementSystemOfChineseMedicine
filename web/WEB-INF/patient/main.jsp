@@ -173,10 +173,9 @@
                 <div class="form-group" align="left">
                     <div class="input-group">
                         <span class="input-group-addon">预约科室</span>
-                        <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                选择预约科室
+                        <div class="btn-group">
+                            <button id="btn_set_department" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                选择预约科室 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                 <li><a href="javascript:set_department('呼吸内科')">呼吸内科</a></li>
@@ -240,7 +239,9 @@
     function set_department(department) {
         document.getElementById('department_info').style.display = "";
         document.getElementById('department_info').innerText = "当前选择的科室：" + department;
+
         _department = department;
+        document.getElementById('btn_set_department').innerText = _department;
         document.getElementById('department').value = department;
     }
     function do_upload() {
