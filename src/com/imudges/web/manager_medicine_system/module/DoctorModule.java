@@ -133,4 +133,36 @@ public class DoctorModule {
         request.setAttribute("msg", "注销成功！");
         return "jsp:public/graph_jump";
     }
+
+    /**
+     * 诊断窗口
+     * */
+    @At("doctor/diagnose")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object diagnosePage(HttpServletRequest request,
+                          HttpSession session){
+        User user = (User) request.getAttribute("user");
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        request.setAttribute("name",doctor.getName());
+        request.setAttribute("code", 0);
+        return "jsp:doctor/diagnose";
+    }
+
+    /**
+     * 收费窗口
+     * */
+    @At("doctor/collection")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object collectionPage(HttpServletRequest request,
+                           HttpSession session){
+        User user = (User) request.getAttribute("user");
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        request.setAttribute("name",doctor.getName());
+        request.setAttribute("code", 0);
+        return "jsp:doctor/collection";
+    }
 }

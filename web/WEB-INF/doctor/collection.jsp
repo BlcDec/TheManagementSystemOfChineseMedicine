@@ -84,10 +84,10 @@
             <ul class="nav" id="main-menu">
 
 
-                <li class="active-link">
+                <li >
                     <a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>
                 </li>
-                <li>
+                <li class="active-link">
                     <a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>
                 </li>
                 <%--/收款窗口是指收取药品费用的窗口--%>
@@ -105,12 +105,12 @@
         <div id="page-inner">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>挂号窗口</h2>
+                    <h2>收款窗口</h2>
                 </div>
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">挂号窗口</li>
+                <li class="active">收款窗口</li>
             </ol>
         </div>
     </div>
