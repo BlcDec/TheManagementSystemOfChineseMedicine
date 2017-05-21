@@ -92,7 +92,7 @@ public class PublicModule {
                     isLogin = false;
                 }
             } else {
-                request.setAttribute("redirect_url", "login.php");
+                request.setAttribute("redirect_url", "patient_login.php");
                 request.setAttribute("code", -2);
             }
 
@@ -104,32 +104,7 @@ public class PublicModule {
         }
     }
 
-    /**
-     * 医生登录GET
-     * */
-    @Filters(@By(type = ConfigFilter.class))
-    @At("public/doctor_login")
-    @Ok("re")
-    @Fail("http:500")
-    @GET
-    public Object doctorLoginPage(@Param("redirect_url") String redirectUrl,
-                                  HttpServletRequest request) {
 
-        request.setAttribute("code", 0);
-        return "jsp:public/patient_login";
-    }
-
-    @Filters(@By(type = ConfigFilter.class))
-    @At("public/doctor_login")
-    @Ok("re")
-    @Fail("http:500")
-    @POST
-    public Object doctorLogin(@Param("redirect_url") String redirectUrl,
-                              HttpServletRequest request) {
-        doctorLoginPage(redirectUrl,request);
-        request.setAttribute("code", 0);
-        return "jsp:public/patient_login";
-    }
 
     @Filters(@By(type = ConfigFilter.class))
     @At("public/signIn")

@@ -74,7 +74,7 @@
 
             <span class="logout-spn">
                   <a style="color:#fff;">欢迎你,</a>
-                <a href="user.php" style="color:#fff;">${name}</a>
+                <a style="color:#fff;">${name}医生</a>
             </span>
         </div>
     </div>
@@ -95,7 +95,7 @@
                     <a href="collection.php"><i class="glyphicon glyphicon-search"></i>收款窗口</a>
                 </li>
                 <li>
-                    <a href="../public/logout.php"><i class="fa fa-home"></i>注销登录</a>
+                    <a href="logout.php"><i class="fa fa-home"></i>注销登录</a>
                 </li>
             </ul>
         </div>
