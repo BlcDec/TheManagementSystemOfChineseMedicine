@@ -1,5 +1,6 @@
 package com.imudges.web.manager_medicine_system.module;
 
+import com.imudges.web.manager_medicine_system.bean.Doctor;
 import com.imudges.web.manager_medicine_system.bean.User;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;

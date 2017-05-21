@@ -36,9 +36,9 @@ public class Doctor {
     private String num;//编号
 
     /**
-     * 挂号
-     * 诊断
-     * 收款
+     * 挂号 0
+     * 诊断 1
+     * 收款 2
      * */
     @Column("A_POSITION")
     private String position;//职位，身份

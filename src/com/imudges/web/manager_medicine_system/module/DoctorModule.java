@@ -100,6 +100,20 @@ public class DoctorModule {
                           HttpSession session){
         User user = (User) request.getAttribute("user");
         Doctor doctor = (Doctor) session.getAttribute("doctor");
+
+        //限制不同医生的窗口
+        switch (doctor.getPosition()){
+            //诊断
+            case "1":
+                request.setAttribute("redirect_url","diagnose.php");
+                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                return "jsp:doctor/graph_jump";
+            //收费
+            case "2":
+                request.setAttribute("redirect_url","collection.php");
+                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                return "jsp:doctor/graph_jump";
+        }
         request.setAttribute("name",doctor.getName());
         request.setAttribute("code", 0);
         return "jsp:doctor/windows";
@@ -145,6 +159,19 @@ public class DoctorModule {
                           HttpSession session){
         User user = (User) request.getAttribute("user");
         Doctor doctor = (Doctor) session.getAttribute("doctor");
+        //限制不同医生的窗口
+        switch (doctor.getPosition()){
+            //挂号
+            case "0":
+                request.setAttribute("redirect_url","windows.php");
+                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                return "jsp:doctor/graph_jump";
+            //收费
+            case "2":
+                request.setAttribute("redirect_url","collection.php");
+                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                return "jsp:doctor/graph_jump";
+        }
         request.setAttribute("name",doctor.getName());
         request.setAttribute("code", 0);
         return "jsp:doctor/diagnose";
@@ -161,8 +188,34 @@ public class DoctorModule {
                            HttpSession session){
         User user = (User) request.getAttribute("user");
         Doctor doctor = (Doctor) session.getAttribute("doctor");
+        //限制不同医生的窗口
+        switch (doctor.getPosition()){
+            //挂号
+            case "0":
+                request.setAttribute("redirect_url","windows.php");
+                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                return "jsp:doctor/graph_jump";
+            //诊断
+            case "1":
+                request.setAttribute("redirect_url","diagnose.php");
+                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                return "jsp:doctor/graph_jump";
+        }
         request.setAttribute("name",doctor.getName());
         request.setAttribute("code", 0);
         return "jsp:doctor/collection";
     }
+
+    /**
+     * 跳转界面
+     * */
+    @At("doctor/jump")
+    @Ok("re")
+    @Fail("http:500")
+    @Filters
+    public String jump(@Param("redirect_url") String redirectUrl, HttpServletRequest request) {
+        request.setAttribute("redirect_url", redirectUrl);
+        return "jsp:doctor/jump";
+    }
+
 }
