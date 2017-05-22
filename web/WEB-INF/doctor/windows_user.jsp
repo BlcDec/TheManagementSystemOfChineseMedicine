@@ -116,7 +116,6 @@
                 <a href="javascript:void(0);" class="list-group-item">姓名：${patient.name}</a>
                 <a href="javascript:void(0);" class="list-group-item">身份证号：${patient.idCard}</a>
                 <a href="effect_appointment.php" class="list-group-item">已生效预约：${effective_appointment}条</a>
-                <a href="effect_registration.php" class="list-group-item">已生效挂号：${effective_registration}条</a>
                 <a href="underway_appointment.php" class="list-group-item">正在进行中的预约：${underway_appointment}条</a>
                 <%--<a href="system_message.php" class="list-group-item">系统提醒--%>
                     <%--<%if((Integer)request.getAttribute("system_remind_number") != 0) {%>--%>

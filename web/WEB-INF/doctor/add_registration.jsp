@@ -74,7 +74,7 @@
 
             <span class="logout-spn">
                   <a style="color:#fff;">欢迎你,</a>
-                <a href="user.php" style="color:#fff;">${name}</a>
+                <a href="user.php" style="color:#fff;">${name}医生</a>
             </span>
         </div>
     </div>
@@ -85,16 +85,17 @@
 
 
                 <li class="active-link">
-                    <a href="main.php"><i class="glyphicon glyphicon-plus"></i>在线预约</a>
+                    <a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>
                 </li>
                 <li>
-                    <a href="user.php"><i class="glyphicon glyphicon-user"></i>个人中心</a>
+                    <a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>
+                </li>
+                <%--/收款窗口是指收取药品费用的窗口--%>
+                <li>
+                    <a href="collection.php"><i class="glyphicon glyphicon-search"></i>收款窗口</a>
                 </li>
                 <li>
-                    <a href="search.php"><i class="glyphicon glyphicon-search"></i>药品检索</a>
-                </li>
-                <li>
-                    <a href="../public/logout.php"><i class="fa fa-home"></i>注销登录</a>
+                    <a href="logout.php"><i class="fa fa-home"></i>注销登录</a>
                 </li>
             </ul>
         </div>
@@ -106,12 +107,13 @@
         <div id="page-inner">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>在线预约</h2>
+                    <h2>添加挂号</h2>
                 </div>
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">在线预约</li>
+                <li class="active"><a href="windows.php">挂号窗口</a></li>
+                <li class="active">添加挂号</li>
             </ol>
 
             <form id="add_form" action="add.php" method="post" enctype="multipart/form-data">
@@ -125,13 +127,13 @@
                 <%--&lt;%&ndash;</span>&ndash;%&gt;--%>
                 <%--</div>--%>
                 <%--</div>--%>
-                <% Patient patient = (Patient) request.getAttribute("patient");%>
-                <%if (patient != null) {%>
-                <span class="label label-warning" id="get_book_info" style="display: none;">书籍信息获取失败，请手动输入</span>
+                <%--<% Patient patient = (Patient) request.getAttribute("patient");%>--%>
+                <%--<%if (patient != null) {%>--%>
+                <%--<span class="label label-warning" id="get_book_info" style="display: none;">书籍信息获取失败，请手动输入</span>--%>
                 <div class="form-group" align="left">
                     <div class="input-group">
                         <span class="input-group-addon">姓名</span>
-                        <input type="text" id="name" name="name" value="<%=patient.getName()%>" placeholder="请确认姓名"
+                        <input type="text" id="name" name="name"  placeholder="输入患者姓名"
                                class="form-control"
                                aria-describedby="sizing-addon2">
                     </div>
@@ -139,7 +141,7 @@
                 <div class="form-group" align="left">
                     <div class="input-group">
                         <span class="input-group-addon">性别</span>
-                        <input type="text" id="sex" name="sex" value="<%=patient.getSex()%>" placeholder="请输入性别"
+                        <input type="text" id="sex" name="sex"  placeholder="输入患者性别"
                                class="form-control"
                                aria-describedby="sizing-addon2">
                     </div>
@@ -147,16 +149,24 @@
                 <div class="form-group" align="left">
                     <div class="input-group">
                         <span class="input-group-addon">年龄</span>
-                        <input type="text" id="year" name="year" value="<%=request.getAttribute("year")%>"
-                               placeholder="输入年龄让我们能够提高对您病情的判断"
+                        <input type="text" id="year" name="year"
+                               placeholder="输入患者年龄"
                                class="form-control"
                                aria-describedby="sizing-addon2">
                     </div>
                 </div>
+                    <div class="form-group" align="left">
+                        <div class="input-group">
+                            <span class="input-group-addon">身份证号</span>
+                            <input type="text" id="id_card" name="id_card" placeholder="输入患者身份证号"
+                                   class="form-control"
+                                   aria-describedby="sizing-addon2">
+                        </div>
+                    </div>
                 <div class="form-group" align="left">
                     <div class="input-group">
-                        <span class="input-group-addon">手机号</span>
-                        <input type="text" id="phone_num" name="phone_num" placeholder="输入您家人或者您的手机号"
+                        <span class="input-group-addon">患者手机号</span>
+                        <input type="text" id="phone_num" name="phone_num" placeholder="输入患者家人或者患者本人手机号"
                                class="form-control"
                                aria-describedby="sizing-addon2">
                     </div>
@@ -172,10 +182,10 @@
                 </div>
                 <div class="form-group" align="left">
                     <div class="input-group">
-                        <span class="input-group-addon">预约科室</span>
+                        <span class="input-group-addon">挂号科室</span>
                         <div class="btn-group">
                             <button id="btn_set_department" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                选择预约科室 <span class="caret"></span>
+                                选择挂号科室 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                 <li><a href="javascript:set_department('呼吸内科')">呼吸内科</a></li>
@@ -189,22 +199,6 @@
                             <span class="label label-info" style="display: none;margin-left: 10px" id="department_info">info</span>
                         </div>
                     </div>
-                    <%--<div class="btn-group" >--%>
-                    <%--<span class="input-group-addon">预约科室</span>--%>
-                    <%--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"--%>
-                    <%--aria-haspopup="true" aria-expanded="false">--%>
-                    <%--内科<span class="caret"></span>--%>
-                    <%--</button>--%>
-                    <%--<ul class="dropdown-menu">--%>
-                    <%--<li><a href="#">呼吸内科</a></li>--%>
-                    <%--<li><a href="#">内分泌科</a></li>--%>
-                    <%--<li><a href="#">精神科</a></li>--%>
-                    <%--<li role="separator" class="divider"></li>--%>
-                    <%--<li><a href="#">老年科</a></li>--%>
-                    <%--<li><a href="#">儿童科</a></li>--%>
-                    <%--<li><a href="#">牙科</a></li>--%>
-                    <%--</ul>--%>
-                    <%--</div>--%>
                 </div>
                 <div class="form-group" align="left">
                     <div>
@@ -217,7 +211,6 @@
                         </div>
                     </div>
                 </div>
-                <%}%>
             </form>
 
 
@@ -252,6 +245,7 @@
         var year = document.getElementById('year').value;
         var phoneNum = document.getElementById('phone_num').value;
         var apperaTime = document.getElementById('appear_time').value;
+        var idCard = document.getElementById('id_card').value;
         if (name.length == 0 ||
             sex.length == 0 ||
             year.length == 0 ||
@@ -267,7 +261,7 @@
             return ;
         }
         $.ajax({
-            url: 'upload_appointment.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
+            url: 'add_registration_msg.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department + '&id_card=' + idCard,
             type: 'GET',
             async: true,
             cache: false,
@@ -279,18 +273,24 @@
                 if(code == 0){
                     document.getElementById('success_info').style.display = "";
                     document.getElementById('fail_info').style.display = "none";
-                    document.getElementById('success_info').innerText = "预约成功！";
+                    document.getElementById('success_info').innerText = "挂号成功！";
                     return ;
                 }
                 if(code == -7){
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
+                    document.getElementById('fail_info').innerText = "挂号失败，每个挂号只可预约一次";
+                    return ;
+                }
+                if(code == -9){
+                    document.getElementById('fail_info').style.display = "";
+                    document.getElementById('success_info').style.display = "none";
+                    document.getElementById('fail_info').innerText = "挂号失败，患者信息有误";
                     return ;
                 }
             },
             fail: function (returndata) {
-                document.getElementById('fail_info').innerText = "网络错误，预约失败";
+                document.getElementById('fail_info').innerText = "网络错误，挂号失败";
                 document.getElementById('fail_info').style.display = "inline";
             }
         });

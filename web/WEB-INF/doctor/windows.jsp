@@ -112,6 +112,14 @@
                 <li class="active">中医药管理系统</li>
                 <li class="active">挂号窗口</li>
             </ol>
+
+            <a href="javascript:void(0);" class="list-group-item">个人信息</a>
+            <a href="javascript:void(0);" class="list-group-item">修改密码</a>
+            <a href="add_registration.php" class="list-group-item">添加挂号</a>
+            <a href="javascript:void(0);" class="list-group-item">缴纳挂号费（为预约用户）</a>
+
+
+
         </div>
     </div>
 </div>
