@@ -3,7 +3,7 @@
 <html lang="">
 <head>
     <meta charset="utf-8">
-    <title>${system_name}</title>
+    <title>中医药管理系统（医生端）</title>
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -22,9 +22,9 @@
 </head>
 <body class="login">
 <section>
-    <h1><strong>${system_name}</strong></h1>
-    <form method="post" action="login.php">
-        <input type="text" name="username" placeholder="身份证号" value="152727199704062710"/>
+    <h1><strong>中医药管理系统（医生端）</strong></h1>
+    <form method="post" action="doctor_login.php">
+        <input type="text" name="username" placeholder="身份证号" value="152727199704062700"/>
         <input placeholder="密码" name="password" type="password" value="123"/>
         <button class="blue">登录</button>
     </form>
@@ -38,7 +38,7 @@
     <p style="color: red;">请求参数错误</p>
     <%}%>
     <div>
-        <p><a href="signIn.php">注册</a></p>
+        <p><a href="signIn.php" style="display: none">注册</a></p>
         <p><a href="forgetpsw.php">忘记密码</a></p>
     </div>
 </section>

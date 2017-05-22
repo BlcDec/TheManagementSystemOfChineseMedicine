@@ -4,10 +4,12 @@ import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
+import java.util.Date;
+
 /**
  * 医生
  */
-@Table("AA_DOCTOR")
+@Table("AAA_DOCTOR")
 public class Doctor {
     @Id
     private int id;
@@ -33,12 +35,25 @@ public class Doctor {
     @Column
     private String num;//编号
 
+    /**
+     * 挂号 0
+     * 诊断 1
+     * 收款 2
+     * */
     @Column("A_POSITION")
     private String position;//职位，身份
 
     @Column
-    private String addTime;//进入医院时间
+    private Date addTime;//进入医院时间
 
+    /**
+     * 呼吸内科
+     * 内分泌科
+     * 神经内科
+     * 老年科
+     * 儿童科
+     * 牙科
+     * */
     @Column
     private String departmentId;//部门id
 
@@ -112,11 +127,11 @@ public class Doctor {
         this.position = position;
     }
 
-    public String getAddTime() {
+    public Date getAddTime() {
         return addTime;
     }
 
-    public void setAddTime(String addTime) {
+    public void setAddTime(Date addTime) {
         this.addTime = addTime;
     }
 

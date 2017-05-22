@@ -143,4 +143,9 @@ public class Toolkit {
         String res = Year + Month + Day;
         return res;
     }
+
+    public static String getCurrentYear(){
+        String Year = Calendar.getInstance().get(Calendar.YEAR) + "";
+        return Year;
+    }
 }

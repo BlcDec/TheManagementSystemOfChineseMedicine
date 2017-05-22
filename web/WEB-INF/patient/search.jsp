@@ -107,6 +107,21 @@
                 <li class="active">药品检索</li>
             </ol>
 
+            <hr/>
+            <div class="row">
+                <form method="post" action="search.php">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <input id="search_content" name="book_info" type="text" class="form-control"
+                                   placeholder="请输入关键字搜索你需要的药品">
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">搜索</button>
+                        </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <h1><span class="label label-info">尚未开发，敬请期待...</span></h1>
         </div>
     </div>
 </div>
@@ -129,13 +144,13 @@
         } else {
             $.ajax({
                 url: 'get_crossingbook.php?book_id=' + book_id,
-                type: 'GET',
+                type: 'POST',
                 async: true,
                 cache: false,
                 contentType: false,
                 processData: false,
                 success: function (returndata) {
-                    document.getElementById(book_id).style.display = "none";
+
                 },
                 fail: function (returndata) {
 

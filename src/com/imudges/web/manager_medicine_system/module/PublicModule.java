@@ -27,37 +27,43 @@ import java.util.Map;
 
 
 @IocBean
-//@Filters(@By(type = AuthorityFilter.class, args = {"ioc:authorityFilter"}))
+@Filters(@By(type = PatientFilter.class, args = {"ioc:patientFilter"}))
 public class PublicModule {
     @Inject
     Dao dao;
 
+    /**
+     * 患者登录GET
+     * */
     @Filters(@By(type = ConfigFilter.class))
-    @At("public/login")
+    @At("public/patient_login")
     @Ok("re")
     @Fail("http:500")
     @GET
-    public Object loginPage(HttpServletRequest request,
-                            @Param("redirect_url") String redirectUrl) {
+    public Object patientLoginPage(HttpServletRequest request,
+                                   @Param("redirect_url") String redirectUrl) {
 
         request.setAttribute("code", 0);
-        return "jsp:public/login";
+        return "jsp:public/patient_login";
     }
 
+    /**
+     * 患者登录
+     * */
     @Filters(@By(type = ConfigFilter.class))
-    @At("public/login")
+    @At("public/patient_login")
     @Ok("re")
     @Fail("http:500")
     @POST
-    public Object login(@Param("username") String username,
-                        @Param("password") String password,
-                        HttpSession session,
-                        HttpServletRequest request,
-                        HttpServletResponse response) {
+    public Object patientLogin(@Param("username") String username,
+                               @Param("password") String password,
+                               HttpSession session,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
         boolean isLogin = false;
         if (username == null || password == null || username.equals("") || password.equals("")) {
             //请求参数错误
-            request.setAttribute("redirect_url", "login.php");
+            request.setAttribute("redirect_url", "patient_login.php");
             request.setAttribute("code", -1);
         } else {
             //请求参数正确
@@ -68,45 +74,25 @@ public class PublicModule {
                 //设置Cookie
                 String ak = MD5.encryptTimeStamp(System.currentTimeMillis() + "");
                 javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie("ak", ak);
-                cookie.setMaxAge(365*24*3600);//时间一年
+                cookie.setMaxAge(365 * 24 * 3600);//时间一年
                 cookie.setPath("/");
                 cookie.setHttpOnly(true);
                 response.addCookie(cookie);
                 user.setAk(ak);
                 dao.update(user);
-                switch (user.getType()) {
-                    case "0":
-
-                        break;
-                    case "1":
-                        //医生
-                        Doctor doctor = dao.fetch(Doctor.class, Cnd.where("A_USERID", "=", user.getId()));
-                        if (doctor != null) {
-//                            result.put("code",0);
-//                            result.put("ak",doctor.getAk());
-//                            result.put("name",doctor.getName());
-                            isLogin = true;
-                        } else {
-                            isLogin = false;
-                        }
-                        break;
-                    case "2":
-                        //患者
-
-                        Patient patient = dao.fetch(Patient.class, Cnd.where("A_USERID", "=", user.getId()));
-                        if (patient != null) {
-                            request.setAttribute("redirect_url", "main.php");
-                            request.setAttribute("name",patient.getName());
-                            session.setAttribute("patient",patient);
-                            request.setAttribute("code", 0);
-                            isLogin = true;
-                        } else {
-                            isLogin = false;
-                        }
-                        break;
+                //患者
+                Patient patient = dao.fetch(Patient.class, Cnd.where("A_USERID", "=", user.getId()));
+                if (patient != null) {
+                    request.setAttribute("redirect_url", "main.php");
+                    request.setAttribute("name", patient.getName());
+                    session.setAttribute("patient", patient);
+                    request.setAttribute("code", 0);
+                    isLogin = true;
+                } else {
+                    isLogin = false;
                 }
             } else {
-                request.setAttribute("redirect_url", "login.php");
+                request.setAttribute("redirect_url", "patient_login.php");
                 request.setAttribute("code", -2);
             }
 
@@ -114,9 +100,11 @@ public class PublicModule {
         if (isLogin) {
             return ">>:../patient/main.php";
         } else {
-            return "jsp:public/login";
+            return "jsp:public/patient_login";
         }
     }
+
+
 
     @Filters(@By(type = ConfigFilter.class))
     @At("public/signIn")
@@ -151,12 +139,12 @@ public class PublicModule {
         try {
             if (idCard.length() != 18) {
                 request.setAttribute("code", -5);
-                request.setAttribute("msg","身份证号长度错误");
+                request.setAttribute("msg", "身份证号长度错误");
                 return "jsp:public/signIn";
             }
             if (dao.fetch(Patient.class, Cnd.where("A_IDCARD", "=", idCard)) != null) {
-                request.setAttribute("code",-6);
-                request.setAttribute("msg","您的身份证号已经注册！");
+                request.setAttribute("code", -6);
+                request.setAttribute("msg", "您的身份证号已经注册！");
                 return "jsp:public/signIn";
             }
             //TODO 如果需要验证码，在此处检测
@@ -181,9 +169,9 @@ public class PublicModule {
                 String username = idCard;
                 User user = new User(p, username, password);
                 dao.insert(user);
-                user = dao.fetch(User.class,Cnd.where("id","=",user.getId()));
+                user = dao.fetch(User.class, Cnd.where("id", "=", user.getId()));
                 patient.setUserId(user.getId() + "");
-                session.setAttribute("patient",p);
+                session.setAttribute("patient", p);
                 request.setAttribute("code", 0);
                 request.setAttribute("username", username);
                 request.setAttribute("redirect_url", "login.php");
@@ -198,12 +186,12 @@ public class PublicModule {
     @Ok("json")
     @Fail("http:500")
     @Filters
-    public Object getCheckCode(@Param("id_card")String idCard,
-                               @Param("phone_num")String phoneNum,
-                               HttpServletRequest request){
-        Map<String,Object> res = new HashMap<>();
-        if(idCard == null || idCard.equals("") || phoneNum == null || phoneNum.equals("")){
-            res.put("code",-6);
+    public Object getCheckCode(@Param("id_card") String idCard,
+                               @Param("phone_num") String phoneNum,
+                               HttpServletRequest request) {
+        Map<String, Object> res = new HashMap<>();
+        if (idCard == null || idCard.equals("") || phoneNum == null || phoneNum.equals("")) {
+            res.put("code", -6);
             return res;
         }
         CheckCode checkCode = new CheckCode();
@@ -219,8 +207,8 @@ public class PublicModule {
     @Ok("re")
     @Fail("http:500")
     @Filters
-    public String jump(@Param("redirect_url")String redirectUrl, HttpServletRequest request){
-        request.setAttribute("redirect_url",redirectUrl);
+    public String jump(@Param("redirect_url") String redirectUrl, HttpServletRequest request) {
+        request.setAttribute("redirect_url", redirectUrl);
         return "jsp:public/jump";
     }
 
@@ -231,22 +219,23 @@ public class PublicModule {
     @Filters
     public String logout(HttpServletRequest request,
                          HttpServletResponse response,
-                         HttpSession session){
+                         HttpSession session) {
         //清除用户的AK信息
         User user = (User) session.getAttribute("user");
         try {
             user.setAk("");
             dao.update(user);
             String s = request.getContextPath();
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
         javax.servlet.http.Cookie cookie = new Cookie("ak", "hupeng");
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(365*24*3600);
+        cookie.setMaxAge(365 * 24 * 3600);
         response.addCookie(cookie);
         session.removeAttribute("user");
-        request.setAttribute("redirect_url", "login.php");
-        request.setAttribute("msg","注销成功！");
+        request.setAttribute("redirect_url", "patient_login.php");
+        request.setAttribute("msg", "注销成功！");
         return "jsp:public/graph_jump";
     }
 }
