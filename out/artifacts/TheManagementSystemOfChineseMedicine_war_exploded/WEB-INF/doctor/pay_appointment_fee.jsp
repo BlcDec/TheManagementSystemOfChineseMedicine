@@ -110,13 +110,37 @@
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">挂号窗口</li>
+                <li class="active"><a href="windows.php">挂号窗口</a></li>
+                <li class="active">缴纳预约患者挂号费</li>
             </ol>
 
-            <a href="javascript:void(0);" class="list-group-item">个人信息</a>
-            <a href="javascript:void(0);" class="list-group-item">修改密码</a>
-            <a href="add_registration.php" class="list-group-item">添加挂号</a>
-            <a href="pay_appointment_fee.php" class="list-group-item">缴纳挂号费（为预约用户）</a>
+            <div class="form-group" align="left">
+                <div class="input-group">
+                    <span class="input-group-addon">预约号码</span>
+                    <input type="text" id="appointment_num" name="appointment_num" placeholder="请输入患者的预约号"
+                           class="form-control"
+                           aria-describedby="sizing-addon2">
+                </div>
+            </div>
+            <div class="form-group" align="left">
+                <div class="input-group">
+                    <span class="input-group-addon">身份证号</span>
+                    <input type="text" id="id_card" name="id_card" placeholder="请输入患者身份证号"
+                           class="form-control"
+                           aria-describedby="sizing-addon2">
+                </div>
+            </div>
+            <div class="form-group" align="left">
+                <div>
+                    <h4><span class="label label-success" id="success_info"
+                              style="display: none;">${msg}</span></h4>
+                    <h4><span class="label label-warning" id="fail_info"
+                              style="display: none;">${msg}</span></h4>
+                    <div>
+                        <button type="button" class="btn btn-primary" onclick="pay_appointment_fee()">提交</button>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -136,37 +160,17 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
-    var _department = -1;
-    function set_department(department) {
-        document.getElementById('department_info').style.display = "";
-        document.getElementById('department_info').innerText = "当前选择的科室：" + department;
-
-        _department = department;
-        document.getElementById('btn_set_department').innerText = _department;
-        document.getElementById('department').value = department;
-    }
-    function do_upload() {
-        var name = document.getElementById('name').value;
-        var sex = document.getElementById('sex').value;
-        var year = document.getElementById('year').value;
-        var phoneNum = document.getElementById('phone_num').value;
-        var apperaTime = document.getElementById('appear_time').value;
-        if (name.length == 0 ||
-            sex.length == 0 ||
-            year.length == 0 ||
-            phoneNum.length == 0 ||
-            apperaTime.length == 0) {
+    function pay_appointment_fee() {
+        var idCard = document.getElementById('id_card').value;
+        var appointment_num = document.getElementById('appointment_num').value;
+        if (idCard.length == 0 ||
+            appointment_num.length == 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请完善信息后提交";
             return ;
         }
-        if(_department == -1){
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请选择预约科室后提交";
-            return ;
-        }
         $.ajax({
-            url: 'upload_appointment.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
+            url: 'commit_appointment_fee.php?' + 'id_card=' + idCard + '&appointment_num=' + appointment_num,
             type: 'GET',
             async: true,
             cache: false,
@@ -178,19 +182,30 @@
                 if(code == 0){
                     document.getElementById('success_info').style.display = "";
                     document.getElementById('fail_info').style.display = "none";
-                    document.getElementById('success_info').innerText = "预约成功！";
+                    document.getElementById('success_info').innerText = "缴纳成功！";
                     return ;
                 }
-                if(code == -7){
+                if(code == -1){
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
+                    document.getElementById('fail_info').innerText = "缴纳失败，请求参数错误";
+                    return ;
+                }
+                if(code == -5){
+                    document.getElementById('fail_info').style.display = "";
+                    document.getElementById('success_info').style.display = "none";
+                    document.getElementById('fail_info').innerText = "缴纳失败，身份证号错误";
+                    return ;
+                }
+                if(code == -10){
+                    document.getElementById('fail_info').style.display = "";
+                    document.getElementById('success_info').style.display = "none";
+                    document.getElementById('fail_info').innerText = "缴纳失败，预约号码不正确";
                     return ;
                 }
             },
             fail: function (returndata) {
-                document.getElementById('success_info').style.display = "none";
-                document.getElementById('fail_info').innerText = "网络错误，预约失败";
+                document.getElementById('fail_info').innerText = "网络错误，缴纳失败";
                 document.getElementById('fail_info').style.display = "";
             }
         });

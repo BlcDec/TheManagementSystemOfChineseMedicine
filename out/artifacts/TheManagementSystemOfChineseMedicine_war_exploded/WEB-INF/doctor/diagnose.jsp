@@ -84,10 +84,10 @@
             <ul class="nav" id="main-menu">
 
 
-                <li class="active-link">
+                <li >
                     <a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>
                 </li>
-                <li>
+                <li class="active-link">
                     <a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>
                 </li>
                 <%--/收款窗口是指收取药品费用的窗口--%>
@@ -105,21 +105,13 @@
         <div id="page-inner">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>挂号窗口</h2>
+                    <h2>诊断窗口</h2>
                 </div>
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">挂号窗口</li>
+                <li class="active">诊断窗口</li>
             </ol>
-
-            <a href="javascript:void(0);" class="list-group-item">个人信息</a>
-            <a href="javascript:void(0);" class="list-group-item">修改密码</a>
-            <a href="add_registration.php" class="list-group-item">添加挂号</a>
-            <a href="pay_appointment_fee.php" class="list-group-item">缴纳挂号费（为预约用户）</a>
-
-
-
         </div>
     </div>
 </div>
@@ -189,9 +181,8 @@
                 }
             },
             fail: function (returndata) {
-                document.getElementById('success_info').style.display = "none";
                 document.getElementById('fail_info').innerText = "网络错误，预约失败";
-                document.getElementById('fail_info').style.display = "";
+                document.getElementById('fail_info').style.display = "inline";
             }
         });
     }

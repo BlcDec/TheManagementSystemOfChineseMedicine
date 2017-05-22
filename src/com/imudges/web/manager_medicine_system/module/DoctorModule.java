@@ -290,4 +290,56 @@ public class DoctorModule {
         return map;
     }
 
+    /**
+     * 缴纳预约患者的挂号费页面
+     * */
+    @At("doctor/pay_appointment_fee")
+    @Ok("re")
+    @Fail("http:500")
+    public Object payAppointmentFeePage(HttpServletRequest request,
+                                    HttpSession session){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        request.setAttribute("name",doctor.getName());
+        request.setAttribute("doctor",doctor);
+        return "jsp:doctor/pay_appointment_fee";
+    }
+
+    /**
+     * 缴纳预约患者的挂号费用
+     * */
+    @At("doctor/commit_appointment_fee")
+    @Ok("json")
+    @Fail("http:500")
+    public Object payAppointmentFee(@Param("id_card")String idCard,
+                                    @Param("appointment_num")String appointmentNum,
+                                    HttpSession session,
+                                    HttpServletRequest request){
+        Map<String,Integer> res = new HashMap<>();
+        if(idCard == null || appointmentNum == null || idCard.equals("") || appointmentNum.equals("")){
+            res.put("code",-1);
+            return res;
+        }
+        Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",idCard));
+        //患者不存在
+        if(patient == null){
+            res.put("code",-5);
+            return res;
+        }
+        //患者存在，但是没有预约信息或 为 非预约信息
+        AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class,Cnd.where("patientIdCard","=",idCard)
+                .and("id","=",appointmentNum)
+                .and("isAppointment","=",true));
+        if(appointmentOrRegistration == null){
+            res.put("code",-10);
+            return res;
+        }
+
+        //此处所有信息都是正确的
+        appointmentOrRegistration.setPayForTime(new Date(System.currentTimeMillis()));
+        appointmentOrRegistration.setRegistrationFeeState(1);
+        dao.update(appointmentOrRegistration);
+        res.put("code",0);
+        return res;
+    }
+
 }
