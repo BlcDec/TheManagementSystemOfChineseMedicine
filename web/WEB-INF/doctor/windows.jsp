@@ -83,7 +83,7 @@
         <div class="sidebar-collapse">
             <ul class="nav" id="main-menu">
 
-
+                <%if ()%>
                 <li class="active-link">
                     <a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>
                 </li>

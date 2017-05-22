@@ -47,12 +47,12 @@ public class Doctor {
     private Date addTime;//进入医院时间
 
     /**
-     * 呼吸内科
-     * 内分泌科
-     * 神经内科
-     * 老年科
-     * 儿童科
-     * 牙科
+     * 呼吸内科 0
+     * 内分泌科 1
+     * 精神科  2
+     * 老年科  3
+     * 儿童科  4
+     * 牙科   5
      * */
     @Column
     private String departmentId;//部门id
