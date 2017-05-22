@@ -3,15 +3,12 @@ package com.imudges.web.manager_medicine_system.bean;
 import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
-import org.nutz.ioc.loader.annotation.IocBean;
-
-import javax.websocket.OnClose;
 import java.util.Date;
 
 /**
  * 医生描述患者的病情
  */
-@Table("A_DIAGNOSIS")
+@Table("AA_DIAGNOSIS")
 public class Diagnosis {
     @Id
     private int id;
@@ -23,7 +20,10 @@ public class Diagnosis {
     private String doctorIdCard;//医生的身份证
 
     @Column
-    private String diseaseSummary;//医生对于病情的描述
+    private String patientSummary;//患者自述
+
+    @Column
+    private String doctorSummary;//医生对于病情的描述
 
     @Column
     private Date addTime;//医生提交时间
@@ -55,12 +55,20 @@ public class Diagnosis {
         this.doctorIdCard = doctorIdCard;
     }
 
-    public String getDiseaseSummary() {
-        return diseaseSummary;
+    public String getPatientSummary() {
+        return patientSummary;
     }
 
-    public void setDiseaseSummary(String diseaseSummary) {
-        this.diseaseSummary = diseaseSummary;
+    public void setPatientSummary(String patientSummary) {
+        this.patientSummary = patientSummary;
+    }
+
+    public String getDoctorSummary() {
+        return doctorSummary;
+    }
+
+    public void setDoctorSummary(String doctorSummary) {
+        this.doctorSummary = doctorSummary;
     }
 
     public Date getAddTime() {

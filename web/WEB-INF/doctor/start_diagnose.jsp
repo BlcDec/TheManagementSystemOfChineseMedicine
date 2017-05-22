@@ -106,7 +106,11 @@
         <div id="page-inner">
             <div class="row">
                 <div class="col-lg-12">
+                    <%if ((Integer) request.getAttribute("code") == -12 || (Integer) request.getAttribute("code") == -11) {%>
+                    <h2>诊断窗口（即将自动跳转）</h2>
+                    <%} else if ((Integer) request.getAttribute("code") == 0) {%>
                     <h2>诊断窗口</h2>
+                    <%}%>
                 </div>
             </div>
             <ol class="breadcrumb">
@@ -115,9 +119,7 @@
                 <li class="active"><a href="diagnose.php">诊断窗口</a></li>
                 <li class="active">诊断</li>
             </ol>
-            <%if ((Integer) request.getAttribute("code") == -1) {%>
-            <h1><span class="label label-info">${msg}</span></h1>
-            <%} else if ((Integer) request.getAttribute("code") == 0) {%>
+            <%if ((Integer) request.getAttribute("code") == 0) {%>
             <%Patient patient = (Patient) request.getAttribute("patient");%>
             <%
                 AppointmentOrRegistration appointmentOrRegistration = (AppointmentOrRegistration) request.getAttribute("appointment_or_registration");%>
@@ -149,8 +151,16 @@
             </div>
             <div class="form-group" align="left">
                 <div class="input-group">
+                    <span class="input-group-addon">患者身份证</span>
+                    <input type="text" id="id_card" name="id_card" value="<%=patient.getIdCard()%>" placeholder="请确认姓名"
+                           class="form-control"
+                           aria-describedby="sizing-addon2">
+                </div>
+            </div>
+            <div class="form-group" align="left">
+                <div class="input-group">
                     <span class="input-group-addon">主诉症状</span>
-                    <input type="text" id="patient_msg" name="patient_msg" placeholder="患者自诉"
+                    <input type="text" id="patient_msg" name="patient_msg" placeholder="请医生填写"
                            class="form-control"
                            aria-describedby="sizing-addon2">
                 </div>
@@ -170,19 +180,25 @@
                     <div class="form-group">
                         <textarea name="summary" class="form-control" rows="5" id="summary"></textarea>
                     </div>
-                    <h4><span class="label label-warning" id="submit_warning"
-                              style="display: none;">请填写完整信息后提交</span></h4>
-                    <div>
-                        <button type="button" class="btn btn-primary" onclick="upload_diagnosis()">提交诊断书</button>
-                        <button type="button" class="btn btn-primary" onclick="upload_prescription()">开药</button>
-                    </div>
+                    <h4><span class="label label-success" id="success_info"
+                              style="display: none;">${msg}</span></h4>
+                    <h4><span class="label label-warning" id="fail_info"
+                              style="display: none;">${msg}</span></h4>
+                    <button type="button" class="btn btn-primary" onclick="upload_diagnosis()">提交诊断书</button>
+                    <button type="button" class="btn btn-primary" onclick="upload_prescription()">开药</button>
                 </div>
             </div>
-
-
-            <%}%>
         </div>
+
+
+        <%} else if ((Integer) request.getAttribute("code") == -12 || (Integer) request.getAttribute("code") == -11 || (Integer) request.getAttribute("code") == -1) {%>
+        <script>
+            window.setTimeout("window.location='${ redirect_url}'", 2000);
+        </script>
+        <h1><span class="label label-warning">${msg}</span></h1>
+        <%}%>
     </div>
+</div>
 </div>
 <div class="footer">
     <div class="row">
@@ -206,28 +222,26 @@
         document.getElementById('btn_set_department').innerText = _department;
         document.getElementById('department').value = department;
     }
-    function do_upload() {
+    function upload_diagnosis() {
         var name = document.getElementById('name').value;
         var sex = document.getElementById('sex').value;
         var year = document.getElementById('year').value;
-        var phoneNum = document.getElementById('phone_num').value;
-        var apperaTime = document.getElementById('appear_time').value;
+        var patientMsg = document.getElementById('patient_msg').value;
+        var appearTime = document.getElementById('appear_time').value;
+        var idCard = document.getElementById('id_card').value;
+        var summary = document.getElementById('summary').value;
         if (name.length == 0 ||
             sex.length == 0 ||
             year.length == 0 ||
-            phoneNum.length == 0 ||
-            apperaTime.length == 0) {
+            patientMsg.length == 0 ||
+            appearTime.length == 0 ||
+            summary.length == 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请完善信息后提交";
             return;
         }
-        if (_department == -1) {
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请选择预约科室后提交";
-            return;
-        }
         $.ajax({
-            url: 'upload_appointment.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
+            url: 'upload_diagnosis.php?name=' + name + '&sex=' + sex + '&year=' + year + '&patient_msg=' + patientMsg + '&appear_time=' + appearTime + '&id_card=' + idCard + '&summary=' + summary,
             type: 'GET',
             async: true,
             cache: false,
@@ -239,19 +253,26 @@
                 if (code == 0) {
                     document.getElementById('success_info').style.display = "";
                     document.getElementById('fail_info').style.display = "none";
-                    document.getElementById('success_info').innerText = "预约成功！";
+                    document.getElementById('success_info').innerText = "提交成功！";
                     return;
                 }
-                if (code == -7) {
+                if (code == -1) {
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
+                    document.getElementById('fail_info').innerText = "提交参数错误！";
                     return;
                 }
+                if (code == -5) {
+                    document.getElementById('fail_info').style.display = "";
+                    document.getElementById('success_info').style.display = "none";
+                    document.getElementById('fail_info').innerText = "身份证号不正确";
+                    return;
+                }
+
             },
             fail: function (returndata) {
-                document.getElementById('fail_info').innerText = "网络错误，预约失败";
-                document.getElementById('fail_info').style.display = "inline";
+                document.getElementById('fail_info').innerText = "网络错误，提交失败";
+                document.getElementById('fail_info').style.display = "";
             }
         });
     }

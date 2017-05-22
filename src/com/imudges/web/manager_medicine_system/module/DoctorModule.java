@@ -1,9 +1,6 @@
 package com.imudges.web.manager_medicine_system.module;
 
-import com.imudges.web.manager_medicine_system.bean.AppointmentOrRegistration;
-import com.imudges.web.manager_medicine_system.bean.Doctor;
-import com.imudges.web.manager_medicine_system.bean.Patient;
-import com.imudges.web.manager_medicine_system.bean.User;
+import com.imudges.web.manager_medicine_system.bean.*;
 import com.imudges.web.manager_medicine_system.util.MD5;
 import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Cnd;
@@ -399,8 +396,17 @@ public class DoctorModule {
         if(appointmentOrRegistration == null){
             request.setAttribute("code",-11);
             request.setAttribute("msg","号码输入错误");
+            request.setAttribute("redirect_url","diagnose.php");
             return "jsp:doctor/start_diagnose";
         }
+        //判断是否缴纳挂号费
+        if(appointmentOrRegistration.getRegistrationFeeState() == 0){
+            request.setAttribute("code",-12);
+            request.setAttribute("msg","该患者未缴纳挂号费！");
+            request.setAttribute("redirect_url","diagnose.php");
+            return "jsp:doctor/start_diagnose";
+        }
+
 
         //成功
 
@@ -412,4 +418,46 @@ public class DoctorModule {
         request.setAttribute("code",0);
         return "jsp:doctor/start_diagnose";
     }
+
+    /**
+     * 提交诊断书
+     * */
+    @At("doctor/upload_diagnosis")
+    @Ok("json")
+    @Fail("http:500")
+    public Object uploadDiagnosis(HttpServletRequest request,
+                                  HttpSession session,
+                                  @Param("name") String name,
+                                  @Param("sex") String sex,
+                                  @Param("year") String year,
+                                  @Param("patient_msg") String patientMsg,
+                                  @Param("appear_time") String appearTime,
+                                  @Param("id_card")String idCard,
+                                  @Param("summary")String summary){
+        User user = (User) session.getAttribute("user");
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Map<String,Integer> res = new HashMap<>();
+        if(idCard == null || patientMsg == null ||idCard.equals("") || patientMsg.equals("")){
+            res.put("code",-1);
+            return res;
+        }
+
+        Diagnosis diagnosis = new Diagnosis();
+        diagnosis.setAddTime(new Date(System.currentTimeMillis()));
+        diagnosis.setPatientSummary(patientMsg);
+        diagnosis.setDoctorSummary(summary);
+        diagnosis.setDoctorIdCard(doctor.getUsername());
+        Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",idCard));
+        if(patient == null ){
+            res.put("code",-5);
+            return res;
+        }
+        diagnosis.setPatientIdCard(patient.getIdCard());
+        //默认为不开，开药的话再改
+        diagnosis.setGiveMedicineOrNot(false);
+        dao.insert(diagnosis);
+        res.put("code",0);
+        return res;
+    }
+
 }
