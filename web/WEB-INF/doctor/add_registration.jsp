@@ -257,7 +257,7 @@
         }
         if(_department == -1){
             document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请选择预约科室后提交";
+            document.getElementById('fail_info').innerText = "请选择挂号科室后提交";
             return ;
         }
         $.ajax({
@@ -285,7 +285,7 @@
                 if(code == -9){
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "挂号失败，患者信息有误";
+                    document.getElementById('fail_info').innerText = "已经预约，但是未缴纳挂号费，因此不能挂号";
                     return ;
                 }
             },

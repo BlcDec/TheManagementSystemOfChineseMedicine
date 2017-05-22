@@ -255,16 +255,20 @@ public class DoctorModule {
         Patient patient = dao.fetch(Patient.class, Cnd.where("A_IDCARD", "=", idCard));
         if(patient == null){
             map.put("code", -9);
-            map.put("msg", "预约失败，患者信息无效");
+            map.put("msg", "挂号失败，患者信息无效");
             request.setAttribute("doctor", patient);
             request.setAttribute("name", doctor.getName());
             return map;
         }
 
-        //一个用户不可多次预约
-        if (dao.count(AppointmentOrRegistration.class, Cnd.where("patientIdCard", "=", patient.getIdCard()).and("registrationFeeState", "=", "0")) != 0) {
-            map.put("code", -7);
-            map.put("msg", "预约失败，每个用户只可预约一次");
+        //一个用户有未支付预约信息
+        if (dao.count(AppointmentOrRegistration.class,
+                Cnd.where("patientIdCard", "=",
+                        patient.getIdCard())
+                        .and("registrationFeeState", "=", "0")
+                        .and("isAppointment","=",true)) != 0) {
+            map.put("code", -9);
+            map.put("msg", "挂号失败，每个用户只可挂号一次");
             request.setAttribute("patient", patient);
             request.setAttribute("name", patient.getName());
             return map;
@@ -280,7 +284,7 @@ public class DoctorModule {
         dao.insert(appointmentOrRegistration);
 
         map.put("code", 0);
-        map.put("msg", "预约成功");
+        map.put("msg", "挂号成功");
         request.setAttribute("doctor", doctor);
         request.setAttribute("name", doctor.getName());
         return map;
