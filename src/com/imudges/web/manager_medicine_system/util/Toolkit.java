@@ -148,4 +148,12 @@ public class Toolkit {
         String Year = Calendar.getInstance().get(Calendar.YEAR) + "";
         return Year;
     }
+
+    public static int getYear(String idCard){
+        String year = "";
+        for (int i = 6; i <= 9; i++) {
+            year += idCard.charAt(i) + "";
+        }
+        return Integer.parseInt(Toolkit.getCurrentYear()) - Integer.parseInt(year);
+    }
 }

@@ -5,6 +5,7 @@ import com.imudges.web.manager_medicine_system.bean.Doctor;
 import com.imudges.web.manager_medicine_system.bean.Patient;
 import com.imudges.web.manager_medicine_system.bean.User;
 import com.imudges.web.manager_medicine_system.util.MD5;
+import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -343,7 +344,7 @@ public class DoctorModule {
     }
 
     /**
-     * 医生个人信息页面
+     * 医生个人信息页面（通用）
      * */
     @At("doctor/user")
     @Ok("re")
@@ -359,7 +360,9 @@ public class DoctorModule {
         return "jsp:doctor/user";
     }
 
-
+    /**
+     * 修改密码（通用）
+     * */
     @At("doctor/modify_password")
     @Ok("re")
     @Fail("http:500")
@@ -370,5 +373,43 @@ public class DoctorModule {
         request.setAttribute("name", doctor.getName());
         request.setAttribute("doctor", doctor);
         return "jsp:doctor/modify_password";
+    }
+
+    /**
+     * 开始诊断
+     * */
+    @At("doctor/start_diagnose")
+    @Ok("re")
+    @Fail("http:500")
+    public Object startDiagnose(HttpServletRequest request,
+                                HttpSession session,
+                                @Param("num")String num) {
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        request.setAttribute("name", doctor.getName());
+        request.setAttribute("doctor", doctor);
+        //请求参数错误
+        if(num == null || num.equals("")){
+            request.setAttribute("code",-1);
+            request.setAttribute("msg","请求参数错误");
+            return "jsp:doctor/start_diagnose";
+        }
+
+        //获取挂号号码失败
+        AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class,Cnd.where("id","=",num));
+        if(appointmentOrRegistration == null){
+            request.setAttribute("code",-11);
+            request.setAttribute("msg","号码输入错误");
+            return "jsp:doctor/start_diagnose";
+        }
+
+        //成功
+
+        Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",appointmentOrRegistration.getPatientIdCard()));
+
+        request.setAttribute("year", Toolkit.getYear(patient.getIdCard()));
+        request.setAttribute("appointment_or_registration",appointmentOrRegistration);
+        request.setAttribute("patient",patient);
+        request.setAttribute("code",0);
+        return "jsp:doctor/start_diagnose";
     }
 }

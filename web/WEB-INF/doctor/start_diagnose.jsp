@@ -1,7 +1,8 @@
 ﻿<%@ page import="java.util.List" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %><%--
+<%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.AppointmentOrRegistration" %><%--
   Created by IntelliJ IDEA.
   User: yangyang
   Date: 2017/4/7
@@ -83,11 +84,11 @@
         <div class="sidebar-collapse">
             <ul class="nav" id="main-menu">
 
-                <%if ()%>
-                <li class="active-link">
+
+                <li>
                     <a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>
                 </li>
-                <li>
+                <li class="active-link">
                     <a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>
                 </li>
                 <%--/收款窗口是指收取药品费用的窗口--%>
@@ -105,21 +106,81 @@
         <div id="page-inner">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>挂号窗口</h2>
+                    <h2>诊断窗口</h2>
                 </div>
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">挂号窗口</li>
+
+                <li class="active"><a href="diagnose.php">诊断窗口</a></li>
+                <li class="active">诊断</li>
             </ol>
+            <%if ((Integer) request.getAttribute("code") == -1) {%>
+            <h1><span class="label label-info">${msg}</span></h1>
+            <%} else if ((Integer) request.getAttribute("code") == 0) {%>
+            <%Patient patient = (Patient) request.getAttribute("patient");%>
+            <%
+                AppointmentOrRegistration appointmentOrRegistration = (AppointmentOrRegistration) request.getAttribute("appointment_or_registration");%>
 
-            <a href="user.php" class="list-group-item">个人信息</a>
-            <a href="modify_password.php" class="list-group-item">修改密码</a>
-            <a href="add_registration.php" class="list-group-item">添加挂号</a>
-            <a href="pay_appointment_fee.php" class="list-group-item">缴纳挂号费（为预约用户）</a>
+            <div class="form-group" align="left">
+                <div class="input-group">
+                    <span class="input-group-addon">患者姓名</span>
+                    <input type="text" id="name" name="name" value="<%=patient.getName()%>" placeholder="请确认姓名"
+                           class="form-control"
+                           aria-describedby="sizing-addon2">
+                </div>
+            </div>
+            <div class="form-group" align="left">
+                <div class="input-group">
+                    <span class="input-group-addon">患者性别</span>
+                    <input type="text" id="sex" name="sex" value="<%=patient.getSex()%>" placeholder="请输入性别"
+                           class="form-control"
+                           aria-describedby="sizing-addon2">
+                </div>
+            </div>
+            <div class="form-group" align="left">
+                <div class="input-group">
+                    <span class="input-group-addon">患者年龄</span>
+                    <input type="text" id="year" name="year" value="<%=request.getAttribute("year")%>"
+                           placeholder="输入年龄让我们能够提高对您病情的判断"
+                           class="form-control"
+                           aria-describedby="sizing-addon2">
+                </div>
+            </div>
+            <div class="form-group" align="left">
+                <div class="input-group">
+                    <span class="input-group-addon">主诉症状</span>
+                    <input type="text" id="patient_msg" name="patient_msg" placeholder="患者自诉"
+                           class="form-control"
+                           aria-describedby="sizing-addon2">
+                </div>
+            </div>
+            <div class="form-group" align="left">
+                <div class="input-group">
+                    <span class="input-group-addon">症状出现时间</span>
+                    <input type="text" id="appear_time" name="appear_time" placeholder="症状出现时间，如：2017/01/01"
+                           value="<%=appointmentOrRegistration.getAppearTime()%>"
+                           class="form-control"
+                           aria-describedby="sizing-addon2">
+                </div>
+            </div>
+            <div class="form-group" align="left">
+                <div>
+                    <label>初步诊断：</label>
+                    <div class="form-group">
+                        <textarea name="summary" class="form-control" rows="5" id="summary"></textarea>
+                    </div>
+                    <h4><span class="label label-warning" id="submit_warning"
+                              style="display: none;">请填写完整信息后提交</span></h4>
+                    <div>
+                        <button type="button" class="btn btn-primary" onclick="upload_diagnosis()">提交诊断书</button>
+                        <button type="button" class="btn btn-primary" onclick="upload_prescription()">开药</button>
+                    </div>
+                </div>
+            </div>
 
 
-
+            <%}%>
         </div>
     </div>
 </div>
@@ -158,12 +219,12 @@
             apperaTime.length == 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请完善信息后提交";
-            return ;
+            return;
         }
-        if(_department == -1){
+        if (_department == -1) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请选择预约科室后提交";
-            return ;
+            return;
         }
         $.ajax({
             url: 'upload_appointment.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
@@ -175,23 +236,22 @@
             success: function (returndata) {
                 var json = returndata;
                 var code = json.code;
-                if(code == 0){
+                if (code == 0) {
                     document.getElementById('success_info').style.display = "";
                     document.getElementById('fail_info').style.display = "none";
                     document.getElementById('success_info').innerText = "预约成功！";
-                    return ;
+                    return;
                 }
-                if(code == -7){
+                if (code == -7) {
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
                     document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
-                    return ;
+                    return;
                 }
             },
             fail: function (returndata) {
-                document.getElementById('success_info').style.display = "none";
                 document.getElementById('fail_info').innerText = "网络错误，预约失败";
-                document.getElementById('fail_info').style.display = "";
+                document.getElementById('fail_info').style.display = "inline";
             }
         });
     }

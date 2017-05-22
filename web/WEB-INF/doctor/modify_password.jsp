@@ -1,6 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.text.DateFormat" %>
-<%@ page import="java.text.SimpleDateFormat" %><%--
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.Doctor" %><%--
   Created by IntelliJ IDEA.
   User: yangyang
   Date: 2017/4/7
@@ -77,15 +78,27 @@
         <div class="sidebar-collapse">
             <ul class="nav" id="main-menu">
 
-
+                <%Doctor doctor = (Doctor) request.getAttribute("doctor");%>
+                <%if(doctor.getPosition().equals("0")){%>
                 <li class="active-link">
+                        <%} else {%>
+                <li>
+                    <%}%>
                     <a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>
                 </li>
+                <%if(doctor.getPosition().equals("1")){%>
+                <li class="active-link">
+                        <%} else {%>
                 <li>
+                    <%}%>
                     <a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>
                 </li>
                 <%--/收款窗口是指收取药品费用的窗口--%>
+                <%if(doctor.getPosition().equals("2")){%>
+                <li class="active-link">
+                        <%} else {%>
                 <li>
+                    <%}%>
                     <a href="collection.php"><i class="glyphicon glyphicon-search"></i>收款窗口</a>
                 </li>
                 <li>
@@ -105,7 +118,13 @@
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
+                <%if(doctor.getPosition().equals("0")){%>
                 <li class="active"><a href="windows.php">挂号窗口</a></li>
+                <%} else if(doctor.getPosition().equals("1")){%>
+                <li class="active"><a href="diagnose.php">诊断窗口</a></li>
+                <%} else if(doctor.getPosition().equals("2")){%>
+                <li class="active"><a href="collection.php">收费窗口</a></li>
+                <%}%>
                 <li class="active">修改密码</li>
             </ol>
 

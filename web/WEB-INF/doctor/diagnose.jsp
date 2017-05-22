@@ -113,25 +113,26 @@
                 <li class="active">诊断窗口</li>
             </ol>
 
-
+            <div class="row">
+                <form method="post" action="start_diagnose.php">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <input id="num" name="num" type="text" class="form-control"
+                                   placeholder="请输入患者挂号的号...">
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">开始诊断</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <br/>
             <a href="user.php" class="list-group-item">个人信息</a>
             <a href="modify_password.php" class="list-group-item">修改密码</a>
-            <a href="add_registration.php" class="list-group-item">诊断</a>
+            <%--<a href="start_diagnose.php" class="list-group-item">开始诊断</a>--%>
             <%--<a href="pay_appointment_fee.php" class="list-group-item">缴纳挂号费（为预约用户）</a>--%>
 
-            <%--<div class="row">--%>
-                <%--<form method="post" action="search.php">--%>
-                    <%--<div class="col-lg-6">--%>
-                        <%--<div class="input-group">--%>
-                            <%--<input id="search_content" name="book_info" type="text" class="form-control"--%>
-                                   <%--placeholder="请输入患者挂号的号...">--%>
-                            <%--<span class="input-group-btn">--%>
-                            <%--<button class="btn btn-default" type="submit">提交</button>--%>
-                        <%--</span>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                <%--</form>--%>
-            <%--</div>--%>
+
         </div>
     </div>
 </div>
