@@ -78,17 +78,18 @@
             <ul class="nav" id="main-menu">
 
 
-                <li >
-                    <a href="main.php"><i class="glyphicon glyphicon-plus"></i>在线预约</a>
-                </li>
                 <li class="active-link">
-                    <a href="user.php"><i class="glyphicon glyphicon-user"></i>个人中心</a>
+                    <a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>
                 </li>
                 <li>
-                    <a href="search.php"><i class="glyphicon glyphicon-search"></i>药品检索</a>
+                    <a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>
+                </li>
+                <%--/收款窗口是指收取药品费用的窗口--%>
+                <li>
+                    <a href="collection.php"><i class="glyphicon glyphicon-search"></i>收款窗口</a>
                 </li>
                 <li>
-                    <a href="../public/logout.php"><i class="fa fa-home"></i>注销登录</a>
+                    <a href="logout.php"><i class="fa fa-home"></i>注销登录</a>
                 </li>
             </ul>
         </div>
@@ -99,46 +100,17 @@
         <div id="page-inner">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>个人中心</h2>
+                    <h2>修改密码</h2>
                 </div>
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">个人中心</li>
+                <li class="active"><a href="windows.php">挂号窗口</a></li>
+                <li class="active">修改密码</li>
             </ol>
 
-            <div class="list-group">
-                <a href="#" class="list-group-item disabled">
-                    用户基本信息
-                </a>
-
-                <a href="javascript:void(0);" class="list-group-item">用户名：${user.username}</a>
-                <a href="javascript:void(0);" class="list-group-item">姓名：${patient.name}</a>
-                <a href="javascript:void(0);" class="list-group-item">身份证号：${patient.idCard}</a>
-                <a href="effect_appointment.php" class="list-group-item">已生效预约：${effective_appointment}条</a>
-                <a href="underway_appointment.php" class="list-group-item">正在进行中的预约：${underway_appointment}条</a>
-                <%--<a href="system_message.php" class="list-group-item">系统提醒--%>
-                    <%--<%if((Integer)request.getAttribute("system_remind_number") != 0) {%>--%>
-                    <%--<span class="badge" style="background-color: #67b168;">--%>
-                        <%--<%=request.getAttribute("system_remind_number")%></span>--%>
-                    <%--<%} else {%>--%>
-                    <%--<%if((Integer)request.getAttribute("already_read_message") != 0) {%>--%>
-                    <%--<span class="badge">--%>
-                            <%--<%=request.getAttribute("already_read_message")%></span>--%>
-                    <%--<%}%>--%>
-                    <%--<%}%>--%>
-                <%--</a>--%>
-                <%--<a href="remind_me.php" class="list-group-item">帮我留意</a>--%>
-                <%--<a href="cancel_remind.php" class="list-group-item">我的留意<span class="badge"><%=request.getAttribute("remind_count")%></span></a>--%>
-                <%--<a href="user_books.php" class="list-group-item">我的书籍</a>--%>
-                <%--<a href="user_my_book_by_drift.php" class="list-group-item">已经接受的漂流<%if((Integer) request.getAttribute("code_record") == 0){%>--%>
-                    <%--<%List<BookCrossingBookRecord> bookCrossingBookRecords = (List<BookCrossingBookRecord>) request.getAttribute("book_list_record");%>--%>
-                    <%--<span class="badge"><%=bookCrossingBookRecords.size()%></span>--%>
-                    <%--<%} else {%>--%>
-                    <%--<span class="badge"><%=0%></span>--%>
-                    <%--<%}%></a>--%>
-            </div>
-
+            <hr/>
+            <h1><span class="label label-info">尚未开发，敬请期待...</span></h1>
         </div>
     </div>
 </div>
@@ -161,13 +133,13 @@
         } else {
             $.ajax({
                 url: 'get_crossingbook.php?book_id=' + book_id,
-                type: 'GET',
+                type: 'POST',
                 async: true,
                 cache: false,
                 contentType: false,
                 processData: false,
                 success: function (returndata) {
-                    document.getElementById(book_id).style.display = "none";
+
                 },
                 fail: function (returndata) {
 

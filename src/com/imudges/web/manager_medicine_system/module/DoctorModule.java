@@ -342,4 +342,33 @@ public class DoctorModule {
         return res;
     }
 
+    /**
+     * 医生个人信息页面
+     * */
+    @At("doctor/user")
+    @Ok("re")
+    @Fail("http:500")
+    public Object windowsUserPage(HttpServletRequest request,
+                                  HttpSession session){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        User user = (User) session.getAttribute("user");
+
+        request.setAttribute("user",user);
+        request.setAttribute("doctor",doctor);
+        request.setAttribute("name",doctor.getName());
+        return "jsp:doctor/user";
+    }
+
+
+    @At("doctor/modify_password")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object modifyPassword(HttpServletRequest request,
+                             HttpSession session) {
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        request.setAttribute("name", doctor.getName());
+        request.setAttribute("doctor", doctor);
+        return "jsp:doctor/modify_password";
+    }
 }

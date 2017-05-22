@@ -1,6 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.text.DateFormat" %>
-<%@ page import="java.text.SimpleDateFormat" %><%--
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.Doctor" %><%--
   Created by IntelliJ IDEA.
   User: yangyang
   Date: 2017/4/7
@@ -78,17 +79,18 @@
             <ul class="nav" id="main-menu">
 
 
-                <li >
-                    <a href="main.php"><i class="glyphicon glyphicon-plus"></i>在线预约</a>
-                </li>
                 <li class="active-link">
-                    <a href="user.php"><i class="glyphicon glyphicon-user"></i>个人中心</a>
+                    <a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>
                 </li>
                 <li>
-                    <a href="search.php"><i class="glyphicon glyphicon-search"></i>药品检索</a>
+                    <a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>
+                </li>
+                <%--/收款窗口是指收取药品费用的窗口--%>
+                <li>
+                    <a href="collection.php"><i class="glyphicon glyphicon-search"></i>收款窗口</a>
                 </li>
                 <li>
-                    <a href="../public/logout.php"><i class="fa fa-home"></i>注销登录</a>
+                    <a href="logout.php"><i class="fa fa-home"></i>注销登录</a>
                 </li>
             </ul>
         </div>
@@ -104,19 +106,25 @@
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">个人中心</li>
+                <li class="active"><a href="windows.php">挂号窗口</a></li>
+                <li class="active">医生信息</li>
             </ol>
 
             <div class="list-group">
                 <a href="#" class="list-group-item disabled">
-                    用户基本信息
+                    医生基本信息
                 </a>
-
+                <%Doctor doctor = (Doctor) request.getAttribute("doctor");%>
                 <a href="javascript:void(0);" class="list-group-item">用户名：${user.username}</a>
-                <a href="javascript:void(0);" class="list-group-item">姓名：${patient.name}</a>
-                <a href="javascript:void(0);" class="list-group-item">身份证号：${patient.idCard}</a>
-                <a href="effect_appointment.php" class="list-group-item">已生效预约：${effective_appointment}条</a>
-                <a href="underway_appointment.php" class="list-group-item">正在进行中的预约：${underway_appointment}条</a>
+                <a href="javascript:void(0);" class="list-group-item">姓名：${doctor.name}</a>
+                <a href="javascript:void(0);" class="list-group-item">性别：${doctor.sex}</a>
+                <a href="javascript:void(0);" class="list-group-item">编号：${doctor.num}号</a>
+                <a href="javascript:void(0);" class="list-group-item">身份：<%if(doctor.getPosition().equals("0")){%>挂号医生<%} else if(doctor.getPosition().equals("1")) {%>诊断医师<%} else if(doctor.getPosition().equals("2")){%>收款人员<%}%></a>
+                <a href="javascript:void(0);" class="list-group-item">薪资：${doctor.salary}元</a>
+                <%--<a href="javascript:void(0);" class="list-group-item">姓名：${patient.name}</a>--%>
+                <%--<a href="javascript:void(0);" class="list-group-item">身份证号：${patient.idCard}</a>--%>
+                <%--<a href="effect_appointment.php" class="list-group-item">已生效预约：${effective_appointment}条</a>--%>
+                <%--<a href="underway_appointment.php" class="list-group-item">正在进行中的预约：${underway_appointment}条</a>--%>
                 <%--<a href="system_message.php" class="list-group-item">系统提醒--%>
                     <%--<%if((Integer)request.getAttribute("system_remind_number") != 0) {%>--%>
                     <%--<span class="badge" style="background-color: #67b168;">--%>
