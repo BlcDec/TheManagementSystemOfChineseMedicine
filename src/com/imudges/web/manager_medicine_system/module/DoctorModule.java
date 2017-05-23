@@ -382,6 +382,7 @@ public class DoctorModule {
                                 HttpSession session,
                                 @Param("num")String num) {
         Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Department department = dao.fetch(Department.class,Cnd.where("id","=",doctor.getDepartmentId()));
         request.setAttribute("name", doctor.getName());
         request.setAttribute("doctor", doctor);
         //请求参数错误
@@ -399,6 +400,7 @@ public class DoctorModule {
             request.setAttribute("redirect_url","diagnose.php");
             return "jsp:doctor/start_diagnose";
         }
+
         //判断是否缴纳挂号费
         if(appointmentOrRegistration.getRegistrationFeeState() == 0){
             request.setAttribute("code",-12);
@@ -407,6 +409,13 @@ public class DoctorModule {
             return "jsp:doctor/start_diagnose";
         }
 
+        //判断是否为本科室病人
+        if(!appointmentOrRegistration.getDepartment().equals(department.getDepartmentName())){
+            request.setAttribute("code",-13);
+            request.setAttribute("msg","该患者挂号科室不是本科室");
+            request.setAttribute("redirect_url","diagnose.php");
+            return "jsp:doctor/start_diagnose";
+        }
 
         //成功
 

@@ -106,7 +106,7 @@
         <div id="page-inner">
             <div class="row">
                 <div class="col-lg-12">
-                    <%if ((Integer) request.getAttribute("code") == -12 || (Integer) request.getAttribute("code") == -11) {%>
+                    <%if ((Integer) request.getAttribute("code") == -12 || (Integer) request.getAttribute("code") == -11 || (Integer) request.getAttribute("code") == -13) {%>
                     <h2>诊断窗口（即将自动跳转）</h2>
                     <%} else if ((Integer) request.getAttribute("code") == 0) {%>
                     <h2>诊断窗口</h2>
@@ -191,7 +191,10 @@
         </div>
 
 
-        <%} else if ((Integer) request.getAttribute("code") == -12 || (Integer) request.getAttribute("code") == -11 || (Integer) request.getAttribute("code") == -1) {%>
+        <%} else if ((Integer) request.getAttribute("code") == -12 ||
+                (Integer) request.getAttribute("code") == -11 ||
+                (Integer) request.getAttribute("code") == -1 ||
+                (Integer) request.getAttribute("code") == -13) {%>
         <script>
             window.setTimeout("window.location='${ redirect_url}'", 2000);
         </script>

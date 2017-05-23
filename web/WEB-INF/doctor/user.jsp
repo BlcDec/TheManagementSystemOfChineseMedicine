@@ -146,7 +146,7 @@
                     诊断医师<%} else if (doctor.getPosition().equals("2")) {%>收款人员<%}%></a>
                 <a href="javascript:void(0);" class="list-group-item">科室：
                     <%switch (doctor.getDepartmentId()) {
-                        case "0":
+                        case "6":
                             %>呼吸内科<%
                             break;
                         case "1":
