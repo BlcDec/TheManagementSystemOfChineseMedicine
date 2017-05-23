@@ -469,4 +469,22 @@ public class DoctorModule {
         return res;
     }
 
+    @At("doctor/search_medicine")
+    @Ok("json")
+    @Fail("http:500")
+    public Object searchMedicine(@Param("search")String search,
+                                 HttpServletRequest request,
+                                 HttpSession session){
+        Map<String ,String > res = new HashMap<>();
+        if(search == null || search.equals("")){
+            res.put("code","-1");
+            res.put("msg","请求参数错误");
+            return res;
+        }
+
+
+        res.put("code","0");
+        return res;
+    }
+
 }

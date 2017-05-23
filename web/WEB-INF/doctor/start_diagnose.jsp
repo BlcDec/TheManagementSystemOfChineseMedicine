@@ -185,16 +185,153 @@
                     <h4><span class="label label-warning" id="fail_info"
                               style="display: none;">${msg}</span></h4>
                     <button type="button" class="btn btn-primary" onclick="upload_diagnosis()">提交诊断书</button>
-                    <button type="button" class="btn btn-primary" onclick="upload_prescription()">开药</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                            data-target="#MyModal_<%=patient.getIdCard()%>">开药
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="MyModal_<%=patient.getIdCard()%>" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" data-toggle="modal" data-target="#myModal">请选择开药方式：</h4>
+                    </div>
+                    <div class="modal-body">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal_select">
+                            选择已有药方
+                        </button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#myModal_combine">自己调配
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal_select" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" data-toggle="modal" data-target="#myModal">选择已有药方：</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <input id="search" name="search" type="text" class="form-control"
+                                   placeholder="请输入关键字搜索你需要的药方名">
+                            <h4><span class="label label-warning" id="fail_search"
+                                      style="display: none;">${msg}</span></h4>
+                            <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button"
+                                            onclick="search_medicine()">搜索</button>
+                                </span>
+
+                        </div>
+
+
+                        <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <input type="checkbox" aria-label="...">
+                                      </span>
+                                <a href="javascript:void(0);" class="list-group-item">伸腿瞪眼丸</a>
+                            </div><!-- /input-group -->
+                        </div><!-- /.col-lg-6 -->
+                        <div class="col-lg-6">
+                            <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <input type="checkbox" aria-label="...">
+                                      </span>
+                                <a href="javascript:void(0);" class="list-group-item">六味地黄丸</a>
+                            </div><!-- /input-group -->
+                        </div><!-- /.col-lg-6 -->
+                    </div><!-- /.row -->
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <input type="checkbox" aria-label="...">
+                                      </span>
+                                    <a href="javascript:void(0);" class="list-group-item">伸腿瞪眼丸</a>
+                                </div><!-- /input-group -->
+                            </div><!-- /.col-lg-6 -->
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <input type="checkbox" aria-label="...">
+                                      </span>
+                                    <a href="javascript:void(0);" class="list-group-item">六味地黄丸</a>
+                                </div><!-- /input-group -->
+                            </div><!-- /.col-lg-6 -->
+                        </div><!-- /.row -->
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <input type="checkbox" aria-label="...">
+                                      </span>
+                                    <a href="javascript:void(0);" class="list-group-item">伸腿瞪眼丸</a>
+                                </div><!-- /input-group -->
+                            </div><!-- /.col-lg-6 -->
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <input type="checkbox" aria-label="...">
+                                      </span>
+                                    <a href="javascript:void(0);" class="list-group-item">六味地黄丸</a>
+                                </div><!-- /input-group -->
+                            </div><!-- /.col-lg-6 -->
+                        </div><!-- /.row -->
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <input type="checkbox" aria-label="...">
+                                      </span>
+                                    <a href="javascript:void(0);" class="list-group-item">伸腿瞪眼丸</a>
+                                </div><!-- /input-group -->
+                            </div><!-- /.col-lg-6 -->
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <input type="checkbox" aria-label="...">
+                                      </span>
+                                    <a href="javascript:void(0);" class="list-group-item">六味地黄丸</a>
+                                </div><!-- /input-group -->
+                            </div><!-- /.col-lg-6 -->
+                        </div><!-- /.row -->
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">
+                            确定
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
 
-        <%} else if ((Integer) request.getAttribute("code") == -12 ||
+        <%
+        } else if ((Integer) request.getAttribute("code") == -12 ||
                 (Integer) request.getAttribute("code") == -11 ||
                 (Integer) request.getAttribute("code") == -1 ||
-                (Integer) request.getAttribute("code") == -13) {%>
+                (Integer) request.getAttribute("code") == -13) {
+        %>
         <script>
             window.setTimeout("window.location='${ redirect_url}'", 2000);
         </script>
@@ -216,6 +353,41 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
+    function search_medicine() {
+        var search = document.getElementById('search').value;
+        var div = document.getElementById('search_content');
+        if (search.length == 0) {
+            alert('请填写完整后搜索！');
+            return;
+        }
+        $.ajax({
+            url: 'search_medicine.php?search=' + search,
+            type: 'GET',
+            async: true,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (returndata) {
+                var json = returndata;
+                var code = json.code;
+                if (code == 0) {
+                    div.style.display = "";
+                    return;
+                }
+                if (code == -1) {
+                    document.getElementById('fail_search').style.display = "";
+                    document.getElementById('fail_search').innerText = "提交参数错误！";
+                    return;
+                }
+
+            },
+            fail: function (returndata) {
+                document.getElementById('fail_search').innerText = "网络错误，提交失败";
+                document.getElementById('fail_search').style.display = "";
+            }
+        });
+
+    }
     var _department = -1;
     function set_department(department) {
         document.getElementById('department_info').style.display = "";
@@ -225,6 +397,11 @@
         document.getElementById('btn_set_department').innerText = _department;
         document.getElementById('department').value = department;
     }
+    function upload_prescription() {
+
+
+    }
+
     function upload_diagnosis() {
         var name = document.getElementById('name').value;
         var sex = document.getElementById('sex').value;

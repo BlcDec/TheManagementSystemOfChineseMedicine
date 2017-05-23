@@ -5,7 +5,7 @@ import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
 /**
- * 药方
+ * 药方，医生开出去的
  */
 @Table("A_PRESCRIPTION")
 public class Prescription {
@@ -13,7 +13,7 @@ public class Prescription {
     private int id;
 
     @Column
-    private String diagnosisId;//诊断书
+    private String diagnosisId;//诊断书id，一个诊断书可能有多个药方
 
     @Column
     private String patientIdCard;//患者身份证
@@ -26,6 +26,17 @@ public class Prescription {
 
     @Column
     private boolean isPay;//是否付款
+
+    @Column
+    private boolean isCombine;//是否为医生自行开药
+
+    public boolean isCombine() {
+        return isCombine;
+    }
+
+    public void setCombine(boolean combine) {
+        isCombine = combine;
+    }
 
     public int getId() {
         return id;
