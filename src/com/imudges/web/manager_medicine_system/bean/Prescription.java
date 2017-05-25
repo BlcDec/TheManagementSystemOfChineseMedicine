@@ -7,7 +7,7 @@ import org.nutz.dao.entity.annotation.Table;
 /**
  * 药方，医生开出去的
  */
-@Table("A_PRESCRIPTION")
+@Table("AA_PRESCRIPTION")
 public class Prescription {
     @Id
     private int id;
@@ -19,7 +19,7 @@ public class Prescription {
     private String patientIdCard;//患者身份证
 
     @Column
-    private String[] prescriptionSummary;//药方内容
+    private String medicineId;//药方Id
 
     @Column
     private String price;//价格
@@ -62,12 +62,12 @@ public class Prescription {
         this.patientIdCard = patientIdCard;
     }
 
-    public String[] getPrescriptionSummary() {
-        return prescriptionSummary;
+    public String getMedicineId() {
+        return medicineId;
     }
 
-    public void setPrescriptionSummary(String[] prescriptionSummary) {
-        this.prescriptionSummary = prescriptionSummary;
+    public void setMedicineId(String medicineId) {
+        this.medicineId = medicineId;
     }
 
     public String getPrice() {

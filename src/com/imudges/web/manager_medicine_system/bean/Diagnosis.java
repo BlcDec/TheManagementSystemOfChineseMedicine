@@ -6,7 +6,7 @@ import org.nutz.dao.entity.annotation.Table;
 import java.util.Date;
 
 /**
- * 医生描述患者的病情
+ * 诊断书
  */
 @Table("AA_DIAGNOSIS")
 public class Diagnosis {

@@ -385,10 +385,14 @@ public class DoctorModule {
         Department department = dao.fetch(Department.class,Cnd.where("id","=",doctor.getDepartmentId()));
         request.setAttribute("name", doctor.getName());
         request.setAttribute("doctor", doctor);
+        if(session.getAttribute("patient_num")!=null && !session.getAttribute("patient_num").equals("")){
+            num = (String) session.getAttribute("patient_num");
+        }
         //请求参数错误
         if(num == null || num.equals("")){
             request.setAttribute("code",-1);
             request.setAttribute("msg","请求参数错误");
+            request.setAttribute("redirect_url","diagnose.php");
             return "jsp:doctor/start_diagnose";
         }
 
@@ -418,7 +422,7 @@ public class DoctorModule {
         }
 
         //成功
-
+        session.setAttribute("patient_num",num);
         Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",appointmentOrRegistration.getPatientIdCard()));
 
         request.setAttribute("year", Toolkit.getYear(patient.getIdCard()));
@@ -485,6 +489,48 @@ public class DoctorModule {
 
         res.put("code","0");
         return res;
+    }
+
+    /**
+     * 手动选择系统已有药方
+     * */
+    @At("doctor/select_prescription")
+    @Ok("re")
+    @Fail("http:500")
+    public Object selectPrescription(HttpServletRequest request,
+                                     HttpSession session){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        request.setAttribute("name",doctor.getName());
+        request.setAttribute("code","0");
+
+
+
+        return "jsp:doctor/select_prescription";
+    }
+
+    /**
+     * 处理搜索药方逻辑
+     * */
+    @At("doctor/search_content")
+    @Ok("json")
+    @Fail("http:500")
+    public Object searchContent(@Param("search_content")String searchContent,
+                                HttpSession session,
+                                HttpServletRequest request){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Map<String, String > res = new HashMap<>();
+
+        if(searchContent == null || searchContent.equals("")){
+            res.put("code","-1");
+            res.put("msg","数据有误");
+            return res;
+        }
+
+
+
+
+        return res;
+
     }
 
 }
