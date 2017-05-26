@@ -206,8 +206,7 @@
                         <button type="button" class="btn btn-primary" onclick="select_prescription()">
                             选择已有药方
                         </button>
-                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#myModal_combine">自己调配
+                        <button type="button" class="btn btn-primary" onclick="DIY()">自己调配
                         </button>
                     </div>
                 </div>
@@ -278,6 +277,9 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
+    function DIY(){
+        window.setTimeout("window.location='DIY_prescription.php'");
+    }
     function select_prescription() {
         window.setTimeout("window.location='select_prescription.php'");
     }

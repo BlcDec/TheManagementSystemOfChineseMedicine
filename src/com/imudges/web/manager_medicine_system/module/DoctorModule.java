@@ -494,6 +494,7 @@ public class DoctorModule {
     /**
      * 手动选择系统已有药方
      * */
+    //TODO 做一个search + 翻页功能
     @At("doctor/select_prescription")
     @Ok("re")
     @Fail("http:500")
@@ -531,6 +532,20 @@ public class DoctorModule {
 
         return res;
 
+    }
+
+    /**
+     * 自行调配药方
+     * */
+    @At("doctor/DIY_prescription")
+    @Ok("re")
+    @Fail("http:500")
+    public Object DIYPrescription(HttpSession session,
+                                  HttpServletRequest request){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        request.setAttribute("name",doctor.getName());
+
+        return "jsp:doctor/DIY_prescription";
     }
 
 }
