@@ -156,4 +156,8 @@ public class Toolkit {
         }
         return Integer.parseInt(Toolkit.getCurrentYear()) - Integer.parseInt(year);
     }
+
+    public static int getSearchMedicinePage(){
+        return new ConfigReader().readInt("search_page");
+    }
 }

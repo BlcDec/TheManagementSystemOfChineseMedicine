@@ -5,12 +5,14 @@ import com.imudges.web.manager_medicine_system.util.MD5;
 import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
+import org.nutz.dao.pager.Pager;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;
 
 import javax.print.Doc;
 import javax.servlet.http.*;
+import java.awt.print.Paper;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -516,6 +518,7 @@ public class DoctorModule {
     @Ok("json")
     @Fail("http:500")
     public Object searchContent(@Param("search_content")String searchContent,
+                                @Param("page")String pageStr,
                                 HttpSession session,
                                 HttpServletRequest request){
         Doctor doctor = (Doctor) session.getAttribute("doctor");
@@ -526,6 +529,16 @@ public class DoctorModule {
             res.put("msg","数据有误");
             return res;
         }
+
+        //结果显示相关功能
+        int page = 1;
+        try {
+            page = Integer.parseInt(pageStr);
+        } catch (Exception e){}
+        //每页显示的内容
+        int pageSize = Toolkit.getSearchMedicinePage();
+        int resourceSize = 0;
+        Pager paper = dao.createPager(page,pageSize);
 
 
 
