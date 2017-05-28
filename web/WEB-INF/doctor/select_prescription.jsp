@@ -134,6 +134,7 @@
                                    placeholder="请输入关键字搜索你需要的药方">
                             <span class="input-group-btn">
                             <button class="btn btn-default" type="submit">搜索</button>
+                                <button type="button" class="btn btn-default">查看已选药方</button>
                         </span>
                         </div>
                     </div>
@@ -188,11 +189,11 @@
                                             aria-hidden="true">&times;</span></button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>确认要为该患者添加 <%=medicine.getName()%></p>
+                                    <p>确认要为该患者添加 <%=medicine.getName()%>吗?</p>
                                 </div>
                                 <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="commit(<%=medicine.getId()%>)">确认添加</button>
                                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">确认添加</button>
                                 </div>
                             </div>
                         </div>
@@ -206,12 +207,10 @@
                                             aria-hidden="true">&times;</span></button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>药品详细信息，
-                                        <%for(Materials m : materialsList){%>
+                                    <p><%=medicine.getName()%>由以下药材组成：</p>
+                                    <p><%for(Materials m : materialsList){%>
                                         <%=m.getId() + " " + m.getMedicineName()%>
-                                        <%}%>
-                                    </p>
-
+                                        <%}%></p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -271,15 +270,15 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
-    function commit() {
-        var search_content = document.getElementById('search_content').value;
-        if (search_content.length == 0) {
-            document.getElementById('fail_info').innerText = '请填写搜索内容后点击搜索';
+    function commit(medicine_id) {
+        if (medicine_id.length == 0) {
+            document.getElementById('fail_info').innerText = '请选择药品后添加';
             document.getElementById('fail_info').style.display = "";
             return;
         }
+        //TODO 添加药品给用户
         $.ajax({
-            url: 'search_prescription.php?search_content=' + search_content,
+            url: 'add_medicine.php?medicine_id=' + medicine_id,
             type: 'GET',
             async: true,
             cache: false,
@@ -291,7 +290,7 @@
                 if (code == 0) {
                     document.getElementById('success_info').style.display = "";
                     document.getElementById('fail_info').style.display = "none";
-                    document.getElementById('success_info').innerText = "提交成功！";
+                    document.getElementById('success_info').innerText = "添加成功！";
                     return;
                 }
                 if (code == -1) {

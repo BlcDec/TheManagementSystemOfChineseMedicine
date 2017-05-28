@@ -120,15 +120,21 @@
                 <li class="active"><a href="start_diagnose.php">诊断</a></li>
                 <li class="active">调配药方</li>
             </ol>
-            <div class="form-group" align="left">
-                <div class="input-group">
-                    <span class="input-group-addon">药方名称</span>
-                    <input type="text" id="appear_time" name="appear_time" placeholder="请填写药方名"
-                           class="form-control"
-                           aria-describedby="sizing-addon2">
-                </div>
+            <div class="row">
+                <form method="post" action="select_prescription.php">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <input id="search_content" name="search_content" type="text" class="form-control"
+                                   placeholder="请输入关键字搜索你需要的药材">
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">搜索</button>
+                                <button type="button" class="btn btn-default">查看已提交药方</button>
+                        </span>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <%//TODO  老铁扎心了，这里怎么写。。。%>
+            <%//TODO  使用模态框显示搜索结果%>
             <div class="form-group" align="left">
                 <div>
                     <label>药方详情：</label>
@@ -136,6 +142,8 @@
                         <textarea name="summary" class="form-control" rows="5" id="summary"></textarea>
                     </div>
                     <h3><span class="label label-info" id="info">请填写药方所含所有药以及含量</span></h3>
+                    <h4><span class="label label-success" id="success_info"
+                              style="display: none;">${msg}</span></h4>
                     <h4><span class="label label-warning" id="fail_info"
                               style="display: none;">${msg}</span></h4>
                     <button type="button" class="btn btn-primary">提交</button>

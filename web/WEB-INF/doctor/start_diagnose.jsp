@@ -185,6 +185,7 @@
                     <h4><span class="label label-warning" id="fail_info"
                               style="display: none;">${msg}</span></h4>
                     <button type="button" class="btn btn-primary" onclick="upload_diagnosis()">提交诊断书</button>
+
                     <button type="button" class="btn btn-primary" data-toggle="modal"
                             data-target="#MyModal_<%=patient.getIdCard()%>">开药
                     </button>
@@ -203,50 +204,66 @@
                         <h4 class="modal-title" data-toggle="modal" data-target="#myModal">请选择开药方式：</h4>
                     </div>
                     <div class="modal-body">
-                        <button type="button" class="btn btn-primary" onclick="select_prescription()">
-                            选择已有药方
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="DIY()">自己调配
-                        </button>
+                        <button type="button" class="btn btn-primary" onclick="select_prescription()">选择已有药方</button>
+                        <button type="button" class="btn btn-primary" onclick="DIY()">自己调配</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Modal -->
-        <%--<div class="modal fade" id="myModal_select" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">--%>
+        <%--<!-- Modal -->--%>
+        <%--<div class="modal fade" id="selectedMedicine_<%=patient.getIdCard()%>" tabindex="-1" role="dialog"--%>
+             <%--aria-labelledby="myModalLabel">--%>
             <%--<div class="modal-dialog" role="document">--%>
                 <%--<div class="modal-content">--%>
                     <%--<div class="modal-header">--%>
                         <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span--%>
                                 <%--aria-hidden="true">&times;</span></button>--%>
-                        <%--<h4 class="modal-title" data-toggle="modal" data-target="#myModal">选择已有药方：</h4>--%>
+                        <%--<h4 class="modal-title" data-toggle="modal" data-target="#myModal">查看已选药方/药材：</h4>--%>
                     <%--</div>--%>
                     <%--<div class="modal-body">--%>
-                        <%--<div class="input-group">--%>
-                            <%--<input id="search" name="search" type="text" class="form-control"--%>
-                                   <%--placeholder="请输入关键字搜索你需要的药方名">--%>
-                            <%--<h4><span class="label label-warning" id="fail_search"--%>
-                                      <%--style="display: none;">${msg}</span></h4>--%>
-                            <%--<span class="input-group-btn">--%>
-                                    <%--<button class="btn btn-default" type="button"--%>
-                                            <%--onclick="search_medicine()">搜索</button>--%>
-                                <%--</span>--%>
-
-                        <%--</div>--%>
-
-
-
+                        <%--此处有一个Table--%>
                     <%--</div>--%>
-
-
                     <%--<div class="modal-footer">--%>
-                        <%--<button type="button" class="btn btn-primary">--%>
-                            <%--确定--%>
-                        <%--</button>--%>
+                        <%--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>--%>
                     <%--</div>--%>
                 <%--</div>--%>
             <%--</div>--%>
+        <%--</div>--%>
+
+        <!-- Modal -->
+        <%--<div class="modal fade" id="myModal_select" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">--%>
+        <%--<div class="modal-dialog" role="document">--%>
+        <%--<div class="modal-content">--%>
+        <%--<div class="modal-header">--%>
+        <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span--%>
+        <%--aria-hidden="true">&times;</span></button>--%>
+        <%--<h4 class="modal-title" data-toggle="modal" data-target="#myModal">选择已有药方：</h4>--%>
+        <%--</div>--%>
+        <%--<div class="modal-body">--%>
+        <%--<div class="input-group">--%>
+        <%--<input id="search" name="search" type="text" class="form-control"--%>
+        <%--placeholder="请输入关键字搜索你需要的药方名">--%>
+        <%--<h4><span class="label label-warning" id="fail_search"--%>
+        <%--style="display: none;">${msg}</span></h4>--%>
+        <%--<span class="input-group-btn">--%>
+        <%--<button class="btn btn-default" type="button"--%>
+        <%--onclick="search_medicine()">搜索</button>--%>
+        <%--</span>--%>
+
+        <%--</div>--%>
+
+
+        <%--</div>--%>
+
+
+        <%--<div class="modal-footer">--%>
+        <%--<button type="button" class="btn btn-primary">--%>
+        <%--确定--%>
+        <%--</button>--%>
+        <%--</div>--%>
+        <%--</div>--%>
+        <%--</div>--%>
         <%--</div>--%>
 
 
@@ -277,7 +294,7 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
-    function DIY(){
+    function DIY() {
         window.setTimeout("window.location='DIY_prescription.php'");
     }
     function select_prescription() {
