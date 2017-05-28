@@ -3,7 +3,10 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.AppointmentOrRegistration" %>
-<%@ page import="com.imudges.web.manager_medicine_system.bean.Medicine" %><%--
+<%@ page import="com.imudges.web.manager_medicine_system.bean.Medicine" %>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.Materials" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %><%--
   Created by IntelliJ IDEA.
   User: yangyang
   Date: 2017/4/7
@@ -143,6 +146,7 @@
             <div class="row-fluid">
                 <%if ((Integer) request.getAttribute("code") == 0) {%>
                 <%List<Medicine> medicines = (List<Medicine>) request.getAttribute("medicineList");%>
+                <%Map<String,List<Materials>> materialsMap = (Map<String, List<Materials>>) request.getAttribute("materials");%>
                 <table class="table table-striped">
                     <div class="form-group">
                         <thead>
@@ -155,7 +159,7 @@
                         </thead>
                     </div>
                     <%for (Medicine medicine : medicines) {%>
-
+                    <%List<Materials> materialsList = materialsMap.get(medicine.getId() + "");%>
                     <tbody>
                     <tr>
 
@@ -165,7 +169,7 @@
                         </td>
                         <td>
                             <button class="btn btn-primary" type="button" data-toggle="modal"
-                                    data-target="#MyModal_<%=medicine.getId()%>#loginModal">添加药品
+                                    data-target="#MyModal_<%=medicine.getId()%>">添加药品
                             </button>
                         </td>
                         <td>
@@ -175,28 +179,46 @@
                         <%--<td><span class="label label-success">已缴纳</span></td>--%>
                     </tr>
                     <!-- Modal -->
-                    <%--<div class="modal fade" id="myModal_<%=a.getId()%>" tabindex="-1" role="dialog"--%>
-                    <%--aria-labelledby="myModalLabel">--%>
-                    <%--<div class="modal-dialog" role="document">--%>
-                    <%--<div class="modal-content">--%>
-                    <%--<div class="modal-header">--%>
-                    <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span--%>
-                    <%--aria-hidden="true">&times;</span></button>--%>
-                    <%--</div>--%>
-                    <%--<div class="modal-body">--%>
-                    <%--<p>请确认是否要缴纳此次预约的费用？</p>--%>
-                    <%--</div>--%>
-                    <%--<div class="modal-footer">--%>
-                    <%--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>--%>
-                    <%--<button type="button" class="btn btn-primary" data-dismiss="modal"--%>
-                    <%--onclick="pay_for(<%=a.getId()%>)">确认缴纳--%>
-                    <%--</button>--%>
-                    <%--</div>--%>
-                    <%--</div>--%>
-                    <%--</div>--%>
-                    <%--</div>--%>
+                    <div class="modal fade" id="MyModal_<%=medicine.getId()%>" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>确认要为该患者添加 <%=medicine.getName()%></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">确认添加</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="myModal_<%=medicine.getId()%>" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>药品详细信息，
+                                        <%for(Materials m : materialsList){%>
+                                        <%=m.getId() + " " + m.getMedicineName()%>
+                                        <%}%>
+                                    </p>
 
-                    <%--</div>--%>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <%}%>
                     </tbody>
@@ -217,16 +239,16 @@
                 <nav aria-label="...">
                     <ul class="pagination">
                         <li <%if (now_page == 1) {%>class="disabled" <%}%>><%if (now_page != 1) {%><a
-                                href="select_prescription.php?page=<%=now_page-1%>&book_info=<%=searchContent%>"
+                                href="select_prescription.php?page=<%=now_page-1%>&search_content=<%=searchContent%>"
                                 aria-label="Previous"><%}%><span
                                 aria-hidden="true">&laquo;</span></a></li>
                         <%for (Integer p : pageList) {%>
                         <li <%if (now_page == p) {%> class="active"<%}%>
-                        ><a href="select_prescription.php?page=<%=p%>&book_info=<%=searchContent%>"><%=p%>
+                        ><a href="select_prescription.php?page=<%=p%>&search_content=<%=searchContent%>"><%=p%>
                         </a></li>
                         <%}%>
                         <li <%if (now_page == pageCount) {%> class="disabled"<%}%>><%if (now_page != pageCount) {%><a
-                                href="select_prescription.php?page=<%=now_page+1%>&book_info=<%=searchContent%>"
+                                href="select_prescription.php?page=<%=now_page+1%>&search_content=<%=searchContent%>"
                                 aria-label="Next"><%}%><span
                                 aria-hidden="true">&raquo;</span></a>
                         </li>
