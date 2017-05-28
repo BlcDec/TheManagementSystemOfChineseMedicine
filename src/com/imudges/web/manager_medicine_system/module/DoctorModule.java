@@ -13,9 +13,7 @@ import org.nutz.mvc.annotation.*;
 import javax.print.Doc;
 import javax.servlet.http.*;
 import java.awt.print.Paper;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 医生的主要逻辑
@@ -500,34 +498,18 @@ public class DoctorModule {
     @At("doctor/select_prescription")
     @Ok("re")
     @Fail("http:500")
-    public Object selectPrescription(HttpServletRequest request,
-                                     HttpSession session){
-        Doctor doctor = (Doctor) session.getAttribute("doctor");
-        request.setAttribute("name",doctor.getName());
-        request.setAttribute("code","0");
-
-
-
-        return "jsp:doctor/select_prescription";
-    }
-
-    /**
-     * 处理搜索药方逻辑
-     * */
-    @At("doctor/search_content")
-    @Ok("json")
-    @Fail("http:500")
-    public Object searchContent(@Param("search_content")String searchContent,
-                                @Param("page")String pageStr,
-                                HttpSession session,
-                                HttpServletRequest request){
+    public Object selectPrescription(@Param("search_content")String searchContent,
+                                     @Param("page")String pageStr,
+                                     HttpSession session,
+                                     HttpServletRequest request){
         Doctor doctor = (Doctor) session.getAttribute("doctor");
         Map<String, String > res = new HashMap<>();
 
         if(searchContent == null || searchContent.equals("")){
-            res.put("code","-1");
-            res.put("msg","数据有误");
-            return res;
+//            res.put("code","-1");
+//            res.put("msg","数据有误");
+//            return res;
+            searchContent = "";
         }
 
         //结果显示相关功能
@@ -538,12 +520,182 @@ public class DoctorModule {
         //每页显示的内容
         int pageSize = Toolkit.getSearchMedicinePage();
         int resourceSize = 0;
-        Pager paper = dao.createPager(page,pageSize);
+        Pager pager = dao.createPager(page,pageSize);
+        List<Medicine> medicineList = null;
+        if(searchContent.equals("") || searchContent == null){
+            medicineList = dao.query(Medicine.class,Cnd.where("id",">","0"),pager);
+            resourceSize = dao.count(Medicine.class,Cnd.where("id",">","0"));
+        } else {
+            medicineList = dao.query(Medicine.class,Cnd.where("id",">","0").and("name","like","%" + searchContent + "%"),pager);
+            resourceSize = dao.count(Medicine.class,Cnd.where("id",">","0").and("name","like","%" + searchContent + "%"));
+        }
+        //储存展示给用户最终的号码
+        List<Integer> pageList = new LinkedList<>();
+        //插入当前页面
+        pageList.add(page);
+        //特殊情况
+        if(medicineList.size() == 0){
+            request.setAttribute("page",page);
+            request.setAttribute("pageCount" , 1);
+            request.setAttribute("pageList",pageList);
+            request.setAttribute("code",1);
+            request.setAttribute("msg","没有搜索到相关图书");
+            return "jsp:doctor/select_prescription";
+        }
+        //得到当前的总页数
+        int pageCount = (resourceSize + pageSize - 1) / pageSize;
 
+        //特殊情况
+        if(page > pageCount){
+            request.setAttribute("redirect_url","select_prescription.php");
+            request.setAttribute("msg","此页面不存在");
+            return "jsp:doctor/select_prescription";
+        }
 
+        //处理特殊情况，page>pageCount
+        while (pageList.size() < 5) {
+            //插入之前节点
+            int firstNode = pageList.get(0);
+            if (firstNode > 1) {
+                pageList.add(0, firstNode - 1);
+            }
 
+            //插入之后节点
+            int lastNode = pageList.get(pageList.size() - 1);
+            if (lastNode < pageCount) {
+                pageList.add(lastNode + 1);
+            }
 
-        return res;
+            //判断之前节点与之后节点是否存在，若都不存在，则退出循环
+            firstNode = pageList.get(0);
+            lastNode = pageList.get(pageList.size() - 1);
+            if (firstNode == 1 && lastNode == pageCount) {
+                break;
+            }
+        }
+        //查询药方所含的详细药材信息 用map返回
+        Map<String,List<Materials>> materialsMap = new HashMap<>();
+
+        for(Medicine medicine : medicineList){
+            List<Materials> materials = new LinkedList<>();
+            //药方所包含所有的药材 关系
+            List<MedicineList> medicineLists = dao.query(MedicineList.class,Cnd.where("medicineId","=",medicine.getId()));
+            //每一味药材，加入到list里
+            for(MedicineList medicineList1 : medicineLists){
+                Materials materials1 = dao.fetch(Materials.class,Cnd.where("id","=",medicineList1.getMaterialsId()));
+                materials.add(materials1);
+            }
+            materialsMap.put(medicine.getId() + "",materials);
+        }
+
+        //把search信息写入request
+        request.setAttribute("materials",materialsMap);
+        request.setAttribute("search_content", searchContent);
+        //页码信息写入前端
+        request.setAttribute("page", page);
+        request.setAttribute("pageCount", pageCount);
+        request.setAttribute("pageList", pageList);
+        request.setAttribute("code", 0);
+        request.setAttribute("medicineList", medicineList);
+        request.setAttribute("msg", "以下为搜索到的药方");
+
+        return "jsp:doctor/select_prescription";
+
+    }
+
+    /**
+     * 处理搜索药方逻辑
+     * */
+    @At("doctor/search_content")
+    @Ok("re")
+    @Fail("http:500")
+    public Object searchContent(@Param("search_content")String searchContent,
+                                @Param("page")String pageStr,
+                                HttpSession session,
+                                HttpServletRequest request){
+//        Doctor doctor = (Doctor) session.getAttribute("doctor");
+//        Map<String, String > res = new HashMap<>();
+//
+//        if(searchContent == null || searchContent.equals("")){
+////            res.put("code","-1");
+////            res.put("msg","数据有误");
+////            return res;
+//            searchContent = "";
+//        }
+//
+//        //结果显示相关功能
+//        int page = 1;
+//        try {
+//            page = Integer.parseInt(pageStr);
+//        } catch (Exception e){}
+//        //每页显示的内容
+//        int pageSize = Toolkit.getSearchMedicinePage();
+//        int resourceSize = 0;
+//        Pager pager = dao.createPager(page,pageSize);
+//        List<Medicine> medicineList = null;
+//        if(searchContent.equals("") || searchContent == null){
+//            medicineList = dao.query(Medicine.class,Cnd.where("id",">","0"),pager);
+//            resourceSize = dao.count(Medicine.class,Cnd.where("id",">","0"));
+//        } else {
+//            medicineList = dao.query(Medicine.class,Cnd.where("id",">","0").and("name","like","%" + searchContent + "%"),pager);
+//            resourceSize = dao.count(Medicine.class,Cnd.where("id",">","0").and("name","like","%" + searchContent + "%"));
+//        }
+//        //储存展示给用户最终的号码
+//        List<Integer> pageList = new LinkedList<>();
+//        //插入当前页面
+//        pageList.add(page);
+//        //特殊情况
+//        if(medicineList.size() == 0){
+//            request.setAttribute("page",page);
+//            request.setAttribute("pageCount" , 1);
+//            request.setAttribute("pageList",pageList);
+//            request.setAttribute("code",1);
+//            request.setAttribute("msg","没有搜索到相关图书");
+//            return "jsp:doctor/select_prescription";
+//        }
+//        //得到当前的总页数
+//        int pageCount = (resourceSize + pageSize - 1) / pageSize;
+//
+//        //特殊情况
+//        if(page > pageCount){
+//            request.setAttribute("redirect_url","select_prescription.php");
+//            request.setAttribute("msg","此页面不存在");
+//            return "jsp:doctor/select_prescription";
+//        }
+//
+//        //处理特殊情况，page>pageCount
+//        while (pageList.size() < 5) {
+//            //插入之前节点
+//            int firstNode = pageList.get(0);
+//            if (firstNode > 1) {
+//                pageList.add(0, firstNode - 1);
+//            }
+//
+//            //插入之后节点
+//            int lastNode = pageList.get(pageList.size() - 1);
+//            if (lastNode < pageCount) {
+//                pageList.add(lastNode + 1);
+//            }
+//
+//            //判断之前节点与之后节点是否存在，若都不存在，则退出循环
+//            firstNode = pageList.get(0);
+//            lastNode = pageList.get(pageList.size() - 1);
+//            if (firstNode == 1 && lastNode == pageCount) {
+//                break;
+//            }
+//        }
+//        //把search信息写入request
+//        request.setAttribute("search_content", searchContent);
+//        //页码信息写入前端
+//        request.setAttribute("page", page);
+//        request.setAttribute("pageCount", pageCount);
+//        request.setAttribute("pageList", pageList);
+//        request.setAttribute("code", 0);
+//        request.setAttribute("medicineList", medicineList);
+//        request.setAttribute("msg", "以下为搜索到的药方");
+//
+//        return "jsp:doctor/select_prescription";
+        return "re";
 
     }
 
@@ -555,8 +707,6 @@ public class DoctorModule {
     @Fail("http:500")
     public Object DIYPrescription(HttpSession session,
                                   HttpServletRequest request){
-        Doctor doctor = (Doctor) session.getAttribute("doctor");
-        request.setAttribute("name",doctor.getName());
 
         return "jsp:doctor/DIY_prescription";
     }

@@ -5,18 +5,18 @@ import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
 /**
- * 药方的药物列表
+ * 成方和药材的关系
  */
-@Table("A_MEDICINELIST")
+@Table("AAA_MEDICINELIST")
 public class MedicineList {
     @Id
     private int id;
 
     @Column
-    private String medicineName;//药物名称
+    private String medicineId;
 
     @Column
-    private String dosage;//药物用量
+    private String materialsId;
 
     public int getId() {
         return id;
@@ -26,19 +26,19 @@ public class MedicineList {
         this.id = id;
     }
 
-    public String getMedicineName() {
-        return medicineName;
+    public String getMedicineId() {
+        return medicineId;
     }
 
-    public void setMedicineName(String medicineName) {
-        this.medicineName = medicineName;
+    public void setMedicineId(String medicineId) {
+        this.medicineId = medicineId;
     }
 
-    public String getDosage() {
-        return dosage;
+    public String getMaterialsId() {
+        return materialsId;
     }
 
-    public void setDosage(String dosage) {
-        this.dosage = dosage;
+    public void setMaterialsId(String materialsId) {
+        this.materialsId = materialsId;
     }
 }

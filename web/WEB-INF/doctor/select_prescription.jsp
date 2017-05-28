@@ -2,7 +2,8 @@
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %>
-<%@ page import="com.imudges.web.manager_medicine_system.bean.AppointmentOrRegistration" %><%--
+<%@ page import="com.imudges.web.manager_medicine_system.bean.AppointmentOrRegistration" %>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.Medicine" %><%--
   Created by IntelliJ IDEA.
   User: yangyang
   Date: 2017/4/7
@@ -123,13 +124,13 @@
 
             <hr/>
             <div class="row">
-                <form method="post" action="search_prescription.php">
+                <form method="post" action="select_prescription.php">
                     <div class="col-lg-6">
                         <div class="input-group">
                             <input id="search_content" name="search_content" type="text" class="form-control"
                                    placeholder="请输入关键字搜索你需要的药方">
                             <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="commit()">搜索</button>
+                            <button class="btn btn-default" type="submit">搜索</button>
                         </span>
                         </div>
                     </div>
@@ -139,8 +140,101 @@
                 <h4><span class="label label-warning" id="fail_info"
                           style="display: none;">${msg}</span></h4>
             </div>
+            <div class="row-fluid">
+                <%if ((Integer) request.getAttribute("code") == 0) {%>
+                <%List<Medicine> medicines = (List<Medicine>) request.getAttribute("medicineList");%>
+                <table class="table table-striped">
+                    <div class="form-group">
+                        <thead>
+                        <tr>
+                            <th>药名：</th>
+                            <th>价格：</th>
+                            <th>操作：</th>
+                            <th>　详情：</th>
+                        </tr>
+                        </thead>
+                    </div>
+                    <%for (Medicine medicine : medicines) {%>
+
+                    <tbody>
+                    <tr>
+
+                        <td><%=medicine.getName()%>
+                        </td>
+                        <td><%=medicine.getPrice()%>元
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" type="button" data-toggle="modal"
+                                    data-target="#MyModal_<%=medicine.getId()%>#loginModal">添加药品
+                            </button>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" class="btn " data-toggle="modal"
+                               data-target="#myModal_<%=medicine.getId()%>">查看详细信息</a>
+                        </td>
+                        <%--<td><span class="label label-success">已缴纳</span></td>--%>
+                    </tr>
+                    <!-- Modal -->
+                    <%--<div class="modal fade" id="myModal_<%=a.getId()%>" tabindex="-1" role="dialog"--%>
+                    <%--aria-labelledby="myModalLabel">--%>
+                    <%--<div class="modal-dialog" role="document">--%>
+                    <%--<div class="modal-content">--%>
+                    <%--<div class="modal-header">--%>
+                    <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span--%>
+                    <%--aria-hidden="true">&times;</span></button>--%>
+                    <%--</div>--%>
+                    <%--<div class="modal-body">--%>
+                    <%--<p>请确认是否要缴纳此次预约的费用？</p>--%>
+                    <%--</div>--%>
+                    <%--<div class="modal-footer">--%>
+                    <%--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>--%>
+                    <%--<button type="button" class="btn btn-primary" data-dismiss="modal"--%>
+                    <%--onclick="pay_for(<%=a.getId()%>)">确认缴纳--%>
+                    <%--</button>--%>
+                    <%--</div>--%>
+                    <%--</div>--%>
+                    <%--</div>--%>
+                    <%--</div>--%>
+
+                    <%--</div>--%>
+
+                    <%}%>
+                    </tbody>
+                </table>
+                <%
+                    } else {
+                    }
+                %>
+            </div>
+            <%
+                int now_page = (Integer) request.getAttribute("page");
+                int pageCount = (Integer) request.getAttribute("pageCount");
+                String searchContent = (String) request.getAttribute("search_content");
+                List<Integer> pageList = (List<Integer>) request.getAttribute("pageList");
+            %>
+
+            <div class="list-cell">
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        <li <%if (now_page == 1) {%>class="disabled" <%}%>><%if (now_page != 1) {%><a
+                                href="select_prescription.php?page=<%=now_page-1%>&book_info=<%=searchContent%>"
+                                aria-label="Previous"><%}%><span
+                                aria-hidden="true">&laquo;</span></a></li>
+                        <%for (Integer p : pageList) {%>
+                        <li <%if (now_page == p) {%> class="active"<%}%>
+                        ><a href="select_prescription.php?page=<%=p%>&book_info=<%=searchContent%>"><%=p%>
+                        </a></li>
+                        <%}%>
+                        <li <%if (now_page == pageCount) {%> class="disabled"<%}%>><%if (now_page != pageCount) {%><a
+                                href="select_prescription.php?page=<%=now_page+1%>&book_info=<%=searchContent%>"
+                                aria-label="Next"><%}%><span
+                                aria-hidden="true">&raquo;</span></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
-</div>
 </div>
 <div class="footer">
     <div class="row">
@@ -157,10 +251,10 @@
 <script>
     function commit() {
         var search_content = document.getElementById('search_content').value;
-        if(search_content.length == 0){
+        if (search_content.length == 0) {
             document.getElementById('fail_info').innerText = '请填写搜索内容后点击搜索';
             document.getElementById('fail_info').style.display = "";
-            return ;
+            return;
         }
         $.ajax({
             url: 'search_prescription.php?search_content=' + search_content,
