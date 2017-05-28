@@ -585,6 +585,7 @@ public class DoctorModule {
                 Materials materials1 = dao.fetch(Materials.class,Cnd.where("id","=",medicineList1.getMaterialsId()));
                 materials.add(materials1);
             }
+            //TODO 需要修改
             materialsMap.put(medicine.getId() + "",materials);
         }
 
@@ -613,6 +614,7 @@ public class DoctorModule {
                                 @Param("page")String pageStr,
                                 HttpSession session,
                                 HttpServletRequest request){
+        //TODO
 //        Doctor doctor = (Doctor) session.getAttribute("doctor");
 //        Map<String, String > res = new HashMap<>();
 //
@@ -709,6 +711,103 @@ public class DoctorModule {
                                   HttpServletRequest request){
 
         return "jsp:doctor/DIY_prescription";
+    }
+
+
+    /**
+     * 医生为患者添加成方
+     * */
+    @At("doctor/add_medicine")
+    @Ok("json")
+    @Fail("http:500")
+    public Object addMedicine(@Param("medicine_id")String medicineId,
+                              HttpServletRequest request,
+                              HttpSession session){
+        String patientNum = (String) session.getAttribute("patient_num");
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Map<String,String> res = new HashMap<>();
+        //检测参数
+        if(medicineId == null || patientNum == null || patientNum.equals("") || medicineId.equals("")){
+            res.put("code","-1");
+            res.put("msg","参数错误，添加失败");
+            return res;
+        }
+        Patient patient = dao.fetch(Patient.class,Cnd.where("id","=",patientNum));
+        Medicine medicine = dao.fetch(Medicine.class,Cnd.where("id","=",medicineId));
+        if(patient == null || medicine == null){
+            res.put("code","-1");
+            res.put("msg","参数错误，添加失败");
+            return res;
+        }
+        //添加
+        Prescription prescription = new Prescription();
+        prescription.setDoctorIdCard(doctor.getUsername());
+        //系统内部药方
+        prescription.setCombine(false);
+        prescription.setMedicineId(medicineId);
+        prescription.setPatientIdCard(patient.getIdCard());
+        //未付钱
+        prescription.setPay(false);
+        prescription.setPrice(medicine.getPrice());
+        dao.insert(prescription);
+
+        res.put("code","0");
+        res.put("msg","添加完成");
+        return res;
+    }
+
+
+    /**
+     * 医生已选择的药方
+     * */
+    @At("doctor/selected_prescription")
+    @Ok("re")
+    @Fail("http:500")
+    public Object selectedPrescription(HttpSession session,
+                                       HttpServletRequest request){
+        String patientNum = (String) session.getAttribute("patient_num");
+        if(patientNum == null || patientNum.equals("")){
+            request.setAttribute("code",-1);
+            request.setAttribute("msg","请求参数错误");
+            return "jsp:doctor/selected_prescription";
+        }
+        Patient patient = dao.fetch(Patient.class,Cnd.where("id","=",patientNum));
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        if(patient == null || doctor == null){
+            request.setAttribute("code",-1);
+            request.setAttribute("msg","请求参数错误");
+            return "jsp:doctor/selected_prescription";
+        }
+        //将医生开出去的方子转化为具体的药方
+        List<Prescription> prescriptionList = dao.query(Prescription.class,Cnd.where("patientIdCard","=",patient.getIdCard()).and("doctorIdCard","=",doctor.getUsername()));
+        List<Medicine> medicineList = new LinkedList<>();
+        //存放每一个药方所包含的每一味药材
+        Map<String,List<Materials>> materialsMap = new HashMap<>();
+        for(Prescription prescription : prescriptionList){
+            //把每个药方返回
+            Medicine medicine = dao.fetch(Medicine.class,Cnd.where("id","=",prescription.getMedicineId()));
+            medicineList.add(medicine);
+
+            //把每个药方的每味材料返回
+            List<Materials> materials = new LinkedList<>();
+            //药方材料的关系
+            List<MedicineList> medicineLists = dao.query(MedicineList.class,Cnd.where("medicineId","=",medicine.getId()));
+            //每一味药材，加入到list里
+            for(MedicineList medicineList1 : medicineLists){
+                Materials materials1 = dao.fetch(Materials.class,Cnd.where("id","=",medicineList1.getMaterialsId()));
+                materials.add(materials1);
+            }
+            //TODO 需要修改
+            materialsMap.put(medicine.getId() + "",materials);
+        }
+
+        //把search信息写入request
+        request.setAttribute("materials",materialsMap);
+        request.setAttribute("doctor",doctor);
+        request.setAttribute("medicine_list",medicineList);
+        request.setAttribute("patient",patient);
+        request.setAttribute("code",0);
+        return "jsp:doctor/selected_prescription";
     }
 
 }

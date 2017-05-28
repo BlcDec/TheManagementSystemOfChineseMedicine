@@ -134,7 +134,7 @@
                                    placeholder="请输入关键字搜索你需要的药方">
                             <span class="input-group-btn">
                             <button class="btn btn-default" type="submit">搜索</button>
-                                <button type="button" class="btn btn-default">查看已选药方</button>
+                                <button type="button" class="btn btn-default" onclick="jump()">查看已选药方</button>
                         </span>
                         </div>
                     </div>
@@ -270,6 +270,9 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
+    function jump() {
+        window.setTimeout("window.location='selected_prescription.php'",2000);
+    }
     function commit(medicine_id) {
         if (medicine_id.length == 0) {
             document.getElementById('fail_info').innerText = '请选择药品后添加';
@@ -299,13 +302,6 @@
                     document.getElementById('fail_info').innerText = "提交参数错误！";
                     return;
                 }
-                if (code == -5) {
-                    document.getElementById('fail_info').style.display = "";
-                    document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "身份证号不正确";
-                    return;
-                }
-
             },
             fail: function (returndata) {
                 document.getElementById('fail_info').innerText = "网络错误，提交失败";
