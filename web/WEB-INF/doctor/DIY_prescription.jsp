@@ -75,12 +75,59 @@
             #main-menu a:visited {
                 color: #31588A;
             }
+
+            .modal-dialog {
+                left: 0%;
+            }
+        }
+
+        .spinner {
+            width: 100px;
+        }
+
+        .spinner input {
+            text-align: right;
+        }
+
+        .input-group-btn-vertical {
+            position: relative;
+            white-space: nowrap;
+            width: 1%;
+            vertical-align: middle;
+            display: table-cell;
+        }
+
+        .input-group-btn-vertical > .btn {
+            display: block;
+            float: none;
+            width: 100%;
+            max-width: 100%;
+            padding: 8px;
+            margin-left: -1px;
+            position: relative;
+            border-radius: 0;
+        }
+
+        .input-group-btn-vertical > .btn:first-child {
+            border-top-right-radius: 4px;
+        }
+
+        .input-group-btn-vertical > .btn:last-child {
+            margin-top: -2px;
+            border-bottom-right-radius: 4px;
+        }
+
+        .input-group-btn-vertical i {
+            position: absolute;
+            top: 0;
+            left: 4px;
         }
     </style>
 
 </head>
 
 <body>
+
 
 <div id="wrapper">
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -184,54 +231,68 @@
                     <%--<button type="button" class="btn btn-default" onclick="jump()">查看已提交药方</button>--%>
                     <%--</span>--%>
                     <%--</div>--%>
-                    <div class="form-group">
-                        <form class="form-horizontal" role="form">
-                            <h4><span class="label label-info" style="margin-left: 15px">选择药材</span></h4>
-                            <div class="form-group">
-                                <div class="col-lg-5">
-                                    <select style="margin-top: 10px" id="bs3Select"
-                                            class="selectpicker show-tick form-control" multiple
-                                            data-live-search="true">
-                                        <%if ((Integer) request.getAttribute("code") == 0) {%>
-                                        <%Map<String, MaterialsStore> materialsStoreMap = (Map<String, MaterialsStore>) request.getAttribute("materials_store");%>
-                                        <%for (String key : materialsStoreMap.keySet()) {%>
-                                        <option id="<%=key%>"><%=materialsStoreMap.get(key).getMaterialName()%>
-                                        </option>
+                    <div class="row-fluid">
+                        <%--<form class="form-horizontal" role="form">--%>
+                        <h4><span class="label label-info" style="margin-left: 15px">选择药材</span></h4>
+                        <div class="row-fluid">
+                            <div class="col-lg-5">
+                                <select style="margin-top: 10px" id="bs3Select"
+                                        class="selectpicker show-tick form-control" multiple
+                                        data-live-search="true">
+                                    <%if ((Integer) request.getAttribute("code") == 0) {%>
+                                    <%Map<String, MaterialsStore> materialsStoreMap = (Map<String, MaterialsStore>) request.getAttribute("materials_store");%>
+                                    <%for (String key : materialsStoreMap.keySet()) {%>
+                                    <option id="<%=key%>"><%=materialsStoreMap.get(key).getMaterialName()%>
+                                    </option>
 
-                                        <%}%>
-                                        <%}%>
-                                    </select>
-                                    <button style="margin-top: 10px" class="btn btn-default" type="button"
-                                            data-toggle="modal"
-                                            data-target="#MyModal">添加
-                                    </button>
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="MyModal" tabindex="-1" role="dialog"
-                                         aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close"><span
-                                                            aria-hidden="true">&times;</span></button>
+                                    <%}%>
+                                    <%}%>
+                                </select>
+                                <button style="margin-top: 10px" class="btn btn-default" type="button"
+                                        onclick="do_modal()">添加
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="MyModal" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel">
+                                    <div style="left: 0%;" class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close"><span
+                                                        aria-hidden="true">&times;</span></button>
+                                            </div>
+                                            <div class="modal-body" id="medicine_modal_body">
+                                                <div id="medicine_msg">
+                                                    <h4><span class="label label-default" style="margin-left: 15px">选择药材</span></h4>
+                                                    <div class="container" id="medicine_dosage">
+                                                        <div class="input-group spinner">
+                                                            <input type="text" class="form-control" value="0">
+                                                            <div class="input-group-btn-vertical">
+                                                                <button class="btn btn-default" type="button"><i
+                                                                        class="fa fa-caret-up"></i></button>
+                                                                <button class="btn btn-default" type="button"><i
+                                                                        class="fa fa-caret-down"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <p>请确认是否要删除此项药方？</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                                                        关闭
-                                                    </button>
-                                                    <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                                            onclick="">确认删除
-                                                    </button>
-                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                                        onclick="">确认添加
+                                                </button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                    关闭
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
-                        </form>
+
+
+                        </div>
 
                     </div>
                 </form>
@@ -271,21 +332,47 @@
 <%--<script src="../../theme/assets/js/custom.js"></script>--%>
 
 <script>
-//    $('#MyModal').on('show.bs.modal', function centerModals() {
-//        $('#MyModal').each(function (i) {
-//            var $clone = $(this).clone().css('display', 'block').appendTo('body');
-//            var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2);
-//            top = top > 0 ? top : 0;
-//            $clone.remove();
-//            $(this).find('.modal-content').css("margin-top", top);
-//        });
-//    });
+    var select = document.getElementById('bs3Select');
+    var summary = document.getElementById('summary');
+    function do_modal() {
+        var tag = false;
+        var arr = [];
+        if (select != null && typeof(select) != "undefined") {
+            for (var i = 0, j = 0; i < select.options.length; i++) {
+                if (select.options[i].selected) {
+                    tag = true;
+                    arr[j] = select.options[i].value;
+                    j++;
+                }
+            }
+        }
+        if (!tag) {
+            alert('请选择药品后添加');
+            return;
+        }
+        //TODO
+        var a = $('#medicine_msg').cloneNode(true);
+        alert(";");
+        var fathor = document.getElementById('medicine_modal_body');
+        alert("'");
+        fathor.appendChild(a);
+        alert("/");
+        $('#MyModal').modal('show');
+    }
+
+
+    (function ($) {
+        $('.spinner .btn:first-of-type').on('click', function () {
+            $('.spinner input').val(parseInt($('.spinner input').val(), 10) + 1);
+        });
+        $('.spinner .btn:last-of-type').on('click', function () {
+            $('.spinner input').val(parseInt($('.spinner input').val(), 10) - 1);
+        });
+    })(jQuery);
 
 
     function add_materials() {
         //TODO
-        var select = document.getElementById('bs3Select');
-        var summary = document.getElementById('summary');
         if (summary.length != 0) {
             summary.value = '';
         }
