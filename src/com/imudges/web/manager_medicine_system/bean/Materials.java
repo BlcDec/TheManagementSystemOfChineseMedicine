@@ -5,7 +5,7 @@ import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
 /**
- * 药材
+ * 构成成方的药材
  */
 @Table("A_MATERIALS")
 public class Materials {

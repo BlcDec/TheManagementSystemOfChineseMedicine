@@ -173,7 +173,8 @@
                 <li class="active"><a href="start_diagnose.php">诊断</a></li>
                 <li class="active">调配药方</li>
             </ol>
-            <div class="row">
+            <hr>
+            <div class="row" align="left">
                 <form method="post" action="search_content.php">
                     <%--<div class="input-group">--%>
                     <%--<input id="search_content" name="search_content" type="text" class="form-control"--%>
@@ -183,43 +184,60 @@
                     <%--<button type="button" class="btn btn-default" onclick="jump()">查看已提交药方</button>--%>
                     <%--</span>--%>
                     <%--</div>--%>
-                    <div class="container" style="margin-top: 0px">
+                    <div class="form-group">
                         <form class="form-horizontal" role="form">
-                            <h4><span class="label label-info">选择药材</span></h4>
+                            <h4><span class="label label-info" style="margin-left: 15px">选择药材</span></h4>
                             <div class="form-group">
-                                <div class="col-lg-5" style="padding-left: 0px">
-                                    <select id="bs3Select" class="selectpicker show-tick form-control" multiple
+                                <div class="col-lg-5">
+                                    <select style="margin-top: 10px" id="bs3Select"
+                                            class="selectpicker show-tick form-control" multiple
                                             data-live-search="true">
-                                        <%if((Integer) request.getAttribute("code") == 0){%>
-                                        <%Map<String,MaterialsStore> materialsStoreMap = (Map<String, MaterialsStore>) request.getAttribute("materials_store");%>
-                                        <%for(String key : materialsStoreMap.keySet()){%>
-                                        <option id="<%=key%>"><%=materialsStoreMap.get(key).getMaterialName()%></option>
+                                        <%if ((Integer) request.getAttribute("code") == 0) {%>
+                                        <%Map<String, MaterialsStore> materialsStoreMap = (Map<String, MaterialsStore>) request.getAttribute("materials_store");%>
+                                        <%for (String key : materialsStoreMap.keySet()) {%>
+                                        <option id="<%=key%>"><%=materialsStoreMap.get(key).getMaterialName()%>
+                                        </option>
+
                                         <%}%>
                                         <%}%>
                                     </select>
-                                    <button class="btn btn-default" type="button" onclick="add_materials()">添加</button>
+                                    <button style="margin-top: 10px" class="btn btn-default" type="button"
+                                            data-toggle="modal"
+                                            data-target="#MyModal">添加
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="MyModal" tabindex="-1" role="dialog"
+                                         aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close"><span
+                                                            aria-hidden="true">&times;</span></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>请确认是否要删除此项药方？</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                        关闭
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                                            onclick="">确认删除
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
+
                     </div>
-                    <%--<div class="input-group">--%>
-                    <%--<i class="clearable glyphicon glyphicon-remove"--%>
-                    <%--style="position: absolute; top: 12px; right: 35px; z-index: 4; cursor: pointer; font-size: 12px; display: none;"></i>--%>
-                    <%--<input type="text" class="form-control" id="test">--%>
-                    <%--<div class="input-group-btn">--%>
-                    <%--<button type="button" class="btn btn-default dropdown-toggle"--%>
-                    <%--data-toggle="dropdown">--%>
-                    <%--<span class="caret"></span>--%>
-                    <%--</button>--%>
-                    <%----%>
-                    <%--</div>--%>
-                    <%--<!-- /btn-group -->--%>
-                    <%--</div>--%>
-
-
                 </form>
             </div>
             <%//TODO  使用模态框显示搜索结果%>
+
             <div class="form-group" align="left">
                 <div>
                     <label>药方详情：</label>
@@ -234,8 +252,6 @@
                     <button type="button" class="btn btn-primary">提交</button>
                 </div>
             </div>
-
-
 
 
         </div>
@@ -255,16 +271,27 @@
 <%--<script src="../../theme/assets/js/custom.js"></script>--%>
 
 <script>
+//    $('#MyModal').on('show.bs.modal', function centerModals() {
+//        $('#MyModal').each(function (i) {
+//            var $clone = $(this).clone().css('display', 'block').appendTo('body');
+//            var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 2);
+//            top = top > 0 ? top : 0;
+//            $clone.remove();
+//            $(this).find('.modal-content').css("margin-top", top);
+//        });
+//    });
+
+
     function add_materials() {
         //TODO
         var select = document.getElementById('bs3Select');
         var summary = document.getElementById('summary');
-        if(summary.length!=0){
+        if (summary.length != 0) {
             summary.value = '';
         }
-        if(select != null && typeof(select)!= "undefined"){
-            for(var i = 0;i<select.options.length;i++){
-                if(select.options[i].selected){
+        if (select != null && typeof(select) != "undefined") {
+            for (var i = 0; i < select.options.length; i++) {
+                if (select.options[i].selected) {
                     summary.value = summary.value + select.options[i].value + ',\n';
                 }
             }
