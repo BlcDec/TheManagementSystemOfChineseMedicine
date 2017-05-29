@@ -7,7 +7,7 @@ import org.nutz.dao.entity.annotation.Table;
 /**
  * 药方，医生开出去的
  */
-@Table("AAA_PRESCRIPTION")
+@Table("AAAA_PRESCRIPTION")
 public class Prescription {
     @Id
     private int id;
@@ -29,6 +29,22 @@ public class Prescription {
 
     @Column
     private boolean isCombine;//是否为医生自行开药
+
+    /**
+     * -1：不知道什么状态
+     * 0：被删除
+     * 1：正常可查询状态
+     * */
+    @Column
+    private int status;//状态
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public boolean isCombine() {
         return isCombine;

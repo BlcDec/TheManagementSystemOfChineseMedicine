@@ -107,11 +107,7 @@
         <div id="page-inner">
             <div class="row">
                 <div class="col-lg-12">
-                    <%--<%if ((Integer) request.getAttribute("code") == -12 || (Integer) request.getAttribute("code") == -11 || (Integer) request.getAttribute("code") == -13) {%>--%>
-                    <%--<h2>诊断窗口（即将自动跳转）</h2>--%>
-                    <%--<%} else if ((Integer) request.getAttribute("code") == 0) {%>--%>
-                    <h2>诊断窗口</h2>
-                    <%--<%}%>--%>
+                    <h2 id="head_contain">诊断窗口</h2>
                 </div>
             </div>
             <ol class="breadcrumb">
@@ -122,6 +118,10 @@
                 <li class="active"><a href="select_prescription.php">开药方</a></li>
                 <li class="active">查看已选药方</li>
             </ol>
+            <h4><span class="label label-success" id="success_info"
+                      style="display: none;">${msg}</span></h4>
+            <h4><span class="label label-warning" id="fail_info"
+                      style="display: none;">${msg}</span></h4>
 
             <hr/>
             <table class="table table-striped">
@@ -136,26 +136,80 @@
                     </tr>
                     </thead>
                 </div>
-                <%if((Integer) request.getAttribute("code") == 0){%>
+                <%if ((Integer) request.getAttribute("code") == 0) {%>
                 <%Doctor doctor = (Doctor) request.getAttribute("doctor");%>
                 <%Patient patient = (Patient) request.getAttribute("patient");%>
                 <%List<Medicine> medicineList = (List<Medicine>) request.getAttribute("medicine_list");%>
+                <%
+                    Map<String, List<Materials>> materialsMap = (Map<String, List<Materials>>) request.getAttribute("materials");%>
                 <tbody>
-                <%for(Medicine medicine : medicineList){%>
+                <%for (Medicine medicine : medicineList) {%>
                 <tr>
-                    <th><%=doctor.getName()%></th>
-                    <th><%=patient.getName()%></th>
-                    <th><%=medicine.getName()%></th>
-                    <th></th>
-                    <th></th>
+                    <td><%=doctor.getName()%>
+                    </td>
+                    <td><%=patient.getName()%>
+                    </td>
+                    <td><%=medicine.getName()%>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="btn " data-toggle="modal"
+                           data-target="#myModal_<%=medicine.getId()%>">查看详细信息</a>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" data-toggle="modal" style="margin-top: 0px"
+                                data-target="#MyModal_<%=medicine.getId()%>">删除
+                        </button>
+                    </td>
                 </tr>
+                <%List<Materials> materialsList = materialsMap.get(medicine.getId() + "");%>
+                <%--Modal--%>
+                <div class="modal fade" id="myModal_<%=medicine.getId()%>" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><%=medicine.getName()%>由以下药材组成：</p>
+                                <p><%for (Materials m : materialsList) {%>
+                                    <%=m.getId() + " " + m.getMedicineName()%>
+                                    <%}%></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="MyModal_<%=medicine.getId()%>" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>请确认是否要删除此项药方？</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="delete_medicine(<%=medicine.getId()%>)">确认删除
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <%}%>
                 </tbody>
                 <%}%>
             </table>
-            </div>
         </div>
     </div>
+</div>
 </div>
 <div class="footer">
     <div class="row">
@@ -170,18 +224,16 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
-    function jump() {
-        window.setTimeout("window.location='selected_prescription.php'",2000);
-    }
-    function commit(medicine_id) {
-        if (medicine_id.length == 0) {
-            document.getElementById('fail_info').innerText = '请选择药品后添加';
+
+    function delete_medicine(medicine_id) {
+        if(medicine_id.length == 0){
             document.getElementById('fail_info').style.display = "";
-            return;
+            document.getElementById('success_info').style.display = "none";
+            document.getElementById('fail_info').innerText = "请选择药方后删除";
+            return ;
         }
-        //TODO 添加药品给用户
         $.ajax({
-            url: 'add_medicine.php?medicine_id=' + medicine_id,
+            url: 'delete_medicine.php?medicine_id=' + medicine_id,
             type: 'GET',
             async: true,
             cache: false,
@@ -193,24 +245,31 @@
                 if (code == 0) {
                     document.getElementById('success_info').style.display = "";
                     document.getElementById('fail_info').style.display = "none";
-                    document.getElementById('success_info').innerText = "添加成功！";
+                    document.getElementById('success_info').innerText = "删除成功！";
+                    document.getElementById('head_contain').innerText = '诊断窗口（即将自动跳转）';
+                    window.setTimeout("window.location='selected_prescription.php'",3000);
+                    scrollTo(0,0);
                     return;
                 }
                 if (code == -1) {
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "提交参数错误！";
+                    document.getElementById('fail_info').innerText = "请求参数错误！";
+                    document.getElementById('head_contain').innerText = '诊断窗口（即将自动跳转）';
+                    window.setTimeout("window.location='selected_prescription.php'",3000);
+                    scrollTo(0,0);
                     return;
                 }
             },
             fail: function (returndata) {
                 document.getElementById('fail_info').innerText = "网络错误，提交失败";
                 document.getElementById('fail_info').style.display = "";
+                document.getElementById('head_contain').innerText = '诊断窗口（即将自动跳转）';
+                window.setTimeout("window.location='selected_prescription.php'",3000);
             }
         });
 
     }
-
 </script>
 
 </body>

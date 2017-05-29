@@ -10,6 +10,7 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;
 
+import javax.naming.ldap.PagedResultsControl;
 import javax.print.Doc;
 import javax.servlet.http.*;
 import java.awt.print.Paper;
@@ -749,6 +750,7 @@ public class DoctorModule {
         //未付钱
         prescription.setPay(false);
         prescription.setPrice(medicine.getPrice());
+        prescription.setStatus(1);
         dao.insert(prescription);
 
         res.put("code","0");
@@ -778,8 +780,11 @@ public class DoctorModule {
             request.setAttribute("msg","请求参数错误");
             return "jsp:doctor/selected_prescription";
         }
-        //将医生开出去的方子转化为具体的药方
-        List<Prescription> prescriptionList = dao.query(Prescription.class,Cnd.where("patientIdCard","=",patient.getIdCard()).and("doctorIdCard","=",doctor.getUsername()));
+        //将医生开出去的方子转化为具体的药方 (有效药方)
+        List<Prescription> prescriptionList = dao.query(Prescription.class
+                , Cnd.where("patientIdCard","=",patient.getIdCard())
+                        .and("doctorIdCard","=",doctor.getUsername())
+                        .and("status","=","1"));
         List<Medicine> medicineList = new LinkedList<>();
         //存放每一个药方所包含的每一味药材
         Map<String,List<Materials>> materialsMap = new HashMap<>();
@@ -808,6 +813,51 @@ public class DoctorModule {
         request.setAttribute("patient",patient);
         request.setAttribute("code",0);
         return "jsp:doctor/selected_prescription";
+    }
+
+    /**
+     * 医生删除已开药方
+     * */
+    @At("doctor/delete_medicine")
+    @Ok("json")
+    @Fail("http:500")
+    public Object deleteMedicine(@Param("medicine_id")String medicineId,
+                                 HttpServletRequest request,
+                                 HttpSession session){
+        Map<String,String> res = new HashMap<>();
+        if(medicineId == null || medicineId.equals("")){
+            res.put("code","-1");
+            res.put("msg","请球参数错误");
+            return res;
+        }
+
+        String patientNum = (String) session.getAttribute("patient_num");
+        if(patientNum == null || patientNum.equals("")){
+            res.put("code","-1");
+            res.put("msg","患者挂号的号码错误");
+            return res;
+        }
+
+        Patient patient = dao.fetch(Patient.class,Cnd.where("id","=",patientNum));
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+
+        Prescription prescription = dao.fetch(Prescription.class,
+                Cnd.where("patientIdCard","=",patient.getIdCard())
+                        .and("doctorIdCard","=",doctor.getUsername())
+                        .and("medicineId","=",medicineId)
+                        .and("status","=","1"));
+        if(prescription == null){
+            res.put("code","-5");
+            res.put("msg","药方信息错误");
+            return res;
+        }
+
+        prescription.setStatus(0);
+        dao.update(prescription);
+
+        res.put("code","0");
+        res.put("msg","删除成功");
+        return res;
     }
 
 }

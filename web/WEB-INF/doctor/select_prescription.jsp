@@ -271,7 +271,7 @@
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
     function jump() {
-        window.setTimeout("window.location='selected_prescription.php'",2000);
+        window.setTimeout("window.location='selected_prescription.php'");
     }
     function commit(medicine_id) {
         if (medicine_id.length == 0) {
@@ -279,7 +279,6 @@
             document.getElementById('fail_info').style.display = "";
             return;
         }
-        //TODO 添加药品给用户
         $.ajax({
             url: 'add_medicine.php?medicine_id=' + medicine_id,
             type: 'GET',
