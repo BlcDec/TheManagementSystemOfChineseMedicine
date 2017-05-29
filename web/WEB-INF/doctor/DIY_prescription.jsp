@@ -226,7 +226,7 @@
                     <div class="form-group">
                         <textarea name="summary" class="form-control" rows="5" id="summary"></textarea>
                     </div>
-                    <h3><span class="label label-info" id="info">请在药材名称后填写各药材重量，以回车隔开</span></h3>
+                    <h3><span class="label label-info" id="info">请在药材名称后的逗号后填写各药材重量，以回车隔开</span></h3>
                     <h4><span class="label label-success" id="success_info"
                               style="display: none;">${msg}</span></h4>
                     <h4><span class="label label-warning" id="fail_info"
@@ -234,6 +234,8 @@
                     <button type="button" class="btn btn-primary">提交</button>
                 </div>
             </div>
+
+
 
 
         </div>
@@ -256,9 +258,16 @@
     function add_materials() {
         //TODO
         var select = document.getElementById('bs3Select');
-        var obj = select.val
-        for(var i = 0;i<select.size();i++){
-            alert(select.value);
+        var summary = document.getElementById('summary');
+        if(summary.length!=0){
+            summary.value = '';
+        }
+        if(select != null && typeof(select)!= "undefined"){
+            for(var i = 0;i<select.options.length;i++){
+                if(select.options[i].selected){
+                    summary.value = summary.value + select.options[i].value + ',\n';
+                }
+            }
         }
     }
     function jump() {
