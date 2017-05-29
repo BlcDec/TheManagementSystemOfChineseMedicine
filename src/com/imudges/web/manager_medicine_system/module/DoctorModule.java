@@ -495,7 +495,6 @@ public class DoctorModule {
     /**
      * 手动选择系统已有药方
      * */
-    //TODO 做一个search + 翻页功能
     @At("doctor/select_prescription")
     @Ok("re")
     @Fail("http:500")
@@ -586,7 +585,7 @@ public class DoctorModule {
                 Materials materials1 = dao.fetch(Materials.class,Cnd.where("id","=",medicineList1.getMaterialsId()));
                 materials.add(materials1);
             }
-            //TODO 需要修改
+            //TODO 需要修改，需要修改显示的内容，即不能为id + 内容
             materialsMap.put(medicine.getId() + "",materials);
         }
 
@@ -615,7 +614,10 @@ public class DoctorModule {
                                 @Param("page")String pageStr,
                                 HttpSession session,
                                 HttpServletRequest request){
+
+//        Map<String,>
         //TODO
+        return "re";
 //        Doctor doctor = (Doctor) session.getAttribute("doctor");
 //        Map<String, String > res = new HashMap<>();
 //
@@ -698,7 +700,7 @@ public class DoctorModule {
 //        request.setAttribute("msg", "以下为搜索到的药方");
 //
 //        return "jsp:doctor/select_prescription";
-        return "re";
+
 
     }
 
@@ -710,7 +712,14 @@ public class DoctorModule {
     @Fail("http:500")
     public Object DIYPrescription(HttpSession session,
                                   HttpServletRequest request){
+        Map<String,MaterialsStore> materialsStoreMap = new HashMap<>();
 
+        List<MaterialsStore> stores = dao.query(MaterialsStore.class,Cnd.where("materialRemain",">","0"));
+        for(MaterialsStore m : stores){
+            materialsStoreMap.put(m.getId() + "",m);
+        }
+        request.setAttribute("materials_store",materialsStoreMap);
+        request.setAttribute("code",0);
         return "jsp:doctor/DIY_prescription";
     }
 
@@ -802,7 +811,7 @@ public class DoctorModule {
                 Materials materials1 = dao.fetch(Materials.class,Cnd.where("id","=",medicineList1.getMaterialsId()));
                 materials.add(materials1);
             }
-            //TODO 需要修改
+            //TODO 需要修改，需要修改显示的内容，即不能为id + 内容
             materialsMap.put(medicine.getId() + "",materials);
         }
 

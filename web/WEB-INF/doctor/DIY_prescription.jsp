@@ -2,7 +2,9 @@
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %>
-<%@ page import="com.imudges.web.manager_medicine_system.bean.AppointmentOrRegistration" %><%--
+<%@ page import="com.imudges.web.manager_medicine_system.bean.AppointmentOrRegistration" %>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.MaterialsStore" %>
+<%@ page import="java.util.Map" %><%--
   Created by IntelliJ IDEA.
   User: yangyang
   Date: 2017/4/7
@@ -21,6 +23,27 @@
     <link href="../../theme/assets/css/font-awesome.css" rel="stylesheet"/>
     <link href="../../theme/assets/css/custom.css" rel="stylesheet"/>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+
+    <script type="text/javascript" src="http://www.daimajiayuan.com/download/jquery/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript"
+            src="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.css">
+
+
+    <!-- 3.0 -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(window).on('load', function () {
+
+            $('.selectpicker').selectpicker({
+                'selectedText': 'cat'
+            });
+
+            // $('.selectpicker').selectpicker('hide');
+        });
+    </script>
     <style>
         @media (max-width: 768px) {
             .navbar-default {
@@ -54,9 +77,10 @@
             }
         }
     </style>
-</head>
-<body>
 
+</head>
+
+<body>
 
 <div id="wrapper">
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -104,6 +128,35 @@
     </nav>
     <div id="page-wrapper">
         <div id="page-inner">
+            <%--<select>--%>
+            <%--<option value="jQuery插件库">jQuery插件库</option>--%>
+            <%--<option value="BlackBerry">BlackBerry</option>--%>
+            <%--<option value="device">device</option>--%>
+            <%--<option value="with">with</option>--%>
+            <%--<option value="entertainment">entertainment</option>--%>
+            <%--<option value="and">and</option>--%>
+            <%--<option value="social">social</option>--%>
+            <%--<option value="networking">networking</option>--%>
+            <%--<option value="apps">apps</option>--%>
+            <%--<option value="or">or</option>--%>
+            <%--<option value="apps">apps</option>--%>
+            <%--<option value="that">that</option>--%>
+            <%--<option value="will">will</option>--%>
+            <%--<option value="boost">boost</option>--%>
+            <%--<option value="your">your</option>--%>
+            <%--<option value="productivity">productivity</option>--%>
+            <%--<option value="Download">Download</option>--%>
+            <%--<option value="or">or</option>--%>
+            <%--<option value="buy">buy</option>--%>
+            <%--<option value="apps">apps</option>--%>
+            <%--<option value="from">from</option>--%>
+            <%--<option value="Afbb">Afbb</option>--%>
+            <%--<option value="Akademie">Akademie</option>--%>
+            <%--<option value="Berlin">Berlin</option>--%>
+            <%--<option value="reviews">reviews</option>--%>
+            <%--<option value="by">by</option>--%>
+            <%--<option value="real">real</option>--%>
+            <%--</select>--%>
             <div class="row">
                 <div class="col-lg-12">
                     <%--<%if ((Integer) request.getAttribute("code") == -12 || (Integer) request.getAttribute("code") == -11 || (Integer) request.getAttribute("code") == -13) {%>--%>
@@ -113,7 +166,7 @@
                     <%--<%}%>--%>
                 </div>
             </div>
-            <ol class="breadcrumb">
+            <ol class="breadcrumb" style="margin-bottom: 0px">
                 <li class="active">中医药管理系统</li>
 
                 <li class="active"><a href="diagnose.php">诊断窗口</a></li>
@@ -121,17 +174,49 @@
                 <li class="active">调配药方</li>
             </ol>
             <div class="row">
-                <form method="post" action="select_prescription.php">
-                    <div class="col-lg-6">
-                        <div class="input-group">
-                            <input id="search_content" name="search_content" type="text" class="form-control"
-                                   placeholder="请输入关键字搜索你需要的药材">
-                            <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit">搜索</button>
-                                <button type="button" class="btn btn-default">查看已提交药方</button>
-                        </span>
-                        </div>
+                <form method="post" action="search_content.php">
+                    <%--<div class="input-group">--%>
+                    <%--<input id="search_content" name="search_content" type="text" class="form-control"--%>
+                    <%--placeholder="请输入关键字搜索你需要的药材">--%>
+                    <%--<span class="input-group-btn">--%>
+                    <%--<button class="btn btn-default" type="submit">搜索</button>--%>
+                    <%--<button type="button" class="btn btn-default" onclick="jump()">查看已提交药方</button>--%>
+                    <%--</span>--%>
+                    <%--</div>--%>
+                    <div class="container" style="margin-top: 0px">
+                        <form class="form-horizontal" role="form">
+                            <h4><span class="label label-info">选择药材</span></h4>
+                            <div class="form-group">
+                                <div class="col-lg-5" style="padding-left: 0px">
+                                    <select id="bs3Select" class="selectpicker show-tick form-control" multiple
+                                            data-live-search="true">
+                                        <%if((Integer) request.getAttribute("code") == 0){%>
+                                        <%Map<String,MaterialsStore> materialsStoreMap = (Map<String, MaterialsStore>) request.getAttribute("materials_store");%>
+                                        <%for(String key : materialsStoreMap.keySet()){%>
+                                        <option id="<%=key%>"><%=materialsStoreMap.get(key).getMaterialName()%></option>
+                                        <%}%>
+                                        <%}%>
+                                    </select>
+                                    <button class="btn btn-default" type="button" onclick="add_materials()">添加</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
+                    <%--<div class="input-group">--%>
+                    <%--<i class="clearable glyphicon glyphicon-remove"--%>
+                    <%--style="position: absolute; top: 12px; right: 35px; z-index: 4; cursor: pointer; font-size: 12px; display: none;"></i>--%>
+                    <%--<input type="text" class="form-control" id="test">--%>
+                    <%--<div class="input-group-btn">--%>
+                    <%--<button type="button" class="btn btn-default dropdown-toggle"--%>
+                    <%--data-toggle="dropdown">--%>
+                    <%--<span class="caret"></span>--%>
+                    <%--</button>--%>
+                    <%----%>
+                    <%--</div>--%>
+                    <%--<!-- /btn-group -->--%>
+                    <%--</div>--%>
+
+
                 </form>
             </div>
             <%//TODO  使用模态框显示搜索结果%>
@@ -141,7 +226,7 @@
                     <div class="form-group">
                         <textarea name="summary" class="form-control" rows="5" id="summary"></textarea>
                     </div>
-                    <h3><span class="label label-info" id="info">请填写药方所含所有药以及含量</span></h3>
+                    <h3><span class="label label-info" id="info">请在药材名称后填写各药材重量，以回车隔开</span></h3>
                     <h4><span class="label label-success" id="success_info"
                               style="display: none;">${msg}</span></h4>
                     <h4><span class="label label-warning" id="fail_info"
@@ -151,8 +236,8 @@
             </div>
 
 
+        </div>
     </div>
-</div>
 </div>
 <div class="footer">
     <div class="row">
@@ -163,16 +248,28 @@
 </div>
 
 
-<script src="../../theme/assets/js/jquery-1.10.2.js"></script>
-<script src="../../theme/assets/js/bootstrap.min.js"></script>
-<script src="../../theme/assets/js/custom.js"></script>
+<%--<script src="../../theme/assets/js/jquery-1.10.2.js"></script>--%>
+<%--<script src="../../theme/assets/js/bootstrap.min.js"></script>--%>
+<%--<script src="../../theme/assets/js/custom.js"></script>--%>
+
 <script>
+    function add_materials() {
+        //TODO
+        var select = document.getElementById('bs3Select');
+        var obj = select.val
+        for(var i = 0;i<select.size();i++){
+            alert(select.value);
+        }
+    }
+    function jump() {
+        window.setTimeout("window.location='selected_prescription.php'");
+    }
     function commit() {
         var search_content = document.getElementById('search_content').value;
-        if(search_content.length == 0){
+        if (search_content.length == 0) {
             document.getElementById('fail_info').innerText = '请填写搜索内容后点击搜索';
             document.getElementById('fail_info').style.display = "";
-            return ;
+            return;
         }
         $.ajax({
             url: 'search_prescription.php?search_content=' + search_content,
