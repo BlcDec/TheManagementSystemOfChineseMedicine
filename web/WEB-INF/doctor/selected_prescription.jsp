@@ -178,7 +178,7 @@
                             <div class="modal-body">
                                 <p><%=medicine.getName()%>由以下药材组成：</p>
                                 <p><%for (Materials m : materialsList) {%>
-                                    <%=m.getId() + " " + m.getMedicineName()%>
+                                    <%=m.getId() + "号：" + m.getMedicineName()  +  m.getDosage() + '克' + ",   "%>
                                     <%}%></p>
                             </div>
                             <div class="modal-footer">
@@ -249,7 +249,7 @@
                             <div class="modal-body">
                                 <p>此药方由以下药材组成：</p>
                                 <p><%for (MaterialsCombine m : materialsCombines) {%>
-                                    <%=m.getId() + " " + m.getMaterialName()%>
+                                    <%=m.getId() + "号：" + m.getMaterialName()  +  m.getMaterialDosage() + '克' + ",   "%>
                                     <%}%></p>
                             </div>
                             <div class="modal-footer">

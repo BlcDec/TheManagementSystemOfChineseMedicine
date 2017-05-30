@@ -908,7 +908,8 @@ public class DoctorModule {
                 List<MedicineCombineList> medicineCombineLists = dao.query(MedicineCombineList.class,Cnd.where("medicineId","=",medicineCombine.getId()));
                 //每一味药材，加入到list里
                 for(MedicineCombineList m : medicineCombineLists){
-                    MaterialsCombine materialsCombine = dao.fetch(MaterialsCombine.class,Cnd.where("id","=",m.getMaterialId()));
+                    MaterialsStore materialsStore = dao.fetch(MaterialsStore.class,Cnd.where("id","=",m.getMaterialId()));
+                    MaterialsCombine materialsCombine = dao.fetch(MaterialsCombine.class,Cnd.where("materialName","=",materialsStore.getMaterialName()));
 //                    Materials materials = dao.fetch(Materials.class,Cnd.where("id","=",m.getMaterialId()));
                     materialsCombines.add(materialsCombine);
                 }
