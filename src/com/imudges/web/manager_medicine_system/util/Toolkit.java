@@ -160,4 +160,8 @@ public class Toolkit {
     public static int getSearchMedicinePage(){
         return new ConfigReader().readInt("search_page");
     }
+
+    public static boolean isDigit(String strNum) {
+        return strNum.matches("[0-9]{1,}");
+    }
 }

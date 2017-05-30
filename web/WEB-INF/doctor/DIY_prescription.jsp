@@ -320,10 +320,6 @@
                     <button type="button" class="btn btn-primary" onclick="commit()">提交</button>
                 </div>
             </div>
-            <form action="DIY_prescription.php" style="display: none;">
-                <input id="medicines_id"/>
-                <input id="medicines_dosage"/>
-            </form>
 
         </div>
     </div>
@@ -340,7 +336,6 @@
     var select = document.getElementById('bs3Select');
     var summary = document.getElementById('summary');
     var medicine = null;
-    var medicines= [];
     function do_modal() {
         var tag = false;
         if (select != null && typeof(select) != "undefined") {
@@ -355,7 +350,6 @@
             alert('请选择药品后添加');
             return;
         }
-        console.log(medicine.id);
         var medicine_name = document.getElementById('medicine_name');
         medicine_name.innerHTML = medicine.value;
         document.getElementById('success').style.display = 'none';
@@ -374,7 +368,6 @@
         if (medicine != null && typeof (medicine) != "undefined") {
             summary.value += medicine.value + ',' + medicine_dosage.value + '克' + '\n';
         }
-        medicines[medicine.id + ""] = medicine_dosage.value;
         medicine_dosage.innerHTML = '0';
         document.getElementById('success').innerHTML = '添加成功';
         document.getElementById('success').style.display = '';
@@ -408,15 +401,13 @@
         window.setTimeout("window.location='selected_prescription.php'");
     }
     function commit() {
-//        console.log(medicines);
         $.ajax({
             url: 'DIY_prescription.php',
-            data:{medicines:medicines},
+            data: 'summary=' + summary.value,
             type: 'POST',
-            traditional:true,
             async: true,
             cache: false,
-            contentType: false,
+            contentType: "application/x-www-form-urlencoded",
             processData: false,
             success: function (returndata) {
                 var json = returndata;
@@ -443,6 +434,7 @@
 
             },
             fail: function (returndata) {
+                alert('testsssss');
                 document.getElementById('fail_info').innerText = "网络错误，提交失败";
                 document.getElementById('fail_info').style.display = "";
             }

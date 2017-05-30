@@ -8,7 +8,9 @@ import org.nutz.dao.Dao;
 import org.nutz.dao.pager.Pager;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.lang.util.NutMap;
 import org.nutz.mvc.annotation.*;
+import sun.rmi.runtime.Log;
 
 import javax.annotation.security.PermitAll;
 import javax.naming.ldap.PagedResultsControl;
@@ -729,10 +731,23 @@ public class DoctorModule {
     @Ok("json")
     @Fail("http:500")
     @POST
-    public Object DIYPrescription(@Param("medicine")Object o,
+    public Object DIYPrescription(@Param("summary")String summary,
                                   HttpSession session,
                                   HttpServletRequest request){
+        Map<String,Integer> materials = new HashMap<>();
         Map<String,String> res = new HashMap<>();
+        //处理字符串，我们默认药材名字不会重复
+        summary = summary.replace("\n","");
+        String[]medicines = summary.split("克");
+        for(String str : medicines){
+            //此处的medicine为每一味药材，而且每一个数组元素都只有两个
+            String[] medicine = str.split(",");
+            if(Toolkit.isDigit(medicine[0])){
+                materials.put(medicine[1],Integer.parseInt(medicine[0]));
+            } else {
+                materials.put(medicine[0],Integer.parseInt(medicine[1]));
+            }
+        }
 
         res.put("code","0");
         return res;
