@@ -260,13 +260,12 @@
                                                 <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close"><span
                                                         aria-hidden="true">&times;</span></button>
-                                            </div>
-                                            <div class="modal-body" id="medicine_modal_body">
-                                                <div id="medicine_msg">
-                                                    <h4><span class="label label-default" style="margin-left: 15px">选择药材</span></h4>
+                                                <div id="medicine_msg" style="display: none">
+                                                    <h4><span class="label label-default" style="margin-left: 15px">选择药材剂量（单位：克）</span></h4>
+                                                    <h3><span class="label label-info" id="medicine_name" style="margin-left: 15px">test</span></h3>
                                                     <div class="container" id="medicine_dosage">
-                                                        <div class="input-group spinner">
-                                                            <input type="text" class="form-control" value="0">
+                                                        <div class="input-group spinner" id="mmp">
+                                                            <input type="text" class="form-control" value="0" id="654164165">
                                                             <div class="input-group-btn-vertical">
                                                                 <button class="btn btn-default" type="button"><i
                                                                         class="fa fa-caret-up"></i></button>
@@ -276,6 +275,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="modal-body" id="medicine_modal_body">
+
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-primary" data-dismiss="modal"
@@ -337,10 +339,12 @@
     function do_modal() {
         var tag = false;
         var arr = [];
+        var idArr = [];
         if (select != null && typeof(select) != "undefined") {
             for (var i = 0, j = 0; i < select.options.length; i++) {
                 if (select.options[i].selected) {
                     tag = true;
+                    idArr[j] = select.options[i].id;
                     arr[j] = select.options[i].value;
                     j++;
                 }
@@ -350,13 +354,26 @@
             alert('请选择药品后添加');
             return;
         }
-        //TODO
-        var a = $('#medicine_msg').cloneNode(true);
-        alert(";");
-        var fathor = document.getElementById('medicine_modal_body');
-        alert("'");
-        fathor.appendChild(a);
-        alert("/");
+        //移除Modal内部的元素
+        var medicineModalBody = document.getElementById('medicine_modal_body');
+        while(medicineModalBody.hasChildNodes()){
+            medicineModalBody.removeChild(medicineModalBody.firstChild);
+        }
+
+        //动态加载相应数量的元素
+        for(var j = 0;j<arr.length;j++){
+            var temp = document.getElementById('medicine_msg');
+            var asd = document.getElementById('654164165');
+            temp.style.display = "";
+            var a = temp.cloneNode(true);
+            a.setAttribute('id',idArr[j]);
+            asd.id = idArr[j] + 'yy';
+
+            a.firstChild.nextSibling.nextSibling.nextSibling.firstChild.textContent = arr[j];
+            temp.style.display = "none";
+            var fa = document.getElementById('medicine_modal_body');
+            fa.appendChild(a);
+        }
         $('#MyModal').modal('show');
     }
 
