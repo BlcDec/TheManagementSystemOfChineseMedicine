@@ -237,7 +237,7 @@
                         <div class="row-fluid">
                             <div class="col-lg-5">
                                 <select style="margin-top: 10px" id="bs3Select"
-                                        class="selectpicker show-tick form-control" multiple
+                                        class="selectpicker show-tick form-control"
                                         data-live-search="true">
                                     <%if ((Integer) request.getAttribute("code") == 0) {%>
                                     <%Map<String, MaterialsStore> materialsStoreMap = (Map<String, MaterialsStore>) request.getAttribute("materials_store");%>
@@ -260,12 +260,17 @@
                                                 <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close"><span
                                                         aria-hidden="true">&times;</span></button>
-                                                <div id="medicine_msg" style="display: none">
-                                                    <h4><span class="label label-default" style="margin-left: 15px">选择药材剂量（单位：克）</span></h4>
-                                                    <h3><span class="label label-info" id="medicine_name" style="margin-left: 15px">test</span></h3>
-                                                    <div class="container" id="medicine_dosage">
+                                            </div>
+                                            <div class="modal-body" id="medicine_modal_body">
+                                                <div id="medicine_msg">
+                                                    <h4><span class="label label-default" style="margin-left: 15px">选择药材剂量（单位：克）</span>
+                                                    </h4>
+                                                    <h3><span class="label label-info" id="medicine_name"
+                                                              style="margin-left: 15px">test</span></h3>
+                                                    <div class="container">
                                                         <div class="input-group spinner" id="mmp">
-                                                            <input type="text" class="form-control" value="0" id="654164165">
+                                                            <input type="text" class="form-control" value="0"
+                                                                   id="medicine_dosage">
                                                             <div class="input-group-btn-vertical">
                                                                 <button class="btn btn-default" type="button"><i
                                                                         class="fa fa-caret-up"></i></button>
@@ -274,14 +279,15 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <h3><span class="label label-warning" id="warning"
+                                                              style="margin-left: 15px;display: none"></span></h3>
+                                                    <h3><span class="label label-success" id="success"
+                                                              style="margin-left: 15px;display: none"></span></h3>
                                                 </div>
                                             </div>
-                                            <div class="modal-body" id="medicine_modal_body">
-
-                                            </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                                        onclick="">确认添加
+                                                <button type="button" class="btn btn-primary"
+                                                        onclick="confirm_add()">确认添加
                                                 </button>
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">
                                                     关闭
@@ -292,7 +298,6 @@
                                 </div>
 
                             </div>
-
 
                         </div>
 
@@ -312,10 +317,13 @@
                               style="display: none;">${msg}</span></h4>
                     <h4><span class="label label-warning" id="fail_info"
                               style="display: none;">${msg}</span></h4>
-                    <button type="button" class="btn btn-primary">提交</button>
+                    <button type="button" class="btn btn-primary" onclick="commit()">提交</button>
                 </div>
             </div>
-
+            <form action="DIY_prescription.php" style="display: none;">
+                <input id="medicines_id"/>
+                <input id="medicines_dosage"/>
+            </form>
 
         </div>
     </div>
@@ -328,25 +336,18 @@
     </div>
 </div>
 
-
-<%--<script src="../../theme/assets/js/jquery-1.10.2.js"></script>--%>
-<%--<script src="../../theme/assets/js/bootstrap.min.js"></script>--%>
-<%--<script src="../../theme/assets/js/custom.js"></script>--%>
-
 <script>
     var select = document.getElementById('bs3Select');
     var summary = document.getElementById('summary');
+    var medicine = null;
+    var medicines= [];
     function do_modal() {
         var tag = false;
-        var arr = [];
-        var idArr = [];
         if (select != null && typeof(select) != "undefined") {
-            for (var i = 0, j = 0; i < select.options.length; i++) {
+            for (var i = 0; i < select.options.length && !tag; i++) {
                 if (select.options[i].selected) {
                     tag = true;
-                    idArr[j] = select.options[i].id;
-                    arr[j] = select.options[i].value;
-                    j++;
+                    medicine = select.options[i];
                 }
             }
         }
@@ -354,27 +355,29 @@
             alert('请选择药品后添加');
             return;
         }
-        //移除Modal内部的元素
-        var medicineModalBody = document.getElementById('medicine_modal_body');
-        while(medicineModalBody.hasChildNodes()){
-            medicineModalBody.removeChild(medicineModalBody.firstChild);
-        }
-
-        //动态加载相应数量的元素
-        for(var j = 0;j<arr.length;j++){
-            var temp = document.getElementById('medicine_msg');
-            var asd = document.getElementById('654164165');
-            temp.style.display = "";
-            var a = temp.cloneNode(true);
-            a.setAttribute('id',idArr[j]);
-            asd.id = idArr[j] + 'yy';
-
-            a.firstChild.nextSibling.nextSibling.nextSibling.firstChild.textContent = arr[j];
-            temp.style.display = "none";
-            var fa = document.getElementById('medicine_modal_body');
-            fa.appendChild(a);
-        }
+        console.log(medicine.id);
+        var medicine_name = document.getElementById('medicine_name');
+        medicine_name.innerHTML = medicine.value;
+        document.getElementById('success').style.display = 'none';
+        document.getElementById('warning').style.display = 'none';
         $('#MyModal').modal('show');
+    }
+
+    function confirm_add() {
+        var medicine_dosage = document.getElementById('medicine_dosage');
+        var warning = document.getElementById('warning');
+        if (medicine_dosage.value <= 0) {
+            warning.innerHTML = '请填写正确的药剂重量！';
+            warning.style.display = '';
+            return;
+        }
+        if (medicine != null && typeof (medicine) != "undefined") {
+            summary.value += medicine.value + ',' + medicine_dosage.value + '克' + '\n';
+        }
+        medicines[medicine.id + ""] = medicine_dosage.value;
+        medicine_dosage.innerHTML = '0';
+        document.getElementById('success').innerHTML = '添加成功';
+        document.getElementById('success').style.display = '';
     }
 
 
@@ -388,32 +391,29 @@
     })(jQuery);
 
 
-    function add_materials() {
-        //TODO
-        if (summary.length != 0) {
-            summary.value = '';
-        }
-        if (select != null && typeof(select) != "undefined") {
-            for (var i = 0; i < select.options.length; i++) {
-                if (select.options[i].selected) {
-                    summary.value = summary.value + select.options[i].value + ',\n';
-                }
-            }
-        }
-    }
+//    function add_materials() {
+//        //TODO
+//        if (summary.length != 0) {
+//            summary.value = '';
+//        }
+//        if (select != null && typeof(select) != "undefined") {
+//            for (var i = 0; i < select.options.length; i++) {
+//                if (select.options[i].selected) {
+//                    summary.value = summary.value + select.options[i].value + ',\n';
+//                }
+//            }
+//        }
+//    }
     function jump() {
         window.setTimeout("window.location='selected_prescription.php'");
     }
     function commit() {
-        var search_content = document.getElementById('search_content').value;
-        if (search_content.length == 0) {
-            document.getElementById('fail_info').innerText = '请填写搜索内容后点击搜索';
-            document.getElementById('fail_info').style.display = "";
-            return;
-        }
+//        console.log(medicines);
         $.ajax({
-            url: 'search_prescription.php?search_content=' + search_content,
-            type: 'GET',
+            url: 'DIY_prescription.php',
+            data:{medicines:medicines},
+            type: 'POST',
+            traditional:true,
             async: true,
             cache: false,
             contentType: false,
@@ -422,9 +422,10 @@
                 var json = returndata;
                 var code = json.code;
                 if (code == 0) {
-                    document.getElementById('success_info').style.display = "";
-                    document.getElementById('fail_info').style.display = "none";
-                    document.getElementById('success_info').innerText = "提交成功！";
+                    alert('success');
+//                    document.getElementById('success_info').style.display = "";
+//                    document.getElementById('fail_info').style.display = "none";
+//                    document.getElementById('success_info').innerText = "提交成功！";
                     return;
                 }
                 if (code == -1) {

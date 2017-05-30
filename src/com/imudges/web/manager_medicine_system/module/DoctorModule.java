@@ -10,6 +10,7 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import javax.naming.ldap.PagedResultsControl;
 import javax.print.Doc;
 import javax.servlet.http.*;
@@ -710,8 +711,9 @@ public class DoctorModule {
     @At("doctor/DIY_prescription")
     @Ok("re")
     @Fail("http:500")
-    public Object DIYPrescription(HttpSession session,
-                                  HttpServletRequest request){
+    @GET
+    public Object DIYPrescriptionPage(HttpSession session,
+                                      HttpServletRequest request){
         Map<String,MaterialsStore> materialsStoreMap = new HashMap<>();
 
         List<MaterialsStore> stores = dao.query(MaterialsStore.class,Cnd.where("materialRemain",">","0"));
@@ -721,6 +723,19 @@ public class DoctorModule {
         request.setAttribute("materials_store",materialsStoreMap);
         request.setAttribute("code",0);
         return "jsp:doctor/DIY_prescription";
+    }
+
+    @At("doctor/DIY_prescription")
+    @Ok("json")
+    @Fail("http:500")
+    @POST
+    public Object DIYPrescription(@Param("medicine")Object o,
+                                  HttpSession session,
+                                  HttpServletRequest request){
+        Map<String,String> res = new HashMap<>();
+
+        res.put("code","0");
+        return res;
     }
 
 
