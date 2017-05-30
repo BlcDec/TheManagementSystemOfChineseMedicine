@@ -5,29 +5,21 @@ import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
 /**
- * 药材库存
+ * 药材仓库
  */
-@Table("AA_MATERIALSSTORE")
+@Table("AAA_MATERIALSSTORE")
 public class MaterialsStore {
     @Id
     private int id;
 
     @Column
-    private String materialName;//名字
+    private String materialName;
 
     @Column
-    private String materialRemain;//余量
+    private String materialRemain;
 
     @Column
-    private Double materialPrice;//价格
-
-    public Double getMaterialPrice() {
-        return materialPrice;
-    }
-
-    public void setMaterialPrice(Double materialPrice) {
-        this.materialPrice = materialPrice;
-    }
+    private double price;//单价
 
     public int getId() {
         return id;
@@ -51,5 +43,13 @@ public class MaterialsStore {
 
     public void setMaterialRemain(String materialRemain) {
         this.materialRemain = materialRemain;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

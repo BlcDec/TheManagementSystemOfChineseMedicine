@@ -8,15 +8,9 @@ import org.nutz.dao.Dao;
 import org.nutz.dao.pager.Pager;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
-import org.nutz.lang.util.NutMap;
 import org.nutz.mvc.annotation.*;
-import sun.rmi.runtime.Log;
 
-import javax.annotation.security.PermitAll;
-import javax.naming.ldap.PagedResultsControl;
-import javax.print.Doc;
 import javax.servlet.http.*;
-import java.awt.print.Paper;
 import java.util.*;
 
 /**
@@ -718,7 +712,7 @@ public class DoctorModule {
                                       HttpServletRequest request){
         Map<String,MaterialsStore> materialsStoreMap = new HashMap<>();
 
-        List<MaterialsStore> stores = dao.query(MaterialsStore.class,Cnd.where("materialRemain",">","0"));
+        List<MaterialsStore> stores = dao.query(MaterialsStore.class,Cnd.where("id",">","0"));
         for(MaterialsStore m : stores){
             materialsStoreMap.put(m.getId() + "",m);
         }
@@ -774,9 +768,16 @@ public class DoctorModule {
             medicineCombineList.setMaterialId(m.getId() + "");
             medicineCombineList.setMedicineId(medicineCombine.getId() + "");
             dao.insert(medicineCombineList);
-            //计算价格
-            price +=m.getMaterialPrice() * materials.get(key);
 
+            MaterialsCombine materialsCombine = new MaterialsCombine();
+            materialsCombine.setMaterialName(m.getMaterialName());
+            materialsCombine.setMaterialDosage(materials.get(key) + "");
+            dao.insert(materialsCombine);
+            //计算价格
+            price +=m.getPrice() * materials.get(key);
+
+            materialsCombine.setMaterialPrice(price);
+            dao.update(materialsCombine);
         }
         medicineCombine.setPrice(price);
         dao.update(medicineCombine);
@@ -872,7 +873,7 @@ public class DoctorModule {
         List<MedicineCombine> medicineCombineList = new LinkedList<>();//自己调配的药方
         //存放每一个药方所包含的每一味药材
         Map<String,List<Materials>> materialsMap = new HashMap<>();//存放系统库内部药方的材料
-        Map<String,List<Materials>> combineMaterialsMap = new HashMap<>();//存放自己调配的药方的材料
+        Map<String,List<MaterialsCombine>> combineMaterialsMap = new HashMap<>();//存放自己调配的药方的材料
         for(Prescription prescription : prescriptionList){
 
 
@@ -902,16 +903,17 @@ public class DoctorModule {
                 medicineCombineList.add(medicineCombine);
 
                 //把每个药方的每味药材返回
-                List<Materials> medicineCombineMaterials = new LinkedList<>();
+                List<MaterialsCombine> materialsCombines = new LinkedList<>();
                 //药方材料的关系
                 List<MedicineCombineList> medicineCombineLists = dao.query(MedicineCombineList.class,Cnd.where("medicineId","=",medicineCombine.getId()));
                 //每一味药材，加入到list里
                 for(MedicineCombineList m : medicineCombineLists){
-                    Materials materials = dao.fetch(Materials.class,Cnd.where("id","=",m.getMaterialId()));
-                    medicineCombineMaterials.add(materials);
+                    MaterialsCombine materialsCombine = dao.fetch(MaterialsCombine.class,Cnd.where("id","=",m.getMaterialId()));
+//                    Materials materials = dao.fetch(Materials.class,Cnd.where("id","=",m.getMaterialId()));
+                    materialsCombines.add(materialsCombine);
                 }
                 //TODO 需要修改，需要修改显示的内容，即不能为id + 内容
-                combineMaterialsMap.put(medicineCombine.getId() + "",medicineCombineMaterials);
+                combineMaterialsMap.put(medicineCombine.getId() + "", materialsCombines);
 
             }
         }

@@ -137,6 +137,7 @@
                     </tr>
                     </thead>
                 </div>
+                <%--加载系统库内部的药方--%>
                 <%if ((Integer) request.getAttribute("code") == 0) {%>
                 <%Doctor doctor = (Doctor) request.getAttribute("doctor");%>
                 <%Patient patient = (Patient) request.getAttribute("patient");%>
@@ -210,9 +211,9 @@
                 </tbody>
 
 
-
+                <%--加载医生自己配置的药方--%>
                 <%List<MedicineCombine> medicineCombineList = (List<MedicineCombine>) request.getAttribute("medicine_combine_list");%>
-                <%Map<String,List<Materials>> combineMaterialsMap = (Map<String, List<Materials>>) request.getAttribute("medicine_combine_materials");%>
+                <%Map<String,List<MaterialsCombine>> combineMaterialsMap = (Map<String, List<MaterialsCombine>>) request.getAttribute("medicine_combine_materials");%>
                 <tbody>
                 <%for (MedicineCombine medicineCombine : medicineCombineList) {%>
                 <tr>
@@ -235,7 +236,7 @@
                     </td>
                 </tr>
 
-                <%List<Materials> materialsList = combineMaterialsMap.get(medicineCombine.getId() + "");%>
+                <%List<MaterialsCombine> materialsCombines = combineMaterialsMap.get(medicineCombine.getId() + "");%>
                 <%--Modal--%>
                 <div class="modal fade" id="modal_<%=medicineCombine.getId()%>" tabindex="-1" role="dialog"
                      aria-labelledby="myModalLabel">
@@ -247,8 +248,8 @@
                             </div>
                             <div class="modal-body">
                                 <p>此药方由以下药材组成：</p>
-                                <p><%for (Materials m : materialsList) {%>
-                                    <%=m.getId() + " " + m.getMedicineName()%>
+                                <p><%for (MaterialsCombine m : materialsCombines) {%>
+                                    <%=m.getId() + " " + m.getMaterialName()%>
                                     <%}%></p>
                             </div>
                             <div class="modal-footer">
@@ -279,8 +280,6 @@
                 </div>
                 <%}%>
                 </tbody>
-
-
                 <%}%>
             </table>
         </div>
@@ -322,8 +321,9 @@
                     document.getElementById('success_info').style.display = "";
                     document.getElementById('fail_info').style.display = "none";
                     document.getElementById('success_info').innerText = "删除成功！";
-                    document.getElementById('head_contain').innerText = '诊断窗口（即将自动跳转）';
-                    window.setTimeout("window.location='selected_prescription.php'",3000);
+                    document.getElementById('head_contain').innerHTML = '诊断窗口（即将自动跳转）';
+                    scrollTo(0,0);
+                    window.setTimeout("window.location='selected_prescription.php'",2000);
                     scrollTo(0,0);
                     return;
                 }
@@ -332,6 +332,7 @@
                     document.getElementById('success_info').style.display = "none";
                     document.getElementById('fail_info').innerText = "请求参数错误！";
                     document.getElementById('head_contain').innerText = '诊断窗口（即将自动跳转）';
+                    scrollTo(0,0);
                     window.setTimeout("window.location='selected_prescription.php'",3000);
                     scrollTo(0,0);
                     return;
@@ -341,6 +342,7 @@
                 document.getElementById('fail_info').innerText = "网络错误，提交失败";
                 document.getElementById('fail_info').style.display = "";
                 document.getElementById('head_contain').innerText = '诊断窗口（即将自动跳转）';
+                scrollTo(0,0);
                 window.setTimeout("window.location='selected_prescription.php'",3000);
             }
         });

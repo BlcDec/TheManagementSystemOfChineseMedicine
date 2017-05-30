@@ -3,8 +3,10 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.AppointmentOrRegistration" %>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.MaterialsCombine" %>
+<%@ page import="java.util.Map" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.MaterialsStore" %>
-<%@ page import="java.util.Map" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: yangyang
   Date: 2017/4/7
@@ -249,7 +251,7 @@
                                     <%}%>
                                 </select>
                                 <button style="margin-top: 10px" class="btn btn-default" type="button"
-                                        onclick="do_modal()">添加
+                                        onclick="do_modal()">选择剂量
                                 </button>
                                 <button style="margin-top: 10px" type="button" class="btn btn-default" onclick="jump()">
                                     查看已选药方
