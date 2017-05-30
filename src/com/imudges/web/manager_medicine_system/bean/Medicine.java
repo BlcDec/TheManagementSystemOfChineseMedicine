@@ -5,7 +5,7 @@ import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
 /**
- * 成方
+ * 成方（系统库内的）
  */
 @Table("AAA_MEDICINE")
 public class Medicine {
@@ -16,7 +16,7 @@ public class Medicine {
     private String name;
 
     @Column
-    private String price;//价格A
+    private String price;//价格
 
     public String getPrice() {
         return price;

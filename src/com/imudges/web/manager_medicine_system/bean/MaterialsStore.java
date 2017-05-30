@@ -5,9 +5,9 @@ import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
 /**
- * Created by yangyang on 2017/5/29.
+ * 药材库存
  */
-@Table("A_MATERIALSSTORE")
+@Table("AA_MATERIALSSTORE")
 public class MaterialsStore {
     @Id
     private int id;
@@ -17,6 +17,17 @@ public class MaterialsStore {
 
     @Column
     private String materialRemain;//余量
+
+    @Column
+    private Double materialPrice;//价格
+
+    public Double getMaterialPrice() {
+        return materialPrice;
+    }
+
+    public void setMaterialPrice(Double materialPrice) {
+        this.materialPrice = materialPrice;
+    }
 
     public int getId() {
         return id;

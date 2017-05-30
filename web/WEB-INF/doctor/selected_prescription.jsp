@@ -115,7 +115,7 @@
 
                 <li class="active"><a href="diagnose.php">诊断窗口</a></li>
                 <li class="active"><a href="start_diagnose.php">诊断</a></li>
-                <li class="active"><a href="select_prescription.php">开药方</a></li>
+                <%--<li class="active"><a href="select_prescription.php">开药方</a></li>--%>
                 <li class="active">查看已选药方</li>
             </ol>
             <h4><span class="label label-success" id="success_info"
@@ -131,6 +131,7 @@
                         <th>医生姓名：</th>
                         <th>患者姓名：</th>
                         <th>药方名：</th>
+                        <th>药方类型：</th>
                         <th>详情：</th>
                         <th>操作：</th>
                     </tr>
@@ -150,6 +151,8 @@
                     <td><%=patient.getName()%>
                     </td>
                     <td><%=medicine.getName()%>
+                    </td>
+                    <td><span class="label label-info">成方</span>
                     </td>
                     <td>
                         <a href="javascript:void(0);" class="btn " data-toggle="modal"
@@ -205,6 +208,79 @@
                 </div>
                 <%}%>
                 </tbody>
+
+
+
+                <%List<MedicineCombine> medicineCombineList = (List<MedicineCombine>) request.getAttribute("medicine_combine_list");%>
+                <%Map<String,List<Materials>> combineMaterialsMap = (Map<String, List<Materials>>) request.getAttribute("medicine_combine_materials");%>
+                <tbody>
+                <%for (MedicineCombine medicineCombine : medicineCombineList) {%>
+                <tr>
+                    <td><%=doctor.getName()%>
+                    </td>
+                    <td><%=patient.getName()%>
+                    </td>
+                    <td>无
+                    </td>
+                    <td><span class="label label-info">医生调配</span>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="btn " data-toggle="modal"
+                           data-target="#modal_<%=medicineCombine.getId()%>">查看详细信息</a>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" data-toggle="modal" style="margin-top: 0px"
+                                data-target="#Modal_<%=medicineCombine.getId()%>">删除
+                        </button>
+                    </td>
+                </tr>
+
+                <%List<Materials> materialsList = combineMaterialsMap.get(medicineCombine.getId() + "");%>
+                <%--Modal--%>
+                <div class="modal fade" id="modal_<%=medicineCombine.getId()%>" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>此药方由以下药材组成：</p>
+                                <p><%for (Materials m : materialsList) {%>
+                                    <%=m.getId() + " " + m.getMedicineName()%>
+                                    <%}%></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="Modal_<%=medicineCombine.getId()%>" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>请确认是否要删除此项药方？</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="delete_medicine(<%=medicineCombine.getId()%>)">确认删除
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <%}%>
+                </tbody>
+
+
                 <%}%>
             </table>
         </div>

@@ -251,6 +251,9 @@
                                 <button style="margin-top: 10px" class="btn btn-default" type="button"
                                         onclick="do_modal()">添加
                                 </button>
+                                <button style="margin-top: 10px" type="button" class="btn btn-default" onclick="jump()">
+                                    查看已选药方
+                                </button>
                                 <!-- Modal -->
                                 <div class="modal fade" id="MyModal" tabindex="-1" role="dialog"
                                      aria-labelledby="myModalLabel">
@@ -384,19 +387,19 @@
     })(jQuery);
 
 
-//    function add_materials() {
-//        //TODO
-//        if (summary.length != 0) {
-//            summary.value = '';
-//        }
-//        if (select != null && typeof(select) != "undefined") {
-//            for (var i = 0; i < select.options.length; i++) {
-//                if (select.options[i].selected) {
-//                    summary.value = summary.value + select.options[i].value + ',\n';
-//                }
-//            }
-//        }
-//    }
+    //    function add_materials() {
+    //        //TODO
+    //        if (summary.length != 0) {
+    //            summary.value = '';
+    //        }
+    //        if (select != null && typeof(select) != "undefined") {
+    //            for (var i = 0; i < select.options.length; i++) {
+    //                if (select.options[i].selected) {
+    //                    summary.value = summary.value + select.options[i].value + ',\n';
+    //                }
+    //            }
+    //        }
+    //    }
     function jump() {
         window.setTimeout("window.location='selected_prescription.php'");
     }
@@ -413,30 +416,19 @@
                 var json = returndata;
                 var code = json.code;
                 if (code == 0) {
-                    alert('success');
-//                    document.getElementById('success_info').style.display = "";
-//                    document.getElementById('fail_info').style.display = "none";
-//                    document.getElementById('success_info').innerText = "提交成功！";
+                    alert('添加成功！');
+                    window.location.href = 'DIY_prescription.php';
                     return;
                 }
                 if (code == -1) {
-                    document.getElementById('fail_info').style.display = "";
-                    document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "提交参数错误！";
+                    alert('提交参数错误，请重试');
+                    window.location.href = 'DIY_prescription.php';
                     return;
                 }
-                if (code == -5) {
-                    document.getElementById('fail_info').style.display = "";
-                    document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "身份证号不正确";
-                    return;
-                }
-
             },
             fail: function (returndata) {
-                alert('testsssss');
-                document.getElementById('fail_info').innerText = "网络错误，提交失败";
-                document.getElementById('fail_info').style.display = "";
+                alert('网络错误，请重试');
+                window.location.href = 'DIY_prescription.php';
             }
         });
 
