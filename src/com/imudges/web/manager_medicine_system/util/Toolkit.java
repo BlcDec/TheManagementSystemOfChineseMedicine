@@ -1,5 +1,6 @@
 package com.imudges.web.manager_medicine_system.util;
 
+import com.imudges.web.manager_medicine_system.bean.Doctor;
 import org.nutz.lang.Lang;
 import org.nutz.lang.random.R;
 import org.nutz.lang.util.NutMap;
@@ -163,5 +164,25 @@ public class Toolkit {
 
     public static boolean isDigit(String strNum) {
         return strNum.matches("[0-9]{1,}");
+    }
+
+    public static String getDoctorUrl(Doctor doctor){
+        String res = "";
+        if(doctor == null){
+            return null;
+        } else {
+            switch(doctor.getPosition()){
+                case "0":
+                    res = "windows.php";
+                    break;
+                case "1":
+                    res = "diagnose.php";
+                    break;
+                case "2":
+                    res = "collection.php";
+                    break;
+            }
+        }
+        return res;
     }
 }

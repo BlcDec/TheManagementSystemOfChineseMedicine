@@ -69,10 +69,9 @@ public class DoctorModule {
                 response.addCookie(cookie);
                 user.setAk(ak);
                 dao.update(user);
-                //患者
                 Doctor doctor = dao.fetch(Doctor.class, Cnd.where("A_USERID", "=", user.getId()));
                 if (doctor != null) {
-                    request.setAttribute("redirect_url", "windows.php");
+                    request.setAttribute("redirect_url", Toolkit.getDoctorUrl(doctor));
                     request.setAttribute("name", doctor.getName());
                     session.setAttribute("doctor", doctor);
                     request.setAttribute("code", 0);
@@ -87,7 +86,9 @@ public class DoctorModule {
 
         }
         if (isLogin) {
-            return ">>:../doctor/windows.php";
+            String url = Toolkit.getDoctorUrl((Doctor) session.getAttribute("doctor"));
+            String res = ">>:../doctor/" + url;
+            return res;
         } else {
             return "jsp:public/doctor_login";
         }

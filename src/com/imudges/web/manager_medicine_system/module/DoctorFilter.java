@@ -68,6 +68,18 @@ public class DoctorFilter implements ActionFilter{
         actionContext.getRequest().getSession().setAttribute("doctor",doctor);
         actionContext.getRequest().getSession().setAttribute("name",doctor.getName());
 
+//        switch (doctor.getPosition()){
+//            case "0":
+//                return new ServerRedirectView("/doctor/jump.php?redirect_url=windows.php");
+//
+//            case "1":
+//                return new ServerRedirectView("/doctor/jump.php?redirect_url=diagnose.php");
+//
+//            case "2":
+//                return new ServerRedirectView("/doctor/jump.php?redirect_url=collection.php");
+//        }
+
+
         return null;
     }
 }
