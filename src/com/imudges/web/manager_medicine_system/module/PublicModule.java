@@ -25,6 +25,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 患者共有的
+ * */
 
 @IocBean
 @Filters(@By(type = PatientFilter.class, args = {"ioc:patientFilter"}))
