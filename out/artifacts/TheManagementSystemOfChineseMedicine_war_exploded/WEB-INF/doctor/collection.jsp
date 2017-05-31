@@ -84,12 +84,12 @@
             <ul class="nav" id="main-menu">
 
 
-                <li>
-                    <a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>
-                </li>
-                <li>
-                    <a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>
-                </li>
+                <%--<li>--%>
+                    <%--<a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>--%>
+                <%--</li>--%>
+                <%--<li>--%>
+                    <%--<a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>--%>
+                <%--</li>--%>
                 <%--/收款窗口是指收取药品费用的窗口--%>
                 <li class="active-link">
                     <a href="collection.php"><i class="glyphicon glyphicon-search"></i>收款窗口</a>
