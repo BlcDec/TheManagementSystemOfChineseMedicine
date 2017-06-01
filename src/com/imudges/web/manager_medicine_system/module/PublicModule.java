@@ -25,6 +25,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 患者共有的
+ * */
 
 @IocBean
 @Filters(@By(type = PatientFilter.class, args = {"ioc:patientFilter"}))
@@ -89,6 +92,7 @@ public class PublicModule {
                     request.setAttribute("code", 0);
                     isLogin = true;
                 } else {
+                    request.setAttribute("code", -2);
                     isLogin = false;
                 }
             } else {
@@ -170,11 +174,13 @@ public class PublicModule {
                 User user = new User(p, username, password);
                 dao.insert(user);
                 user = dao.fetch(User.class, Cnd.where("id", "=", user.getId()));
+                //将患者与User绑定
                 patient.setUserId(user.getId() + "");
+                dao.update(patient);
                 session.setAttribute("patient", p);
                 request.setAttribute("code", 0);
                 request.setAttribute("username", username);
-                request.setAttribute("redirect_url", "login.php");
+                request.setAttribute("redirect_url", "patient_login.php");
             }
         } else {
             request.setAttribute("code", -4);

@@ -59,6 +59,26 @@ public class DoctorFilter implements ActionFilter{
         if(!user.getAk().equals(ak)){
             return new ServerRedirectView("/public/jump.php?redirect_url=doctor_login.php");
         }
+        Doctor doctor = dao.fetch(Doctor.class,Cnd.where("userId","=",user.getId()));
+
+        if(doctor == null){
+            return new ServerRedirectView("/public/jump.php?redirect_url=doctor_login.php");
+        }
+
+        actionContext.getRequest().getSession().setAttribute("doctor",doctor);
+        actionContext.getRequest().getSession().setAttribute("name",doctor.getName());
+
+//        switch (doctor.getPosition()){
+//            case "0":
+//                return new ServerRedirectView("/doctor/jump.php?redirect_url=windows.php");
+//
+//            case "1":
+//                return new ServerRedirectView("/doctor/jump.php?redirect_url=diagnose.php");
+//
+//            case "2":
+//                return new ServerRedirectView("/doctor/jump.php?redirect_url=collection.php");
+//        }
+
 
         return null;
     }

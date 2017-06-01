@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by yangyang on 2017/5/18.
+ * 患者主要逻辑
  */
 
 @IocBean
@@ -100,15 +100,23 @@ public class PatientModule {
                 Cnd.where("patientIdCard","=",patient.getIdCard())
                         .and("registrationFeeState","=","1")
                         .and("isAppointment","=",true));
+        //已生效的挂号信息
+        List<AppointmentOrRegistration> registrationList = dao.query(AppointmentOrRegistration.class,
+                Cnd.where("patientIdCard","=",patient.getIdCard())
+                        .and("registrationFeeState","=","1")
+                        .and("isAppointment","=",false));
+
         //正在进行中的预约
         List<AppointmentOrRegistration> list = dao.query(AppointmentOrRegistration.class,
                 Cnd.where("patientIdCard","=",patient.getIdCard())
                         .and("registrationFeeState","=","0")
                         .and("isAppointment","=",true));
 
+
         request.setAttribute("user",session.getAttribute("user"));
         request.setAttribute("name", patient.getName());
         request.setAttribute("patient", patient);
+        request.setAttribute("effective_registration",registrationList.size());
         request.setAttribute("effective_appointment",lists.size());
         request.setAttribute("underway_appointment",list.size());
         return "jsp:patient/user";
@@ -129,6 +137,7 @@ public class PatientModule {
                         .and("registrationFeeState","=","0")
                         .and("isAppointment","=",true));
         request.setAttribute("code",0);
+        request.setAttribute("name", patient.getName());
         request.setAttribute("msg","pageOk");
         request.setAttribute("underway_appointment",list);
         return "jsp:patient/underway_appointment";
@@ -150,6 +159,7 @@ public class PatientModule {
                         .and("isAppointment","=",true));
         request.setAttribute("code",0);
         request.setAttribute("msg","pageOk");
+        request.setAttribute("name", patient.getName());
         request.setAttribute("effect_appointment",list);
         return "jsp:patient/effect_appointment";
     }
@@ -172,6 +182,7 @@ public class PatientModule {
         if(appointmentOrRegistration!=null){
             appointmentOrRegistration.setRegistrationFeeState(1);
             appointmentOrRegistration.setPayForTime(new Date(System.currentTimeMillis()));
+            appointmentOrRegistration.setAppointment(true);
             dao.update(appointmentOrRegistration);
             res.put("code","0");
         } else {
@@ -191,5 +202,26 @@ public class PatientModule {
         request.setAttribute("name", patient.getName());
         request.setAttribute("patient", patient);
         return "jsp:patient/search";
+    }
+
+    /**
+     * 已生效的挂号信息
+     * */
+    @At("patient/effect_registration")
+    @Ok("re")
+    @Fail("http:500")
+    public Object effectRegistration(HttpServletRequest request,
+                                    HttpSession session){
+        Patient patient = (Patient) session.getAttribute("patient");
+        User user = (User) session.getAttribute("user");
+        List<AppointmentOrRegistration> list = dao.query(AppointmentOrRegistration.class,
+                Cnd.where("patientIdCard","=",patient.getIdCard())
+                        .and("registrationFeeState","=","1")
+                        .and("isAppointment","=",false));
+        request.setAttribute("code",0);
+        request.setAttribute("msg","pageOk");
+        request.setAttribute("name", patient.getName());
+        request.setAttribute("effect_registration",list);
+        return "jsp:patient/effect_registration";
     }
 }

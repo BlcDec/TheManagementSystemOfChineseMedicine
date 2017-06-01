@@ -11,7 +11,6 @@ import org.nutz.mvc.View;
 import org.nutz.mvc.view.ServerRedirectView;
 
 import javax.servlet.http.Cookie;
-//TODO 需要重构，医患过滤器分开写，医生患者登录逻辑分开
 /**
  * 患者过滤器，验证用户的登录状态
  */

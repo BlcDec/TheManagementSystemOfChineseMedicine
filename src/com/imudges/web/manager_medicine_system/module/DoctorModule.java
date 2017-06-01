@@ -1,17 +1,17 @@
 package com.imudges.web.manager_medicine_system.module;
 
-import com.imudges.web.manager_medicine_system.bean.Doctor;
-import com.imudges.web.manager_medicine_system.bean.Patient;
-import com.imudges.web.manager_medicine_system.bean.User;
+import com.imudges.web.manager_medicine_system.bean.*;
 import com.imudges.web.manager_medicine_system.util.MD5;
+import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
+import org.nutz.dao.pager.Pager;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;
 
-import javax.print.Doc;
 import javax.servlet.http.*;
+import java.util.*;
 
 /**
  * 医生的主要逻辑
@@ -24,7 +24,7 @@ public class DoctorModule {
 
     /**
      * 医生登录GET
-     * */
+     */
     @Filters(@By(type = ConfigFilter.class))
     @At("public/doctor_login")
     @Ok("re")
@@ -48,7 +48,7 @@ public class DoctorModule {
                               HttpSession session,
                               HttpServletRequest request,
                               HttpServletResponse response) {
-        doctorLoginPage(redirectUrl,request);
+        doctorLoginPage(redirectUrl, request);
         boolean isLogin = false;
         if (username == null || password == null || username.equals("") || password.equals("")) {
             //请求参数错误
@@ -69,10 +69,9 @@ public class DoctorModule {
                 response.addCookie(cookie);
                 user.setAk(ak);
                 dao.update(user);
-                //患者
                 Doctor doctor = dao.fetch(Doctor.class, Cnd.where("A_USERID", "=", user.getId()));
                 if (doctor != null) {
-                    request.setAttribute("redirect_url", "windows.php");
+                    request.setAttribute("redirect_url", Toolkit.getDoctorUrl(doctor));
                     request.setAttribute("name", doctor.getName());
                     session.setAttribute("doctor", doctor);
                     request.setAttribute("code", 0);
@@ -87,7 +86,9 @@ public class DoctorModule {
 
         }
         if (isLogin) {
-            return ">>:../doctor/windows.php";
+            String url = Toolkit.getDoctorUrl((Doctor) session.getAttribute("doctor"));
+            String res = ">>:../doctor/" + url;
+            return res;
         } else {
             return "jsp:public/doctor_login";
         }
@@ -97,31 +98,31 @@ public class DoctorModule {
     @Ok("re")
     @Fail("http:500")
     public Object windows(HttpServletRequest request,
-                          HttpSession session){
+                          HttpSession session) {
         User user = (User) request.getAttribute("user");
         Doctor doctor = (Doctor) session.getAttribute("doctor");
 
         //限制不同医生的窗口
-        switch (doctor.getPosition()){
+        switch (doctor.getPosition()) {
             //诊断
             case "1":
-                request.setAttribute("redirect_url","diagnose.php");
-                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                request.setAttribute("redirect_url", "diagnose.php");
+                request.setAttribute("msg", "对不起，您的身份权限不足！正在跳转您可访问的页面...");
                 return "jsp:doctor/graph_jump";
             //收费
             case "2":
-                request.setAttribute("redirect_url","collection.php");
-                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                request.setAttribute("redirect_url", "collection.php");
+                request.setAttribute("msg", "对不起，您的身份权限不足！正在跳转您可访问的页面...");
                 return "jsp:doctor/graph_jump";
         }
-        request.setAttribute("name",doctor.getName());
+        request.setAttribute("name", doctor.getName());
         request.setAttribute("code", 0);
         return "jsp:doctor/windows";
     }
 
     /**
      * 注销
-     * */
+     */
     @At("doctor/logout")
     @Ok("re")
     @Fail("http:500")
@@ -150,65 +151,65 @@ public class DoctorModule {
 
     /**
      * 诊断窗口
-     * */
+     */
     @At("doctor/diagnose")
     @Ok("re")
     @Fail("http:500")
     @GET
     public Object diagnosePage(HttpServletRequest request,
-                          HttpSession session){
+                               HttpSession session) {
         User user = (User) request.getAttribute("user");
         Doctor doctor = (Doctor) session.getAttribute("doctor");
         //限制不同医生的窗口
-        switch (doctor.getPosition()){
+        switch (doctor.getPosition()) {
             //挂号
             case "0":
-                request.setAttribute("redirect_url","windows.php");
-                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                request.setAttribute("redirect_url", "windows.php");
+                request.setAttribute("msg", "对不起，您的身份权限不足！正在跳转您可访问的页面...");
                 return "jsp:doctor/graph_jump";
             //收费
             case "2":
-                request.setAttribute("redirect_url","collection.php");
-                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                request.setAttribute("redirect_url", "collection.php");
+                request.setAttribute("msg", "对不起，您的身份权限不足！正在跳转您可访问的页面...");
                 return "jsp:doctor/graph_jump";
         }
-        request.setAttribute("name",doctor.getName());
+        request.setAttribute("name", doctor.getName());
         request.setAttribute("code", 0);
         return "jsp:doctor/diagnose";
     }
 
     /**
      * 收费窗口
-     * */
+     */
     @At("doctor/collection")
     @Ok("re")
     @Fail("http:500")
     @GET
     public Object collectionPage(HttpServletRequest request,
-                           HttpSession session){
+                                 HttpSession session) {
         User user = (User) request.getAttribute("user");
         Doctor doctor = (Doctor) session.getAttribute("doctor");
         //限制不同医生的窗口
-        switch (doctor.getPosition()){
+        switch (doctor.getPosition()) {
             //挂号
             case "0":
-                request.setAttribute("redirect_url","windows.php");
-                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                request.setAttribute("redirect_url", "windows.php");
+                request.setAttribute("msg", "对不起，您的身份权限不足！正在跳转您可访问的页面...");
                 return "jsp:doctor/graph_jump";
             //诊断
             case "1":
-                request.setAttribute("redirect_url","diagnose.php");
-                request.setAttribute("msg","对不起，您的身份权限不足！正在跳转您可访问的页面...");
+                request.setAttribute("redirect_url", "diagnose.php");
+                request.setAttribute("msg", "对不起，您的身份权限不足！正在跳转您可访问的页面...");
                 return "jsp:doctor/graph_jump";
         }
-        request.setAttribute("name",doctor.getName());
+        request.setAttribute("name", doctor.getName());
         request.setAttribute("code", 0);
         return "jsp:doctor/collection";
     }
 
     /**
      * 跳转界面
-     * */
+     */
     @At("doctor/jump")
     @Ok("re")
     @Fail("http:500")
@@ -216,6 +217,767 @@ public class DoctorModule {
     public String jump(@Param("redirect_url") String redirectUrl, HttpServletRequest request) {
         request.setAttribute("redirect_url", redirectUrl);
         return "jsp:doctor/jump";
+    }
+
+
+    @At("doctor/add_registration")
+    @Ok("re")
+    @Fail("http:500")
+    public Object addRegistrationPage(HttpServletRequest request,
+                                      HttpSession session) {
+        User user = (User) request.getAttribute("user");
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        request.setAttribute("name", doctor.getName());
+        request.setAttribute("code", 0);
+        return "jsp:doctor/add_registration";
+    }
+
+    /**
+     * 现场患者挂号，现场已缴纳挂号费
+     * */
+    @At("doctor/add_registration_msg")
+    @Ok("json")
+    @Fail("http:500")
+    public Object addRegistration(HttpServletRequest request,
+                                  HttpSession session,
+                                  @Param("name") String name,
+                                  @Param("sex") String sex,
+                                  @Param("year") String year,
+                                  @Param("phone_num") String phoneNum,
+                                  @Param("appear_time") String appearTime,
+                                  @Param("department") String department,
+                                  @Param("id_card") String idCard) {
+        Map<String, Object> map = new HashMap<>();
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Patient patient = dao.fetch(Patient.class, Cnd.where("A_IDCARD", "=", idCard));
+        if(patient == null){
+            map.put("code", -9);
+            map.put("msg", "挂号失败，患者信息无效");
+            request.setAttribute("doctor", patient);
+            request.setAttribute("name", doctor.getName());
+            return map;
+        }
+
+        //一个用户有未支付预约信息
+        if (dao.count(AppointmentOrRegistration.class,
+                Cnd.where("patientIdCard", "=",
+                        patient.getIdCard())
+                        .and("registrationFeeState", "=", "0")
+                        .and("isAppointment","=",true)) != 0) {
+            map.put("code", -9);
+            map.put("msg", "挂号失败，每个用户只可挂号一次");
+            request.setAttribute("patient", patient);
+            request.setAttribute("name", patient.getName());
+            return map;
+        }
+        AppointmentOrRegistration appointmentOrRegistration = new AppointmentOrRegistration(true);
+        appointmentOrRegistration.setAddTime(new Date(System.currentTimeMillis()));
+        appointmentOrRegistration.setAppearTime(appearTime);
+        appointmentOrRegistration.setDepartment(department);
+        appointmentOrRegistration.setPatientIdCard(patient.getIdCard());
+        appointmentOrRegistration.setRegistrationFeeState(1);//已经支付挂号费
+        appointmentOrRegistration.setPayForTime(new Date(System.currentTimeMillis()));
+        appointmentOrRegistration.setAppointment(false);//不是预约信息
+        dao.insert(appointmentOrRegistration);
+
+        map.put("code", 0);
+        map.put("msg", "挂号成功");
+        request.setAttribute("doctor", doctor);
+        request.setAttribute("name", doctor.getName());
+        return map;
+    }
+
+    /**
+     * 缴纳预约患者的挂号费页面
+     * */
+    @At("doctor/pay_appointment_fee")
+    @Ok("re")
+    @Fail("http:500")
+    public Object payAppointmentFeePage(HttpServletRequest request,
+                                    HttpSession session){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        request.setAttribute("name",doctor.getName());
+        request.setAttribute("doctor",doctor);
+        return "jsp:doctor/pay_appointment_fee";
+    }
+
+    /**
+     * 缴纳预约患者的挂号费用
+     * */
+    @At("doctor/commit_appointment_fee")
+    @Ok("json")
+    @Fail("http:500")
+    public Object payAppointmentFee(@Param("id_card")String idCard,
+                                    @Param("appointment_num")String appointmentNum,
+                                    HttpSession session,
+                                    HttpServletRequest request){
+        Map<String,Integer> res = new HashMap<>();
+        if(idCard == null || appointmentNum == null || idCard.equals("") || appointmentNum.equals("")){
+            res.put("code",-1);
+            return res;
+        }
+        Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",idCard));
+        //患者不存在
+        if(patient == null){
+            res.put("code",-5);
+            return res;
+        }
+        //患者存在，但是没有预约信息或 为 非预约信息
+        AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class,Cnd.where("patientIdCard","=",idCard)
+                .and("id","=",appointmentNum)
+                .and("isAppointment","=",true));
+        if(appointmentOrRegistration == null){
+            res.put("code",-10);
+            return res;
+        }
+
+        //此处所有信息都是正确的
+        appointmentOrRegistration.setPayForTime(new Date(System.currentTimeMillis()));
+        appointmentOrRegistration.setRegistrationFeeState(1);
+        dao.update(appointmentOrRegistration);
+        res.put("code",0);
+        return res;
+    }
+
+    /**
+     * 医生个人信息页面（通用）
+     * */
+    @At("doctor/user")
+    @Ok("re")
+    @Fail("http:500")
+    public Object windowsUserPage(HttpServletRequest request,
+                                  HttpSession session){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        User user = (User) session.getAttribute("user");
+
+        request.setAttribute("user",user);
+        request.setAttribute("doctor",doctor);
+        request.setAttribute("name",doctor.getName());
+        return "jsp:doctor/user";
+    }
+
+    /**
+     * 修改密码（通用）
+     * */
+    @At("doctor/modify_password")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object modifyPassword(HttpServletRequest request,
+                             HttpSession session) {
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        request.setAttribute("name", doctor.getName());
+        request.setAttribute("doctor", doctor);
+        return "jsp:doctor/modify_password";
+    }
+
+    /**
+     * 开始诊断
+     * */
+    @At("doctor/start_diagnose")
+    @Ok("re")
+    @Fail("http:500")
+    public Object startDiagnose(HttpServletRequest request,
+                                HttpSession session,
+                                @Param("num")String num) {
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Department department = dao.fetch(Department.class,Cnd.where("id","=",doctor.getDepartmentId()));
+        request.setAttribute("name", doctor.getName());
+        request.setAttribute("doctor", doctor);
+        if(session.getAttribute("patient_num")!=null && !session.getAttribute("patient_num").equals("")){
+            num = (String) session.getAttribute("patient_num");
+        }
+        //请求参数错误
+        if(num == null || num.equals("")){
+            request.setAttribute("code",-1);
+            request.setAttribute("msg","请求参数错误");
+            request.setAttribute("redirect_url","diagnose.php");
+            return "jsp:doctor/start_diagnose";
+        }
+
+        //获取挂号号码失败
+        AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class,Cnd.where("id","=",num));
+        if(appointmentOrRegistration == null){
+            request.setAttribute("code",-11);
+            request.setAttribute("msg","号码输入错误");
+            request.setAttribute("redirect_url","diagnose.php");
+            return "jsp:doctor/start_diagnose";
+        }
+
+        //判断是否缴纳挂号费
+        if(appointmentOrRegistration.getRegistrationFeeState() == 0){
+            request.setAttribute("code",-12);
+            request.setAttribute("msg","该患者未缴纳挂号费！");
+            request.setAttribute("redirect_url","diagnose.php");
+            return "jsp:doctor/start_diagnose";
+        }
+
+        //判断是否为本科室病人
+        if(!appointmentOrRegistration.getDepartment().equals(department.getDepartmentName())){
+            request.setAttribute("code",-13);
+            request.setAttribute("msg","该患者挂号科室不是本科室");
+            request.setAttribute("redirect_url","diagnose.php");
+            return "jsp:doctor/start_diagnose";
+        }
+
+        //成功
+        session.setAttribute("patient_num",num);
+        Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",appointmentOrRegistration.getPatientIdCard()));
+
+        request.setAttribute("year", Toolkit.getYear(patient.getIdCard()));
+        request.setAttribute("appointment_or_registration",appointmentOrRegistration);
+        request.setAttribute("patient",patient);
+        request.setAttribute("code",0);
+        return "jsp:doctor/start_diagnose";
+    }
+
+    /**
+     * 提交诊断书
+     * */
+    @At("doctor/upload_diagnosis")
+    @Ok("json")
+    @Fail("http:500")
+    public Object uploadDiagnosis(HttpServletRequest request,
+                                  HttpSession session,
+                                  @Param("name") String name,
+                                  @Param("sex") String sex,
+                                  @Param("year") String year,
+                                  @Param("patient_msg") String patientMsg,
+                                  @Param("appear_time") String appearTime,
+                                  @Param("id_card")String idCard,
+                                  @Param("summary")String summary){
+        User user = (User) session.getAttribute("user");
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Map<String,Integer> res = new HashMap<>();
+        if(idCard == null || patientMsg == null ||idCard.equals("") || patientMsg.equals("")){
+            res.put("code",-1);
+            return res;
+        }
+
+        Diagnosis diagnosis = new Diagnosis();
+        diagnosis.setAddTime(new Date(System.currentTimeMillis()));
+        diagnosis.setPatientSummary(patientMsg);
+        diagnosis.setDoctorSummary(summary);
+        diagnosis.setDoctorIdCard(doctor.getUsername());
+        Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",idCard));
+        if(patient == null ){
+            res.put("code",-5);
+            return res;
+        }
+        diagnosis.setPatientIdCard(patient.getIdCard());
+        //默认为不开，开药的话再改
+        diagnosis.setGiveMedicineOrNot(false);
+        dao.insert(diagnosis);
+        res.put("code",0);
+        return res;
+    }
+
+    @At("doctor/search_medicine")
+    @Ok("json")
+    @Fail("http:500")
+    public Object searchMedicine(@Param("search")String search,
+                                 HttpServletRequest request,
+                                 HttpSession session){
+        Map<String ,String > res = new HashMap<>();
+        if(search == null || search.equals("")){
+            res.put("code","-1");
+            res.put("msg","请求参数错误");
+            return res;
+        }
+
+
+        res.put("code","0");
+        return res;
+    }
+
+    /**
+     * 手动选择系统已有药方
+     * */
+    @At("doctor/select_prescription")
+    @Ok("re")
+    @Fail("http:500")
+    public Object selectPrescription(@Param("search_content")String searchContent,
+                                     @Param("page")String pageStr,
+                                     HttpSession session,
+                                     HttpServletRequest request){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Map<String, String > res = new HashMap<>();
+
+        if(searchContent == null || searchContent.equals("")){
+//            res.put("code","-1");
+//            res.put("msg","数据有误");
+//            return res;
+            searchContent = "";
+        }
+
+        //结果显示相关功能
+        int page = 1;
+        try {
+            page = Integer.parseInt(pageStr);
+        } catch (Exception e){}
+        //每页显示的内容
+        int pageSize = Toolkit.getSearchMedicinePage();
+        int resourceSize = 0;
+        Pager pager = dao.createPager(page,pageSize);
+        List<Medicine> medicineList = null;
+        if(searchContent.equals("") || searchContent == null){
+            medicineList = dao.query(Medicine.class,Cnd.where("id",">","0"),pager);
+            resourceSize = dao.count(Medicine.class,Cnd.where("id",">","0"));
+        } else {
+            medicineList = dao.query(Medicine.class,Cnd.where("id",">","0").and("name","like","%" + searchContent + "%"),pager);
+            resourceSize = dao.count(Medicine.class,Cnd.where("id",">","0").and("name","like","%" + searchContent + "%"));
+        }
+        //储存展示给用户最终的号码
+        List<Integer> pageList = new LinkedList<>();
+        //插入当前页面
+        pageList.add(page);
+        //特殊情况
+        if(medicineList.size() == 0){
+            request.setAttribute("page",page);
+            request.setAttribute("pageCount" , 1);
+            request.setAttribute("pageList",pageList);
+            request.setAttribute("code",1);
+            request.setAttribute("msg","没有搜索到相关图书");
+            return "jsp:doctor/select_prescription";
+        }
+        //得到当前的总页数
+        int pageCount = (resourceSize + pageSize - 1) / pageSize;
+
+        //特殊情况
+        if(page > pageCount){
+            request.setAttribute("redirect_url","select_prescription.php");
+            request.setAttribute("msg","此页面不存在");
+            return "jsp:doctor/select_prescription";
+        }
+
+        //处理特殊情况，page>pageCount
+        while (pageList.size() < 5) {
+            //插入之前节点
+            int firstNode = pageList.get(0);
+            if (firstNode > 1) {
+                pageList.add(0, firstNode - 1);
+            }
+
+            //插入之后节点
+            int lastNode = pageList.get(pageList.size() - 1);
+            if (lastNode < pageCount) {
+                pageList.add(lastNode + 1);
+            }
+
+            //判断之前节点与之后节点是否存在，若都不存在，则退出循环
+            firstNode = pageList.get(0);
+            lastNode = pageList.get(pageList.size() - 1);
+            if (firstNode == 1 && lastNode == pageCount) {
+                break;
+            }
+        }
+        //查询药方所含的详细药材信息 用map返回
+        Map<String,List<Materials>> materialsMap = new HashMap<>();
+
+        for(Medicine medicine : medicineList){
+            List<Materials> materials = new LinkedList<>();
+            //药方所包含所有的药材 关系
+            List<MedicineList> medicineLists = dao.query(MedicineList.class,Cnd.where("medicineId","=",medicine.getId()));
+            //每一味药材，加入到list里
+            for(MedicineList medicineList1 : medicineLists){
+                Materials materials1 = dao.fetch(Materials.class,Cnd.where("id","=",medicineList1.getMaterialsId()));
+                materials.add(materials1);
+            }
+            //TODO 需要修改，需要修改显示的内容，即不能为id + 内容
+            materialsMap.put(medicine.getId() + "",materials);
+        }
+
+        //把search信息写入request
+        request.setAttribute("materials",materialsMap);
+        request.setAttribute("search_content", searchContent);
+        //页码信息写入前端
+        request.setAttribute("page", page);
+        request.setAttribute("pageCount", pageCount);
+        request.setAttribute("pageList", pageList);
+        request.setAttribute("code", 0);
+        request.setAttribute("medicineList", medicineList);
+        request.setAttribute("msg", "以下为搜索到的药方");
+
+        return "jsp:doctor/select_prescription";
+
+    }
+
+    /**
+     * 处理搜索药方逻辑
+     * */
+    @At("doctor/search_content")
+    @Ok("re")
+    @Fail("http:500")
+    public Object searchContent(@Param("search_content")String searchContent,
+                                @Param("page")String pageStr,
+                                HttpSession session,
+                                HttpServletRequest request){
+
+//        Map<String,>
+        //TODO
+        return "re";
+//        Doctor doctor = (Doctor) session.getAttribute("doctor");
+//        Map<String, String > res = new HashMap<>();
+//
+//        if(searchContent == null || searchContent.equals("")){
+////            res.put("code","-1");
+////            res.put("msg","数据有误");
+////            return res;
+//            searchContent = "";
+//        }
+//
+//        //结果显示相关功能
+//        int page = 1;
+//        try {
+//            page = Integer.parseInt(pageStr);
+//        } catch (Exception e){}
+//        //每页显示的内容
+//        int pageSize = Toolkit.getSearchMedicinePage();
+//        int resourceSize = 0;
+//        Pager pager = dao.createPager(page,pageSize);
+//        List<Medicine> medicineList = null;
+//        if(searchContent.equals("") || searchContent == null){
+//            medicineList = dao.query(Medicine.class,Cnd.where("id",">","0"),pager);
+//            resourceSize = dao.count(Medicine.class,Cnd.where("id",">","0"));
+//        } else {
+//            medicineList = dao.query(Medicine.class,Cnd.where("id",">","0").and("name","like","%" + searchContent + "%"),pager);
+//            resourceSize = dao.count(Medicine.class,Cnd.where("id",">","0").and("name","like","%" + searchContent + "%"));
+//        }
+//        //储存展示给用户最终的号码
+//        List<Integer> pageList = new LinkedList<>();
+//        //插入当前页面
+//        pageList.add(page);
+//        //特殊情况
+//        if(medicineList.size() == 0){
+//            request.setAttribute("page",page);
+//            request.setAttribute("pageCount" , 1);
+//            request.setAttribute("pageList",pageList);
+//            request.setAttribute("code",1);
+//            request.setAttribute("msg","没有搜索到相关图书");
+//            return "jsp:doctor/select_prescription";
+//        }
+//        //得到当前的总页数
+//        int pageCount = (resourceSize + pageSize - 1) / pageSize;
+//
+//        //特殊情况
+//        if(page > pageCount){
+//            request.setAttribute("redirect_url","select_prescription.php");
+//            request.setAttribute("msg","此页面不存在");
+//            return "jsp:doctor/select_prescription";
+//        }
+//
+//        //处理特殊情况，page>pageCount
+//        while (pageList.size() < 5) {
+//            //插入之前节点
+//            int firstNode = pageList.get(0);
+//            if (firstNode > 1) {
+//                pageList.add(0, firstNode - 1);
+//            }
+//
+//            //插入之后节点
+//            int lastNode = pageList.get(pageList.size() - 1);
+//            if (lastNode < pageCount) {
+//                pageList.add(lastNode + 1);
+//            }
+//
+//            //判断之前节点与之后节点是否存在，若都不存在，则退出循环
+//            firstNode = pageList.get(0);
+//            lastNode = pageList.get(pageList.size() - 1);
+//            if (firstNode == 1 && lastNode == pageCount) {
+//                break;
+//            }
+//        }
+//        //把search信息写入request
+//        request.setAttribute("search_content", searchContent);
+//        //页码信息写入前端
+//        request.setAttribute("page", page);
+//        request.setAttribute("pageCount", pageCount);
+//        request.setAttribute("pageList", pageList);
+//        request.setAttribute("code", 0);
+//        request.setAttribute("medicineList", medicineList);
+//        request.setAttribute("msg", "以下为搜索到的药方");
+//
+//        return "jsp:doctor/select_prescription";
+
+
+    }
+
+    /**
+     * 自行调配药方
+     * */
+    @At("doctor/DIY_prescription")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object DIYPrescriptionPage(HttpSession session,
+                                      HttpServletRequest request){
+        Map<String,MaterialsStore> materialsStoreMap = new HashMap<>();
+
+        List<MaterialsStore> stores = dao.query(MaterialsStore.class,Cnd.where("id",">","0"));
+        for(MaterialsStore m : stores){
+            materialsStoreMap.put(m.getId() + "",m);
+        }
+        request.setAttribute("materials_store",materialsStoreMap);
+        request.setAttribute("code",0);
+        return "jsp:doctor/DIY_prescription";
+    }
+
+    @At("doctor/DIY_prescription")
+    @Ok("json")
+    @Fail("http:500")
+    @POST
+    public Object DIYPrescription(@Param("summary")String summary,
+                                  HttpSession session,
+                                  HttpServletRequest request){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        String patientNum = (String) session.getAttribute("patient_num");
+        Patient patient = dao.fetch(Patient.class,Cnd.where("id","=",patientNum));
+        Map<String,String> res = new HashMap<>();
+
+        if(doctor == null || patient == null){
+            res.put("code","-1");
+            res.put("msg","请求参数错误");
+            return res;
+        }
+
+        Map<String,Double> materials = new HashMap<>();
+        //处理字符串，我们默认药材名字不会重复
+        summary = summary.replace("\n","");
+        String[]medicines = summary.split("克");
+        for(String str : medicines){
+            //此处的medicine为每一味药材，而且每一个数组元素都只有两个
+            String[] medicine = str.split(",");
+            if(Toolkit.isDigit(medicine[0])){
+                materials.put(medicine[1],Double.parseDouble(medicine[0]));
+            } else {
+                materials.put(medicine[0],Double.parseDouble(medicine[1]));
+            }
+        }
+        //保存药方信息
+        MedicineCombine medicineCombine = new MedicineCombine();
+        medicineCombine.setAddTime(new Date(System.currentTimeMillis()));
+        medicineCombine.setDoctorIdCard(doctor.getUsername());
+        medicineCombine.setPatientIdCard(patient.getIdCard());
+        dao.insert(medicineCombine);
+        //计算药方价格 并且保存该药方的药材信息
+        double price = 0;
+        //key 为药材名字
+        for(String key : materials.keySet()){
+            //保存药方的药材信息
+            MaterialsStore m = dao.fetch(MaterialsStore.class,Cnd.where("materialName","=",key));
+            MedicineCombineList medicineCombineList = new MedicineCombineList();
+            medicineCombineList.setMaterialId(m.getId() + "");
+            medicineCombineList.setMedicineId(medicineCombine.getId() + "");
+            dao.insert(medicineCombineList);
+
+            MaterialsCombine materialsCombine = new MaterialsCombine();
+            materialsCombine.setMaterialName(m.getMaterialName());
+            materialsCombine.setMaterialDosage(materials.get(key) + "");
+            dao.insert(materialsCombine);
+            //计算价格
+            price +=m.getPrice() * materials.get(key);
+
+            materialsCombine.setMaterialPrice(price);
+            dao.update(materialsCombine);
+        }
+        medicineCombine.setPrice(price);
+        dao.update(medicineCombine);
+
+        //保存开出去的药方信息
+        Prescription prescription = new Prescription();
+        prescription.setAddTime(medicineCombine.getAddTime());
+        prescription.setPay(false);
+        prescription.setPatientIdCard(patient.getIdCard());
+        prescription.setDoctorIdCard(doctor.getUsername());
+        prescription.setMedicineId(medicineCombine.getId() + "");
+        prescription.setCombine(true);
+        prescription.setStatus(1);
+        dao.insert(prescription);
+
+        res.put("code","0");
+        return res;
+    }
+
+
+    /**
+     * 医生为患者添加成方
+     * */
+    @At("doctor/add_medicine")
+    @Ok("json")
+    @Fail("http:500")
+    public Object addMedicine(@Param("medicine_id")String medicineId,
+                              HttpServletRequest request,
+                              HttpSession session){
+        String patientNum = (String) session.getAttribute("patient_num");
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Map<String,String> res = new HashMap<>();
+        //检测参数
+        if(medicineId == null || patientNum == null || patientNum.equals("") || medicineId.equals("")){
+            res.put("code","-1");
+            res.put("msg","参数错误，添加失败");
+            return res;
+        }
+        Patient patient = dao.fetch(Patient.class,Cnd.where("id","=",patientNum));
+        Medicine medicine = dao.fetch(Medicine.class,Cnd.where("id","=",medicineId));
+        if(patient == null || medicine == null){
+            res.put("code","-1");
+            res.put("msg","参数错误，添加失败");
+            return res;
+        }
+        //添加
+        Prescription prescription = new Prescription();
+        prescription.setDoctorIdCard(doctor.getUsername());
+        //系统内部药方
+        prescription.setCombine(false);
+        prescription.setMedicineId(medicineId);
+        prescription.setPatientIdCard(patient.getIdCard());
+        //未付钱
+        prescription.setPay(false);
+        prescription.setAddTime(new Date(System.currentTimeMillis()));
+//        prescription.setPrice(medicine.getPrice());
+        prescription.setStatus(1);
+        dao.insert(prescription);
+
+        res.put("code","0");
+        res.put("msg","添加完成");
+        return res;
+    }
+
+
+    /**
+     * 医生已选择的药方
+     * */
+    @At("doctor/selected_prescription")
+    @Ok("re")
+    @Fail("http:500")
+    public Object selectedPrescription(HttpSession session,
+                                       HttpServletRequest request){
+        String patientNum = (String) session.getAttribute("patient_num");
+        if(patientNum == null || patientNum.equals("")){
+            request.setAttribute("code",-1);
+            request.setAttribute("msg","请求参数错误");
+            return "jsp:doctor/selected_prescription";
+        }
+        Patient patient = dao.fetch(Patient.class,Cnd.where("id","=",patientNum));
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        if(patient == null || doctor == null){
+            request.setAttribute("code",-1);
+            request.setAttribute("msg","请求参数错误");
+            return "jsp:doctor/selected_prescription";
+        }
+        //将医生开出去的方子转化为具体的药方 (有效药方)
+        List<Prescription> prescriptionList = dao.query(Prescription.class
+                , Cnd.where("patientIdCard","=",patient.getIdCard())
+                        .and("doctorIdCard","=",doctor.getUsername())
+                        .and("status","=","1"));
+        List<Medicine> medicineList = new LinkedList<>();//系统库内部的药方
+        List<MedicineCombine> medicineCombineList = new LinkedList<>();//自己调配的药方
+        //存放每一个药方所包含的每一味药材
+        Map<String,List<Materials>> materialsMap = new HashMap<>();//存放系统库内部药方的材料
+        Map<String,List<MaterialsCombine>> combineMaterialsMap = new HashMap<>();//存放自己调配的药方的材料
+        for(Prescription prescription : prescriptionList){
+
+
+            if(!prescription.isCombine()) {
+                //使用系统库的药方
+
+                //把每个药方返回
+                Medicine medicine = dao.fetch(Medicine.class, Cnd.where("id", "=", prescription.getMedicineId()));
+                medicineList.add(medicine);
+
+                //把每个药方的每味材料返回
+                List<Materials> materials = new LinkedList<>();
+                //药方材料的关系
+                List<MedicineList> medicineLists = dao.query(MedicineList.class, Cnd.where("medicineId", "=", medicine.getId()));
+                //每一味药材，加入到list里
+                for (MedicineList medicineList1 : medicineLists) {
+                    Materials materials1 = dao.fetch(Materials.class, Cnd.where("id", "=", medicineList1.getMaterialsId()));
+                    materials.add(materials1);
+                }
+                //TODO 需要修改，需要修改显示的内容，即不能为id + 内容
+                materialsMap.put(medicine.getId() + "", materials);
+            } else {
+                //自己调配的药方
+
+                //把每个药方返回
+                MedicineCombine medicineCombine = dao.fetch(MedicineCombine.class,Cnd.where("id","=",prescription.getMedicineId()));
+                medicineCombineList.add(medicineCombine);
+
+                //把每个药方的每味药材返回
+                List<MaterialsCombine> materialsCombines = new LinkedList<>();
+                //药方材料的关系
+                List<MedicineCombineList> medicineCombineLists = dao.query(MedicineCombineList.class,Cnd.where("medicineId","=",medicineCombine.getId()));
+                //每一味药材，加入到list里
+                for(MedicineCombineList m : medicineCombineLists){
+                    MaterialsStore materialsStore = dao.fetch(MaterialsStore.class,Cnd.where("id","=",m.getMaterialId()));
+                    MaterialsCombine materialsCombine = dao.fetch(MaterialsCombine.class,Cnd.where("materialName","=",materialsStore.getMaterialName()));
+//                    Materials materials = dao.fetch(Materials.class,Cnd.where("id","=",m.getMaterialId()));
+                    materialsCombines.add(materialsCombine);
+                }
+                //TODO 需要修改，需要修改显示的内容，即不能为id + 内容
+                combineMaterialsMap.put(medicineCombine.getId() + "", materialsCombines);
+
+            }
+        }
+
+        //把search信息写入request
+        //把系统内部药方及药材信息返回
+        request.setAttribute("materials",materialsMap);
+        request.setAttribute("medicine_list",medicineList);
+
+        //把自己添加的药方己药材信息返回
+        request.setAttribute("medicine_combine_materials",combineMaterialsMap);
+        request.setAttribute("medicine_combine_list",medicineCombineList);
+
+        request.setAttribute("patient",patient);
+        request.setAttribute("doctor",doctor);
+        request.setAttribute("code",0);
+        return "jsp:doctor/selected_prescription";
+    }
+
+    /**
+     * 医生删除已开药方
+     * */
+    @At("doctor/delete_medicine")
+    @Ok("json")
+    @Fail("http:500")
+    public Object deleteMedicine(@Param("medicine_id")String medicineId,
+                                 HttpServletRequest request,
+                                 HttpSession session){
+        Map<String,String> res = new HashMap<>();
+        if(medicineId == null || medicineId.equals("")){
+            res.put("code","-1");
+            res.put("msg","请球参数错误");
+            return res;
+        }
+
+        String patientNum = (String) session.getAttribute("patient_num");
+        if(patientNum == null || patientNum.equals("")){
+            res.put("code","-1");
+            res.put("msg","患者挂号的号码错误");
+            return res;
+        }
+
+        Patient patient = dao.fetch(Patient.class,Cnd.where("id","=",patientNum));
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+
+        Prescription prescription = dao.fetch(Prescription.class,
+                Cnd.where("patientIdCard","=",patient.getIdCard())
+                        .and("doctorIdCard","=",doctor.getUsername())
+                        .and("medicineId","=",medicineId)
+                        .and("status","=","1"));
+        if(prescription == null){
+            res.put("code","-5");
+            res.put("msg","药方信息错误");
+            return res;
+        }
+
+        prescription.setStatus(0);
+        dao.update(prescription);
+
+        res.put("code","0");
+        res.put("msg","删除成功");
+        return res;
     }
 
 }

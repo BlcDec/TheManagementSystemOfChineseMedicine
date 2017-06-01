@@ -1,5 +1,6 @@
 package com.imudges.web.manager_medicine_system.util;
 
+import com.imudges.web.manager_medicine_system.bean.Doctor;
 import org.nutz.lang.Lang;
 import org.nutz.lang.random.R;
 import org.nutz.lang.util.NutMap;
@@ -147,5 +148,41 @@ public class Toolkit {
     public static String getCurrentYear(){
         String Year = Calendar.getInstance().get(Calendar.YEAR) + "";
         return Year;
+    }
+
+    public static int getYear(String idCard){
+        String year = "";
+        for (int i = 6; i <= 9; i++) {
+            year += idCard.charAt(i) + "";
+        }
+        return Integer.parseInt(Toolkit.getCurrentYear()) - Integer.parseInt(year);
+    }
+
+    public static int getSearchMedicinePage(){
+        return new ConfigReader().readInt("search_page");
+    }
+
+    public static boolean isDigit(String strNum) {
+        return strNum.matches("[0-9]{1,}");
+    }
+
+    public static String getDoctorUrl(Doctor doctor){
+        String res = "";
+        if(doctor == null){
+            return null;
+        } else {
+            switch(doctor.getPosition()){
+                case "0":
+                    res = "windows.php";
+                    break;
+                case "1":
+                    res = "diagnose.php";
+                    break;
+                case "2":
+                    res = "collection.php";
+                    break;
+            }
+        }
+        return res;
     }
 }
