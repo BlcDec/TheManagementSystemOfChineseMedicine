@@ -112,6 +112,27 @@
                 <li class="active">中医药管理系统</li>
                 <li class="active">收款窗口</li>
             </ol>
+            <hr>
+            <div class="row">
+                <form method="post" action="#">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <input id="patient_num" name="patient_num" type="text" class="form-control"
+                                   placeholder="请输入患者挂号的号">
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">搜索</button>
+                                <button type="button" class="btn btn-default" onclick="create_prescription()">生成病历</button>
+                        </span>
+                        </div>
+                    </div>
+                </form>
+                <h4><span class="label label-success" id="success_info"
+                          style="display: none;">${msg}</span></h4>
+                <h4><span class="label label-warning" id="fail_info"
+                          style="display: none;">${msg}</span></h4>
+            </div>
+
+
         </div>
     </div>
 </div>
@@ -128,37 +149,15 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
-    var _department = -1;
-    function set_department(department) {
-        document.getElementById('department_info').style.display = "";
-        document.getElementById('department_info').innerText = "当前选择的科室：" + department;
-
-        _department = department;
-        document.getElementById('btn_set_department').innerText = _department;
-        document.getElementById('department').value = department;
-    }
-    function do_upload() {
-        var name = document.getElementById('name').value;
-        var sex = document.getElementById('sex').value;
-        var year = document.getElementById('year').value;
-        var phoneNum = document.getElementById('phone_num').value;
-        var apperaTime = document.getElementById('appear_time').value;
-        if (name.length == 0 ||
-            sex.length == 0 ||
-            year.length == 0 ||
-            phoneNum.length == 0 ||
-            apperaTime.length == 0) {
+    function create_prescription() {
+        var patientNum = document.getElementById('patient_num').value;
+        if (patientNum.length == 0) {
             document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请完善信息后提交";
-            return ;
-        }
-        if(_department == -1){
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请选择预约科室后提交";
+            document.getElementById('fail_info').innerText = "请填写完整患者号后生成";
             return ;
         }
         $.ajax({
-            url: 'upload_appointment.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
+            url: 'create_prescription.php?patient_num=' + patientNum,
             type: 'GET',
             async: true,
             cache: false,
@@ -168,9 +167,9 @@
                 var json = returndata;
                 var code = json.code;
                 if(code == 0){
-                    document.getElementById('success_info').style.display = "";
-                    document.getElementById('fail_info').style.display = "none";
-                    document.getElementById('success_info').innerText = "预约成功！";
+//                    document.getElementById('success_info').style.display = "";
+//                    document.getElementById('fail_info').style.display = "none";
+//                    document.getElementById('success_info').innerText = "生成成功！";
                     return ;
                 }
                 if(code == -7){
@@ -181,7 +180,7 @@
                 }
             },
             fail: function (returndata) {
-                document.getElementById('fail_info').innerText = "网络错误，预约失败";
+                document.getElementById('fail_info').innerText = "网络错误，生成失败";
                 document.getElementById('fail_info').style.display = "inline";
             }
         });

@@ -980,4 +980,36 @@ public class DoctorModule {
         return res;
     }
 
+    /**
+     * 生成病历
+     * */
+    @At("doctor/create_prescription")
+    @Ok("re")
+    @Fail("http:500")
+    public Object createPrescrition(@Param("patient_num")String patientNum,
+                                    HttpServletRequest request,
+                                    HttpSession session){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Map<String,String> res = new HashMap<>();
+        if(patientNum == null || patientNum.equals("")){
+            res.put("code","-1");
+            res.put("msg","请求参数错误");
+            return res;
+        }
+
+        AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class,Cnd.where("id","=",patientNum));
+        if(appointmentOrRegistration == null){
+            res.put("code","-11");
+            res.put("msg","号码错误");
+            return res ;
+        }
+
+        String patientIdCard = appointmentOrRegistration.getPatientIdCard();
+
+
+
+
+        return res;
+    }
+
 }
