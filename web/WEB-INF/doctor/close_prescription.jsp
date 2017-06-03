@@ -110,22 +110,23 @@
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">收款窗口</li>
+                <li class="active"><a href="collection.php">收款窗口</a></li>
+                <li class="active">结算医疗费</li>
             </ol>
             <hr>
             <div class="row">
-                <form id="form" method="post" action="close_account.php">
-                    <div class="col-lg-6">
-                        <div class="input-group">
-                            <input id="patient_num" name="patient_num" type="text" class="form-control"
-                                   placeholder="请输入患者挂号的号">
-                            <span class="input-group-btn">
-                            <button class="btn btn-default" onclick="commit()">搜索</button>
-                                <button type="button" class="btn btn-default" onclick="create_prescription()">生成病历</button>
-                        </span>
-                        </div>
-                    </div>
-                </form>
+                <%--<form id="form" method="post" action="close_account.php">--%>
+                    <%--<div class="col-lg-6">--%>
+                        <%--<div class="input-group">--%>
+                            <%--<input id="patient_num" name="patient_num" type="text" class="form-control"--%>
+                                   <%--placeholder="请输入患者挂号的号">--%>
+                            <%--<span class="input-group-btn">--%>
+                            <%--<button class="btn btn-default" onclick="commit()">搜索</button>--%>
+                                <%--<button type="button" class="btn btn-default" onclick="create_prescription()">生成病历</button>--%>
+                        <%--</span>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                <%--</form>--%>
                 <h4><span class="label label-success" id="success_info"
                           style="display: none;">${msg}</span></h4>
                 <h4><span class="label label-warning" id="fail_info"

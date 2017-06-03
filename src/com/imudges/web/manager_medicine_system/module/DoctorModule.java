@@ -10,6 +10,7 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;
 
+import javax.print.Doc;
 import javax.servlet.http.*;
 import java.util.*;
 
@@ -424,6 +425,14 @@ public class DoctorModule {
         session.setAttribute("patient_num",num);
         Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",appointmentOrRegistration.getPatientIdCard()));
 
+        if(dao.count(Diagnosis.class,Cnd.where("patientIdCard","=",patient.getIdCard())
+                .and("status","=",1))>0){
+            request.setAttribute("is_commit_diagnose",true);
+        } else {
+            request.setAttribute("is_commit_diagnose",false);
+        }
+
+
         request.setAttribute("year", Toolkit.getYear(patient.getIdCard()));
         request.setAttribute("appointment_or_registration",appointmentOrRegistration);
         request.setAttribute("patient",patient);
@@ -467,6 +476,7 @@ public class DoctorModule {
         diagnosis.setPatientIdCard(patient.getIdCard());
         //默认为不开，开药的话再改
         diagnosis.setGiveMedicineOrNot(false);
+        diagnosis.setStatus(1);
         dao.insert(diagnosis);
         res.put("code",0);
         return res;
@@ -1005,11 +1015,47 @@ public class DoctorModule {
         }
 
         String patientIdCard = appointmentOrRegistration.getPatientIdCard();
-
+        //TODO
 
 
 
         return res;
+    }
+
+    /**
+     * 药品费用结算
+     * */
+    @At("doctor/close_account")
+    @Ok("re")
+    @Fail("http:500")
+    public Object closeAccount(@Param("patient_num")String patientNum,
+                                    HttpSession session,
+                                    HttpServletRequest request){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        if(patientNum == null || patientNum.equals("")){
+            request.setAttribute("code",-1);
+            request.setAttribute("msg","患者信息错误");
+            return "jsp:doctor/collection";
+        }
+        //根据患者挂号的号查出与其相关的所有信息，然后将需要的返回
+        AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class,Cnd.where("id","=",patientNum));
+        if(appointmentOrRegistration == null){
+            request.setAttribute("code",-11);
+            request.setAttribute("msg","患者信息错误");
+            return "jsp:doctor/collection";
+        }
+        Patient patient = dao.fetch(Patient.class,Cnd.where("IdCard","=",appointmentOrRegistration.getPatientIdCard()));
+        if(patient == null){
+            request.setAttribute("code",-11);
+            request.setAttribute("msg","患者信息错误");
+            return "jsp:doctor/collection";
+        }
+        Prescription prescription = dao.fetch(Prescription.class,Cnd.where("patientIdCard","=",patient.getIdCard()));
+
+
+
+
+        return "jsp:doctor/close_prescription";
     }
 
 }

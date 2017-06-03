@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 诊断书
  */
-@Table("AA_DIAGNOSIS")
+@Table("AAA_DIAGNOSIS")
 public class Diagnosis {
     @Id
     private int id;
@@ -30,6 +30,23 @@ public class Diagnosis {
 
     @Column
     private boolean giveMedicineOrNot;//是否开药
+
+
+    /**
+     * -1：不知道什么状态
+     * 0：被删除
+     * 1：正常状态
+     * */
+    @Column
+    private int status;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public int getId() {
         return id;

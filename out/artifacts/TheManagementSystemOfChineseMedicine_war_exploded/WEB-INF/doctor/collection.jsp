@@ -114,13 +114,13 @@
             </ol>
             <hr>
             <div class="row">
-                <form method="post" action="#">
+                <form id="form" method="post" action="close_account.php">
                     <div class="col-lg-6">
                         <div class="input-group">
                             <input id="patient_num" name="patient_num" type="text" class="form-control"
                                    placeholder="请输入患者挂号的号">
                             <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit">搜索</button>
+                            <button class="btn btn-default" onclick="commit()">搜索</button>
                                 <button type="button" class="btn btn-default" onclick="create_prescription()">生成病历</button>
                         </span>
                         </div>
@@ -149,6 +149,15 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
+    function commit() {
+        var patientNum = document.getElementById('patient_num').value;
+        if (patientNum.length == 0) {
+            document.getElementById('fail_info').style.display = "";
+            document.getElementById('fail_info').innerText = "请填写完整患者号后生成";
+            return ;
+        }
+        document.getElementById('form').submit();
+    }
     function create_prescription() {
         var patientNum = document.getElementById('patient_num').value;
         if (patientNum.length == 0) {
