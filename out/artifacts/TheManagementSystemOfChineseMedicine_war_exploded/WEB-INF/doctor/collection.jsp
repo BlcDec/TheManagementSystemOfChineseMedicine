@@ -114,14 +114,15 @@
             </ol>
             <hr>
             <div class="row">
-                <form id="form" method="post" action="close_account.php">
+                <form id="form" >
                     <div class="col-lg-6">
                         <div class="input-group">
                             <input id="patient_num" name="patient_num" type="text" class="form-control"
                                    placeholder="请输入患者挂号的号">
                             <span class="input-group-btn">
-                            <button class="btn btn-default" onclick="commit()">搜索</button>
+                                <button class="btn btn-default" type="button" onclick="commit()">搜索</button>
                                 <button type="button" class="btn btn-default" onclick="create_prescription()">生成病历</button>
+                                <button type="button" class="btn btn-default" onclick="create_prescription()">查看历史</button>
                         </span>
                         </div>
                     </div>
@@ -156,17 +157,8 @@
             document.getElementById('fail_info').innerText = "请填写完整患者号后生成";
             return ;
         }
-        document.getElementById('form').submit();
-    }
-    function create_prescription() {
-        var patientNum = document.getElementById('patient_num').value;
-        if (patientNum.length == 0) {
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请填写完整患者号后生成";
-            return ;
-        }
         $.ajax({
-            url: 'create_prescription.php?patient_num=' + patientNum,
+            url: 'close_account.php?patient_num=' + patientNum,
             type: 'GET',
             async: true,
             cache: false,
@@ -176,21 +168,19 @@
                 var json = returndata;
                 var code = json.code;
                 if(code == 0){
-//                    document.getElementById('success_info').style.display = "";
-//                    document.getElementById('fail_info').style.display = "none";
-//                    document.getElementById('success_info').innerText = "生成成功！";
-                    return ;
+//                    alert(code);
+                    window.location.href='close_prescription.php';
                 }
-                if(code == -7){
+                if(code == -1 || code == -11){
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
-                    return ;
+                    document.getElementById('fail_info').innerText = "患者信息错误";
+                    alert('test');
                 }
             },
             fail: function (returndata) {
                 document.getElementById('fail_info').innerText = "网络错误，生成失败";
-                document.getElementById('fail_info').style.display = "inline";
+                document.getElementById('fail_info').style.display = "";
             }
         });
     }

@@ -1026,32 +1026,53 @@ public class DoctorModule {
      * 药品费用结算
      * */
     @At("doctor/close_account")
-    @Ok("re")
+    @Ok("json")
     @Fail("http:500")
     public Object closeAccount(@Param("patient_num")String patientNum,
                                     HttpSession session,
                                     HttpServletRequest request){
+        Map<String,String> res = new HashMap<>();
         Doctor doctor = (Doctor) session.getAttribute("doctor");
         if(patientNum == null || patientNum.equals("")){
-            request.setAttribute("code",-1);
-            request.setAttribute("msg","患者信息错误");
-            return "jsp:doctor/collection";
+            res.put("code","-1");
+            res.put("msg","患者信息错误");
+            return res;
         }
         //根据患者挂号的号查出与其相关的所有信息，然后将需要的返回
         AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class,Cnd.where("id","=",patientNum));
         if(appointmentOrRegistration == null){
-            request.setAttribute("code",-11);
-            request.setAttribute("msg","患者信息错误");
-            return "jsp:doctor/collection";
+            res.put("code","-1");
+            res.put("msg","患者信息错误");
+            return res;
         }
         Patient patient = dao.fetch(Patient.class,Cnd.where("IdCard","=",appointmentOrRegistration.getPatientIdCard()));
         if(patient == null){
-            request.setAttribute("code",-11);
-            request.setAttribute("msg","患者信息错误");
-            return "jsp:doctor/collection";
+            res.put("code","-1");
+            res.put("msg","患者信息错误");
+            return res;
         }
-        Prescription prescription = dao.fetch(Prescription.class,Cnd.where("patientIdCard","=",patient.getIdCard()));
+        List<Prescription> prescription = dao.query(Prescription.class,Cnd.where("patientIdCard","=",patient.getIdCard()).and("isPay","=",false));
+        List<Diagnosis> diagnosis = dao.query(Diagnosis.class,Cnd.where("patientIdCard","=",patient.getIdCard()));
 
+        session.setAttribute("patientNum",patient);
+        session.setAttribute("patient",patient);
+        session.setAttribute("appointmentOrRegistration",appointmentOrRegistration);
+        session.setAttribute("prescription",prescription);
+        session.setAttribute("diagnosis",diagnosis);
+        res.put("code","0");
+        res.put("msg","成功");
+        return res;
+
+    }
+
+    /**
+     * 结算页面
+     * */
+    @At("doctor/close_prescription")
+    @Ok("re")
+    @Fail("http:50")
+    public Object closePrescription(HttpServletRequest request,
+                                    HttpSession session){
 
 
 

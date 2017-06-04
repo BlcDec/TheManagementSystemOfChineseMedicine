@@ -23,7 +23,10 @@ public class Prescription {
     @Column
     private String medicineId;//药方Id（或为系统库内部药方，或为医生自己调配）
 
-
+    /**
+     * false：未付款
+     * true：付款
+     * */
     @Column
     private boolean isPay;//是否付款
 

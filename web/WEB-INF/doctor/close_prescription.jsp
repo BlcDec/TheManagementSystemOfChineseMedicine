@@ -85,10 +85,10 @@
 
 
                 <%--<li>--%>
-                    <%--<a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>--%>
+                <%--<a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>--%>
                 <%--</li>--%>
                 <%--<li>--%>
-                    <%--<a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>--%>
+                <%--<a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>--%>
                 <%--</li>--%>
                 <%--/收款窗口是指收取药品费用的窗口--%>
                 <li class="active-link">
@@ -116,21 +116,64 @@
             <hr>
             <div class="row">
                 <%--<form id="form" method="post" action="close_account.php">--%>
-                    <%--<div class="col-lg-6">--%>
-                        <%--<div class="input-group">--%>
-                            <%--<input id="patient_num" name="patient_num" type="text" class="form-control"--%>
-                                   <%--placeholder="请输入患者挂号的号">--%>
-                            <%--<span class="input-group-btn">--%>
-                            <%--<button class="btn btn-default" onclick="commit()">搜索</button>--%>
-                                <%--<button type="button" class="btn btn-default" onclick="create_prescription()">生成病历</button>--%>
-                        <%--</span>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
+                <%--<div class="col-lg-6">--%>
+                <%--<div class="input-group">--%>
+                <%--<input id="patient_num" name="patient_num" type="text" class="form-control"--%>
+                <%--placeholder="请输入患者挂号的号">--%>
+                <%--<span class="input-group-btn">--%>
+                <%--<button class="btn btn-default" onclick="commit()">搜索</button>--%>
+                <%--<button type="button" class="btn btn-default" onclick="create_prescription()">生成病历</button>--%>
+                <%--</span>--%>
+                <%--</div>--%>
+                <%--</div>--%>
                 <%--</form>--%>
                 <h4><span class="label label-success" id="success_info"
                           style="display: none;">${msg}</span></h4>
                 <h4><span class="label label-warning" id="fail_info"
                           style="display: none;">${msg}</span></h4>
+            </div>
+            <div class="list-group">
+                <a class="list-group-item disabled">
+                    患者药品详情
+                </a>
+                <table class="table table-striped">
+                    <div class="form-group">
+                        <thead>
+                        <tr>
+                            <th>患者身份证号：</th>
+                            <th>预约科室：</th>
+                            <th>药方名：</th>
+                            <th>药方类型：</th>
+                            <th>应缴费用：</th>
+                            <th>是否缴费：</th>
+                        </tr>
+                        </thead>
+                    </div>
+                    <tbody>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal_" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>请确认是否要缴纳此次预约的费用？</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                            onclick="pay_for()">确认缴纳
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </tbody>
+                </table>
             </div>
 
 
@@ -155,7 +198,7 @@
         if (patientNum.length == 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请填写完整患者号后生成";
-            return ;
+            return;
         }
         document.getElementById('form').submit();
     }
@@ -164,7 +207,7 @@
         if (patientNum.length == 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请填写完整患者号后生成";
-            return ;
+            return;
         }
         $.ajax({
             url: 'create_prescription.php?patient_num=' + patientNum,
@@ -176,17 +219,14 @@
             success: function (returndata) {
                 var json = returndata;
                 var code = json.code;
-                if(code == 0){
-//                    document.getElementById('success_info').style.display = "";
-//                    document.getElementById('fail_info').style.display = "none";
-//                    document.getElementById('success_info').innerText = "生成成功！";
-                    return ;
+                if (code == 0) {
+                    return;
                 }
-                if(code == -7){
+                if (code == -7) {
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
                     document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
-                    return ;
+                    return;
                 }
             },
             fail: function (returndata) {
