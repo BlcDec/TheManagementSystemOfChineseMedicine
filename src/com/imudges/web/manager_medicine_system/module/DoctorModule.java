@@ -732,6 +732,8 @@ public class DoctorModule {
         return "jsp:doctor/DIY_prescription";
     }
 
+
+    //TODO 提交药方后，需要在诊断书内部修改 是否开药这个属性
     @At("doctor/DIY_prescription")
     @Ok("json")
     @Fail("http:500")
@@ -743,6 +745,8 @@ public class DoctorModule {
         String patientNum = (String) session.getAttribute("patient_num");
         Patient patient = dao.fetch(Patient.class,Cnd.where("id","=",patientNum));
         Map<String,String> res = new HashMap<>();
+
+
 
         if(doctor == null || patient == null){
             res.put("code","-1");
@@ -809,6 +813,8 @@ public class DoctorModule {
     }
 
 
+
+    //TODO 提交药方后，需要在诊断书内部修改 是否开药这个属性
     /**
      * 医生为患者添加成方
      * */
@@ -1052,9 +1058,10 @@ public class DoctorModule {
             return res;
         }
         List<Prescription> prescription = dao.query(Prescription.class,Cnd.where("patientIdCard","=",patient.getIdCard()).and("isPay","=",false));
-        List<Diagnosis> diagnosis = dao.query(Diagnosis.class,Cnd.where("patientIdCard","=",patient.getIdCard()));
+        //默认每个患者只有一份可用诊断书
+        Diagnosis diagnosis = dao.fetch(Diagnosis.class,Cnd.where("patientIdCard","=",patient.getIdCard()).and("status","=","1"));
 
-        session.setAttribute("patientNum",patient);
+        session.setAttribute("patientNum",patientNum);
         session.setAttribute("patient",patient);
         session.setAttribute("appointmentOrRegistration",appointmentOrRegistration);
         session.setAttribute("prescription",prescription);
@@ -1073,10 +1080,33 @@ public class DoctorModule {
     @Fail("http:50")
     public Object closePrescription(HttpServletRequest request,
                                     HttpSession session){
+        Patient patient = (Patient) session.getAttribute("patient");
+        String patientNum = (String) session.getAttribute("patientNum");
+        AppointmentOrRegistration appointmentOrRegistration = (AppointmentOrRegistration) session.getAttribute("appointmentOrRegistration");
+        List<Prescription> prescription = (List<Prescription>) session.getAttribute("prescription");
+        Diagnosis diagnosis = (Diagnosis) session.getAttribute("diagnosis");
+        Map<String,Medicine> medicineMap = new HashMap<>();
+        Map<String,MedicineCombine> medicineCombineMap = new HashMap<>();
+
+        for(Prescription p : prescription){
+            if(p.isCombine()){
+                //医生自配
+                MedicineCombine medicineCombine = dao.fetch(MedicineCombine.class,Cnd.where("id","=",p.getMedicineId()));
+                medicineCombineMap.put(p.getId() + "",medicineCombine);
+            } else {
+                //系统提供
+                Medicine medicine = dao.fetch(Medicine.class,Cnd.where("id","=",p.getMedicineId()));
+                medicineMap.put(p.getId() + "",medicine);
+            }
+        }
 
 
-
+        request.setAttribute("medicineMap",medicineMap);
+        request.setAttribute("medicineCombineMap",medicineCombineMap);
+        request.setAttribute("patient",patient);
+        request.setAttribute("appointmentOrRegistration",appointmentOrRegistration);
+        request.setAttribute("prescription",prescription);
+        request.setAttribute("diagnosis",diagnosis);
         return "jsp:doctor/close_prescription";
     }
-
 }

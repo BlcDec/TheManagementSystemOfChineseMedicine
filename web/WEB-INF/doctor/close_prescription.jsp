@@ -1,7 +1,8 @@
 ﻿<%@ page import="java.util.List" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %><%--
+<%@ page import="com.imudges.web.manager_medicine_system.bean.*" %>
+<%@ page import="java.util.Map" %><%--
   Created by IntelliJ IDEA.
   User: yangyang
   Date: 2017/4/7
@@ -150,7 +151,28 @@
                         </thead>
                     </div>
                     <tbody>
+                    <%List<Prescription> prescriptionList = (List<Prescription>) request.getAttribute("prescription");%>
+                    <%if(prescriptionList.size()!=0){%>
+                    <%Patient patient = (Patient) request.getAttribute("patient");%>
+                    <%AppointmentOrRegistration appointmentOrRegistration = (AppointmentOrRegistration) request.getAttribute("appointmentOrRegistration");%>
+                    <%Diagnosis diagnosis = (Diagnosis) request.getAttribute("diagnosis");%>
+                    <%Map<String,Medicine> medicineMap = (Map<String, Medicine>) request.getAttribute("medicineMap");%>
+                    <%Map<String,MedicineCombine> medicineCombineMap = (Map<String, MedicineCombine>) request.getAttribute("medicineCombineMap");%>
+                    <%for(Prescription p : prescriptionList){%>
+                    <tr>
+                        <th><%=patient.getIdCard()%></th>
+                        <th><%=appointmentOrRegistration.getDepartment()%></th>
+                        <th><%if(p.isCombine()){%>无<%}else{%><%=medicineMap.get(p.getId() + "").getName()%><%}%></th>
+                        <th><%if(p.isCombine()){%>医生自配<%}else{%>系统提供<%}%></th>
+                        <th><%if(p.isCombine()){%><%=medicineCombineMap.get(p.getId() + "").getPrice()%><%}else{%><%=medicineMap.get(p.getId() + "").getPrice()%><%}%>元</th>
+                        <th>是否缴费：</th>
+                    </tr>
+                    <%}%>
 
+
+
+                    <%} else {%>
+                    <%}%>
                     <!-- Modal -->
                     <div class="modal fade" id="myModal_" tabindex="-1" role="dialog"
                          aria-labelledby="myModalLabel">
