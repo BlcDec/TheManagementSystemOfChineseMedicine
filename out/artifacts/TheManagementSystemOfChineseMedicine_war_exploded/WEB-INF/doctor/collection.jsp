@@ -168,14 +168,12 @@
                 var json = returndata;
                 var code = json.code;
                 if(code == 0){
-//                    alert(code);
                     window.location.href='close_prescription.php';
                 }
                 if(code == -1 || code == -11){
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
                     document.getElementById('fail_info').innerText = "患者信息错误";
-                    alert('test');
                 }
             },
             fail: function (returndata) {

@@ -1109,4 +1109,42 @@ public class DoctorModule {
         request.setAttribute("diagnosis",diagnosis);
         return "jsp:doctor/close_prescription";
     }
+
+    /**
+     * 在线支付挂号费
+     * */
+    @At("doctor/pay_for_appointment")
+    @Ok("json")
+    @Fail("http:50")
+    public Object payForAppointment(@Param("appointment_id")String appointmentId,
+                                    @Param("prescription_id")String prescriptionId,
+                                    HttpServletRequest request,
+                                    HttpSession session){
+        Map<String ,String >res = new HashMap<>();
+        if(appointmentId == null || prescriptionId == null){
+            res.put("code","-8");
+            return res;
+        }
+        Patient patient = (Patient) session.getAttribute("patient");
+        AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class
+                ,Cnd.where("id","=",appointmentId)
+                        .and("patientIdCard","=",patient.getIdCard()));
+        Prescription prescription = dao.fetch(Prescription.class
+                ,Cnd.where("id","=",prescriptionId));
+        if(appointmentOrRegistration!=null && prescription!=null){
+            prescription.setPay(true);
+            prescription.setReceiveMedicineTime(new Date(System.currentTimeMillis()));
+            prescription.setStatus(2);//设置药品为已被取走，不可修改状态
+            dao.update(prescription);
+
+            appointmentOrRegistration.setRegistrationFeeState(1);
+            appointmentOrRegistration.setPayForTime(new Date(System.currentTimeMillis()));
+            appointmentOrRegistration.setAppointment(true);
+            dao.update(appointmentOrRegistration);
+            res.put("code","0");
+        } else {
+            res.put("code","-8");
+        }
+        return res;
+    }
 }

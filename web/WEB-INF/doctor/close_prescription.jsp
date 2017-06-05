@@ -160,12 +160,41 @@
                     <%Map<String,MedicineCombine> medicineCombineMap = (Map<String, MedicineCombine>) request.getAttribute("medicineCombineMap");%>
                     <%for(Prescription p : prescriptionList){%>
                     <tr>
-                        <th><%=patient.getIdCard()%></th>
-                        <th><%=appointmentOrRegistration.getDepartment()%></th>
-                        <th><%if(p.isCombine()){%>无<%}else{%><%=medicineMap.get(p.getId() + "").getName()%><%}%></th>
-                        <th><%if(p.isCombine()){%>医生自配<%}else{%>系统提供<%}%></th>
-                        <th><%if(p.isCombine()){%><%=medicineCombineMap.get(p.getId() + "").getPrice()%><%}else{%><%=medicineMap.get(p.getId() + "").getPrice()%><%}%>元</th>
-                        <th>是否缴费：</th>
+                        <td><%=patient.getIdCard()%></td>
+                        <td><%=appointmentOrRegistration.getDepartment()%></td>
+                        <td><%if(p.isCombine()){%>无<%}else{%><%=medicineMap.get(p.getId() + "").getName()%><%}%></td>
+                        <td><%if(p.isCombine()){%>医生自配<%}else{%>系统提供<%}%></td>
+                        <td><%if(p.isCombine()){%><%=medicineCombineMap.get(p.getId() + "").getPrice()%><%}else{%><%=medicineMap.get(p.getId() + "").getPrice()%><%}%>元</td>
+                        <%if(!p.isPay()){%>
+                        <td>
+                            <button class="btn btn-danger" data-toggle="modal" style="margin-top: 0px"
+                                    data-target="#myModal_<%=p.getId()%>">未缴纳
+                            </button>
+                        </td>
+                        <%} else {%>
+                        <td><span class="label label-success">已缴纳</span></td>
+                        <%}%>
+                        <!-- Modal -->
+                        <div class="modal fade" id="myModal_<%=p.getId()%>" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>请确认是否要缴纳<%if(p.isCombine()){%>“医生自配药方”<%}else{%>“<%=medicineMap.get(p.getId() + "").getName()%>”<%}%>的费用？</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                                onclick="pay_for(<%=appointmentOrRegistration.getId()%>,<%=p.getId()%>)">确认缴纳
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </tr>
                     <%}%>
 
@@ -173,27 +202,6 @@
 
                     <%} else {%>
                     <%}%>
-                    <!-- Modal -->
-                    <div class="modal fade" id="myModal_" tabindex="-1" role="dialog"
-                         aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>请确认是否要缴纳此次预约的费用？</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                            onclick="pay_for()">确认缴纳
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     </tbody>
                 </table>
             </div>
@@ -256,6 +264,34 @@
                 document.getElementById('fail_info').style.display = "inline";
             }
         });
+    }
+    function pay_for(appointment_id,prescription_id) {
+        if (appointment_id == null || prescription_id == null) {
+            alert("页面错误！");
+            return;
+        } else {
+            $.ajax({
+                url: 'pay_for_appointment.php?appointment_id=' + appointment_id + '&prescription_id=' + prescription_id,
+                type: 'GET',
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (returndata) {
+                    var json = returndata;
+                    var code = json.code;
+                    if(code == 0){
+                        alert("缴纳成功，点击后跳转！");
+                    } else if(code == -8){
+                        alert("缴纳失败，点击后跳转！");
+                    }
+                    window.location.href='collection.php';
+                },
+                fail: function (returndata) {
+
+                }
+            });
+        }
     }
 
 </script>
