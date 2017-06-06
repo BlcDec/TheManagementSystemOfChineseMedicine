@@ -4,7 +4,6 @@
 <%@ page import="com.imudges.web.manager_medicine_system.bean.AppointmentOrRegistration" %>
 <%@ page import="java.util.Date" %><%--
   Created by IntelliJ IDEA.
-  User: yangyang
   Date: 2017/4/7
   Time: 15:33
 

@@ -2,7 +2,6 @@
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %><%--
   Created by IntelliJ IDEA.
-  User: yangyang
   Date: 2017/4/7
   Time: 15:33
 

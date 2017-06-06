@@ -7,8 +7,8 @@ var ioc = {
         },
         fields : {
             // url : "jdbc:mysql://127.0.0.1:3306/chinese_medicine_manager_system?useUnicode=true&characterEncoding=UTF8",
-            //url : "jdbc:oracle:thin:@183.175.12.166:8082:orcl",
-            jdbcUrl : 'jdbc:oracle:thin:@183.175.12.166:8082:orcl',
+            // url : "jdbc:oracle:thin:@localhost:1521:epsit",
+            jdbcUrl : 'jdbc:oracle:thin:@127.0.0.1:8082:orcl',
             username : "scott",
             password : "jack",
             testWhileIdle : true,
