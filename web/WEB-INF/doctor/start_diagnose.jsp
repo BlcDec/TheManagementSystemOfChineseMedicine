@@ -180,13 +180,16 @@
                     <div class="form-group">
                         <textarea name="summary" class="form-control" rows="5" id="summary"></textarea>
                     </div>
+                    <h4><span class="label label-info" id="info" <%if((Boolean) request.getAttribute("is_commit_diagnose")){%>style="display: none"<%}else{%>
+                            <%}%>>提交诊断书后为患者开药</span></h4>
                     <h4><span class="label label-success" id="success_info"
                               style="display: none;">${msg}</span></h4>
                     <h4><span class="label label-warning" id="fail_info"
                               style="display: none;">${msg}</span></h4>
                     <button type="button" class="btn btn-primary" onclick="upload_diagnosis()">提交诊断书</button>
 
-                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                    <button id="select_medicine" type="button" class="btn btn-primary" data-toggle="modal"<%if((Boolean) request.getAttribute("is_commit_diagnose")){%> <%}else{%>style="display: none"
+                            <%}%>
                             data-target="#MyModal_<%=patient.getIdCard()%>">开药
                     </button>
                 </div>
@@ -381,6 +384,8 @@
                     document.getElementById('success_info').style.display = "";
                     document.getElementById('fail_info').style.display = "none";
                     document.getElementById('success_info').innerText = "提交成功！";
+                    document.getElementById('select_medicine').style.display= "";
+                    document.getElementById('info').style.display = "none";
                     return;
                 }
                 if (code == -1) {

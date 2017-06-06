@@ -10,6 +10,7 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;
 
+import javax.print.Doc;
 import javax.servlet.http.*;
 import java.util.*;
 
@@ -424,6 +425,14 @@ public class DoctorModule {
         session.setAttribute("patient_num",num);
         Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",appointmentOrRegistration.getPatientIdCard()));
 
+        if(dao.count(Diagnosis.class,Cnd.where("patientIdCard","=",patient.getIdCard())
+                .and("status","=",1))>0){
+            request.setAttribute("is_commit_diagnose",true);
+        } else {
+            request.setAttribute("is_commit_diagnose",false);
+        }
+
+
         request.setAttribute("year", Toolkit.getYear(patient.getIdCard()));
         request.setAttribute("appointment_or_registration",appointmentOrRegistration);
         request.setAttribute("patient",patient);
@@ -467,6 +476,7 @@ public class DoctorModule {
         diagnosis.setPatientIdCard(patient.getIdCard());
         //默认为不开，开药的话再改
         diagnosis.setGiveMedicineOrNot(false);
+        diagnosis.setStatus(1);
         dao.insert(diagnosis);
         res.put("code",0);
         return res;
@@ -722,6 +732,8 @@ public class DoctorModule {
         return "jsp:doctor/DIY_prescription";
     }
 
+
+    //TODO 提交药方后，需要在诊断书内部修改 是否开药这个属性
     @At("doctor/DIY_prescription")
     @Ok("json")
     @Fail("http:500")
@@ -733,6 +745,8 @@ public class DoctorModule {
         String patientNum = (String) session.getAttribute("patient_num");
         Patient patient = dao.fetch(Patient.class,Cnd.where("id","=",patientNum));
         Map<String,String> res = new HashMap<>();
+
+
 
         if(doctor == null || patient == null){
             res.put("code","-1");
@@ -799,6 +813,8 @@ public class DoctorModule {
     }
 
 
+
+    //TODO 提交药方后，需要在诊断书内部修改 是否开药这个属性
     /**
      * 医生为患者添加成方
      * */
@@ -980,4 +996,155 @@ public class DoctorModule {
         return res;
     }
 
+    /**
+     * 生成病历
+     * */
+    @At("doctor/create_prescription")
+    @Ok("re")
+    @Fail("http:500")
+    public Object createPrescrition(@Param("patient_num")String patientNum,
+                                    HttpServletRequest request,
+                                    HttpSession session){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Map<String,String> res = new HashMap<>();
+        if(patientNum == null || patientNum.equals("")){
+            res.put("code","-1");
+            res.put("msg","请求参数错误");
+            return res;
+        }
+
+        AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class,Cnd.where("id","=",patientNum));
+        if(appointmentOrRegistration == null){
+            res.put("code","-11");
+            res.put("msg","号码错误");
+            return res ;
+        }
+
+        String patientIdCard = appointmentOrRegistration.getPatientIdCard();
+        //TODO
+
+
+
+        return res;
+    }
+
+    /**
+     * 药品费用结算
+     * */
+    @At("doctor/close_account")
+    @Ok("json")
+    @Fail("http:500")
+    public Object closeAccount(@Param("patient_num")String patientNum,
+                                    HttpSession session,
+                                    HttpServletRequest request){
+        Map<String,String> res = new HashMap<>();
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        if(patientNum == null || patientNum.equals("")){
+            res.put("code","-1");
+            res.put("msg","患者信息错误");
+            return res;
+        }
+        //根据患者挂号的号查出与其相关的所有信息，然后将需要的返回
+        AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class,Cnd.where("id","=",patientNum));
+        if(appointmentOrRegistration == null){
+            res.put("code","-1");
+            res.put("msg","患者信息错误");
+            return res;
+        }
+        Patient patient = dao.fetch(Patient.class,Cnd.where("IdCard","=",appointmentOrRegistration.getPatientIdCard()));
+        if(patient == null){
+            res.put("code","-1");
+            res.put("msg","患者信息错误");
+            return res;
+        }
+        List<Prescription> prescription = dao.query(Prescription.class,Cnd.where("patientIdCard","=",patient.getIdCard()).and("isPay","=",false));
+        //默认每个患者只有一份可用诊断书
+        Diagnosis diagnosis = dao.fetch(Diagnosis.class,Cnd.where("patientIdCard","=",patient.getIdCard()).and("status","=","1"));
+
+        session.setAttribute("patientNum",patientNum);
+        session.setAttribute("patient",patient);
+        session.setAttribute("appointmentOrRegistration",appointmentOrRegistration);
+        session.setAttribute("prescription",prescription);
+        session.setAttribute("diagnosis",diagnosis);
+        res.put("code","0");
+        res.put("msg","成功");
+        return res;
+
+    }
+
+    /**
+     * 结算页面
+     * */
+    @At("doctor/close_prescription")
+    @Ok("re")
+    @Fail("http:50")
+    public Object closePrescription(HttpServletRequest request,
+                                    HttpSession session){
+        Patient patient = (Patient) session.getAttribute("patient");
+        String patientNum = (String) session.getAttribute("patientNum");
+        AppointmentOrRegistration appointmentOrRegistration = (AppointmentOrRegistration) session.getAttribute("appointmentOrRegistration");
+        List<Prescription> prescription = (List<Prescription>) session.getAttribute("prescription");
+        Diagnosis diagnosis = (Diagnosis) session.getAttribute("diagnosis");
+        Map<String,Medicine> medicineMap = new HashMap<>();
+        Map<String,MedicineCombine> medicineCombineMap = new HashMap<>();
+
+        for(Prescription p : prescription){
+            if(p.isCombine()){
+                //医生自配
+                MedicineCombine medicineCombine = dao.fetch(MedicineCombine.class,Cnd.where("id","=",p.getMedicineId()));
+                medicineCombineMap.put(p.getId() + "",medicineCombine);
+            } else {
+                //系统提供
+                Medicine medicine = dao.fetch(Medicine.class,Cnd.where("id","=",p.getMedicineId()));
+                medicineMap.put(p.getId() + "",medicine);
+            }
+        }
+
+
+        request.setAttribute("medicineMap",medicineMap);
+        request.setAttribute("medicineCombineMap",medicineCombineMap);
+        request.setAttribute("patient",patient);
+        request.setAttribute("appointmentOrRegistration",appointmentOrRegistration);
+        request.setAttribute("prescription",prescription);
+        request.setAttribute("diagnosis",diagnosis);
+        return "jsp:doctor/close_prescription";
+    }
+
+    /**
+     * 在线支付挂号费
+     * */
+    @At("doctor/pay_for_appointment")
+    @Ok("json")
+    @Fail("http:50")
+    public Object payForAppointment(@Param("appointment_id")String appointmentId,
+                                    @Param("prescription_id")String prescriptionId,
+                                    HttpServletRequest request,
+                                    HttpSession session){
+        Map<String ,String >res = new HashMap<>();
+        if(appointmentId == null || prescriptionId == null){
+            res.put("code","-8");
+            return res;
+        }
+        Patient patient = (Patient) session.getAttribute("patient");
+        AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class
+                ,Cnd.where("id","=",appointmentId)
+                        .and("patientIdCard","=",patient.getIdCard()));
+        Prescription prescription = dao.fetch(Prescription.class
+                ,Cnd.where("id","=",prescriptionId));
+        if(appointmentOrRegistration!=null && prescription!=null){
+            prescription.setPay(true);
+            prescription.setReceiveMedicineTime(new Date(System.currentTimeMillis()));
+            prescription.setStatus(2);//设置药品为已被取走，不可修改状态
+            dao.update(prescription);
+
+            appointmentOrRegistration.setRegistrationFeeState(1);
+            appointmentOrRegistration.setPayForTime(new Date(System.currentTimeMillis()));
+            appointmentOrRegistration.setAppointment(true);
+            dao.update(appointmentOrRegistration);
+            res.put("code","0");
+        } else {
+            res.put("code","-8");
+        }
+        return res;
+    }
 }
