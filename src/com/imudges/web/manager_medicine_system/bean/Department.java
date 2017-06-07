@@ -14,7 +14,7 @@ public class Department {
     private int id;
 
     @Column
-    private String departmentName;
+    private String departmentName;//科室名
 
     @Column
     private int num;//科室人数

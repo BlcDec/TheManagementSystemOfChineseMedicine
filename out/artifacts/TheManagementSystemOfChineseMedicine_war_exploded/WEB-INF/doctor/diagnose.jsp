@@ -1,14 +1,7 @@
 ﻿<%@ page import="java.util.List" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %><%--
-  Created by IntelliJ IDEA.
-  User: yangyang
-  Date: 2017/4/7
-  Time: 15:33
-
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">

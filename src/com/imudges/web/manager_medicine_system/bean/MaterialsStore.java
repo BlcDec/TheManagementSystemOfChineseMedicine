@@ -16,7 +16,7 @@ public class MaterialsStore {
     private String materialName;
 
     @Column
-    private String materialRemain;
+    private String materialRemain;//余量
 
     @Column
     private double price;//单价

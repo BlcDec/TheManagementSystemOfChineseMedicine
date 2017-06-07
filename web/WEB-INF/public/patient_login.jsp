@@ -24,7 +24,7 @@
 <section>
     <h1><strong>${system_name}</strong></h1>
     <form method="post" action="patient_login.php">
-        <input type="text" name="username" placeholder="身份证号" value="152727199704062710"/>
+        <input type="text" name="username" placeholder="身份证号" value="370681199610066812"/>
         <input placeholder="密码" name="password" type="password" value="123"/>
         <button class="blue">登录</button>
     </form>
