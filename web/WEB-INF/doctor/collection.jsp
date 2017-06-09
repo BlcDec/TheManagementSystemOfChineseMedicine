@@ -122,7 +122,7 @@
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button" onclick="commit()">搜索</button>
                                 <button type="button" class="btn btn-default" onclick="create_prescription()">生成病历</button>
-                                <button type="button" class="btn btn-default" onclick="create_prescription()">查看历史</button>
+                                <button type="button" class="btn btn-default" onclick="find_history()">查看历史</button>
                         </span>
                         </div>
                     </div>
@@ -150,11 +150,12 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
+    //缴费
     function commit() {
         var patientNum = document.getElementById('patient_num').value;
         if (patientNum.length == 0) {
             document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请填写完整患者号后生成";
+            document.getElementById('fail_info').innerText = "请填写完整患者号后缴费";
             return ;
         }
         $.ajax({
@@ -177,7 +178,76 @@
                 }
             },
             fail: function (returndata) {
+                document.getElementById('fail_info').innerText = "网络错误，缴纳失败";
+                document.getElementById('fail_info').style.display = "";
+            }
+        });
+    }
+
+    //TODO 生成病历
+    function create_prescription() {
+        var patientNum = document.getElementById('patient_num').value;
+        if (patientNum.length == 0) {
+            document.getElementById('fail_info').style.display = "";
+            document.getElementById('fail_info').innerText = "请填写完整患者号后生成";
+            return ;
+        }
+        $.ajax({
+            url: 'create_prescription.php?patient_num=' + patientNum,
+            type: 'GET',
+            async: true,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (returndata) {
+                var json = returndata;
+                var code = json.code;
+                if(code == 0){
+                    window.location.href='create_prescription.php';
+                }
+                if(code == -1 || code == -11){
+                    document.getElementById('fail_info').style.display = "";
+                    document.getElementById('success_info').style.display = "none";
+                    document.getElementById('fail_info').innerText = "患者信息错误";
+                }
+            },
+            fail: function (returndata) {
                 document.getElementById('fail_info').innerText = "网络错误，生成失败";
+                document.getElementById('fail_info').style.display = "";
+            }
+        });
+    }
+
+    //查看历史
+    function find_history() {
+        var patientNum = document.getElementById('patient_num').value;
+        if (patientNum.length == 0) {
+            document.getElementById('fail_info').style.display = "";
+            document.getElementById('fail_info').innerText = "请填写完整患者号后查看历史";
+            return ;
+        }
+        $.ajax({
+            url: 'find_history_logic.php?patient_num=' + patientNum,
+            type: 'GET',
+            async: true,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (returndata) {
+                var json = returndata;
+                var code = json.code;
+                if(code == 0){
+                    console.log("111112")
+                    window.location.href='find_history.php';
+                }
+                if(code == -1 || code == -11){
+                    document.getElementById('fail_info').style.display = "";
+                    document.getElementById('success_info').style.display = "none";
+                    document.getElementById('fail_info').innerText = "患者信息错误";
+                }
+            },
+            fail: function (returndata) {
+                document.getElementById('fail_info').innerText = "网络错误，失败";
                 document.getElementById('fail_info').style.display = "";
             }
         });

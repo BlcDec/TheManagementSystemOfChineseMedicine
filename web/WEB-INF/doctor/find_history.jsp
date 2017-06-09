@@ -112,7 +112,7 @@
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
                 <li class="active"><a href="collection.php">收款窗口</a></li>
-                <li class="active">结算医疗费</li>
+                <li class="active">查看历史详情</li>
             </ol>
             <hr>
             <div class="row">
@@ -167,34 +167,32 @@
                         <td><%if(p.isCombine()){%><%=medicineCombineMap.get(p.getId() + "").getPrice()%><%}else{%><%=medicineMap.get(p.getId() + "").getPrice()%><%}%>元</td>
                         <%if(!p.isPay()){%>
                         <td>
-                            <button class="btn btn-danger" data-toggle="modal" style="margin-top: 0px"
-                                    data-target="#myModal_<%=p.getId()%>">点击缴纳
-                            </button>
+                            <span class="label label-danger">未缴纳</span>
                         </td>
                         <%} else {%>
                         <td><span class="label label-success">已缴纳</span></td>
                         <%}%>
                         <!-- Modal -->
-                        <div class="modal fade" id="myModal_<%=p.getId()%>" tabindex="-1" role="dialog"
-                             aria-labelledby="myModalLabel">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                aria-hidden="true">&times;</span></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>请确认是否要缴纳<%if(p.isCombine()){%>“医生自配药方”<%}else{%>“<%=medicineMap.get(p.getId() + "").getName()%>”<%}%>的费用？</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                                onclick="pay_for(<%=appointmentOrRegistration.getId()%>,<%=p.getId()%>)">确认缴纳
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <%--<div class="modal fade" id="myModal_<%=p.getId()%>" tabindex="-1" role="dialog"--%>
+                             <%--aria-labelledby="myModalLabel">--%>
+                            <%--<div class="modal-dialog" role="document">--%>
+                                <%--<div class="modal-content">--%>
+                                    <%--<div class="modal-header">--%>
+                                        <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span--%>
+                                                <%--aria-hidden="true">&times;</span></button>--%>
+                                    <%--</div>--%>
+                                    <%--<div class="modal-body">--%>
+                                        <%--<p>请确认是否要缴纳<%if(p.isCombine()){%>“医生自配药方”<%}else{%>“<%=medicineMap.get(p.getId() + "").getName()%>”<%}%>的费用？</p>--%>
+                                    <%--</div>--%>
+                                    <%--<div class="modal-footer">--%>
+                                        <%--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>--%>
+                                        <%--<button type="button" class="btn btn-primary" data-dismiss="modal"--%>
+                                                <%--onclick="pay_for(<%=appointmentOrRegistration.getId()%>,<%=p.getId()%>)">确认缴纳--%>
+                                        <%--</button>--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
                     </tr>
                     <%}%>
 
@@ -223,77 +221,6 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
-    function commit() {
-        var patientNum = document.getElementById('patient_num').value;
-        if (patientNum.length == 0) {
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请填写完整患者号后生成";
-            return;
-        }
-        document.getElementById('form').submit();
-    }
-    function create_prescription() {
-        var patientNum = document.getElementById('patient_num').value;
-        if (patientNum.length == 0) {
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请填写完整患者号后生成";
-            return;
-        }
-        $.ajax({
-            url: 'create_prescription.php?patient_num=' + patientNum,
-            type: 'GET',
-            async: true,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (returndata) {
-                var json = returndata;
-                var code = json.code;
-                if (code == 0) {
-                    return;
-                }
-                if (code == -7) {
-                    document.getElementById('fail_info').style.display = "";
-                    document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
-                    return;
-                }
-            },
-            fail: function (returndata) {
-                document.getElementById('fail_info').innerText = "网络错误，生成失败";
-                document.getElementById('fail_info').style.display = "inline";
-            }
-        });
-    }
-    function pay_for(appointment_id,prescription_id) {
-        if (appointment_id == null || prescription_id == null) {
-            alert("页面错误！");
-            return;
-        } else {
-            $.ajax({
-                url: 'pay_for_appointment.php?appointment_id=' + appointment_id + '&prescription_id=' + prescription_id,
-                type: 'GET',
-                async: true,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (returndata) {
-                    var json = returndata;
-                    var code = json.code;
-                    if(code == 0){
-                        alert("缴纳成功，点击后跳转！");
-                    } else if(code == -8){
-                        alert("缴纳失败，点击后跳转！");
-                    }
-                    window.location.href='collection.php';
-                },
-                fail: function (returndata) {
-
-                }
-            });
-        }
-    }
-
 </script>
 
 </body>
