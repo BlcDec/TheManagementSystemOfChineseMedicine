@@ -109,7 +109,9 @@ public class PublicModule {
     }
 
 
-
+    /**
+     * 患者注册页面
+     * */
     @Filters(@By(type = ConfigFilter.class))
     @At("public/signIn")
     @Ok("re")
@@ -121,6 +123,9 @@ public class PublicModule {
         return "jsp:public/signIn";
     }
 
+    /**
+     * 患者注册
+     * */
     @Filters(@By(type = ConfigFilter.class))
     @At("public/signIn")
     @Ok("re")
@@ -188,6 +193,9 @@ public class PublicModule {
         return "jsp:public/signIn";
     }
 
+    /**
+     * 验证码
+     * */
     @At("public/signIn")
     @Ok("json")
     @Fail("http:500")
@@ -209,6 +217,9 @@ public class PublicModule {
         return "str";
     }
 
+    /**
+     * 跳转页面
+     * */
     @At("public/jump")
     @Ok("re")
     @Fail("http:500")
@@ -218,7 +229,9 @@ public class PublicModule {
         return "jsp:public/jump";
     }
 
-
+    /**
+     * 注销
+     * */
     @At("public/logout")
     @Ok("re")
     @Fail("http:500")

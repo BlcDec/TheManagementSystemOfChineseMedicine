@@ -4,6 +4,7 @@ package com.imudges.web.manager_medicine_system;
  * Created by yangyang on 2017/4/23.
  */
 
+import com.imudges.web.manager_medicine_system.bean.Admin;
 import com.imudges.web.manager_medicine_system.bean.Patient;
 import com.imudges.web.manager_medicine_system.bean.User;
 import org.nutz.dao.Dao;
@@ -27,7 +28,7 @@ public class MainSetup implements Setup {
         Dao dao = ioc.get(Dao.class);
         Daos.createTablesInPackage(dao, "com.imudges.web.manager_medicine_system", false);
 
-
+        //初始化一个患者
         User user = null;
         if (dao.count(User.class) == 0) {
             user = new User();
@@ -36,7 +37,6 @@ public class MainSetup implements Setup {
             user.setType("2");
             dao.insert(user);
         }
-
         Patient patient = null;
         if (dao.count(Patient.class) == 0) {
             patient = new Patient();
@@ -50,6 +50,21 @@ public class MainSetup implements Setup {
                 patient.setUserId(user.getId() + "");
             }
             dao.insert(patient);
+        }
+
+        //初始化一个管理员
+        Admin admin = null;
+        if(dao.count(Admin.class) == 0){
+            User u = new User();
+            u.setUsername("admin");
+            u.setPassword("yydashuaibi");
+            u.setType("0");
+            dao.insert(u);
+            admin = new Admin();
+            if(u!=null){
+                admin.setUserId(u.getId() + "");
+            }
+            dao.insert(admin);
         }
     }
 }
