@@ -74,7 +74,7 @@
 
             <span class="logout-spn">
                   <a style="color:#fff;">欢迎你,</a>
-                <a href="user.php" style="color:#fff;">admin</a>
+                <a href="user.php" style="color:#fff;">${admin_name}</a>
             </span>
         </div>
     </div>

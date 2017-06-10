@@ -185,4 +185,8 @@ public class Toolkit {
         }
         return res;
     }
+
+    public static String getAdminName(){
+        return new ConfigReader().read("admin_name");
+    }
 }

@@ -2,6 +2,7 @@ package com.imudges.web.manager_medicine_system.module;
 
 import com.imudges.web.manager_medicine_system.bean.Admin;
 import com.imudges.web.manager_medicine_system.bean.User;
+import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.loader.annotation.Inject;
@@ -30,7 +31,8 @@ public class AdminFilter implements ActionFilter {
         if(admin == null){
             return new ServerRedirectView("/public/jump.php?redirect_url=admin_login.php");
         }
-
+        String adminName = Toolkit.getAdminName();
+        actionContext.getRequest().setAttribute("admin_name",adminName);
         actionContext.getRequest().getSession().setAttribute("user",user);
         actionContext.getRequest().getSession().setAttribute("admin",admin);
 

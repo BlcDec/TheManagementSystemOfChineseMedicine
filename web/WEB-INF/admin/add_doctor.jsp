@@ -74,7 +74,7 @@
 
             <span class="logout-spn">
                   <a style="color:#fff;">欢迎你,</a>
-                <a href="user.php" style="color:#fff;">admin</a>
+                <a href="user.php" style="color:#fff;">${admin_name}</a>
             </span>
         </div>
     </div>
@@ -114,6 +114,55 @@
                 <li class="active"><a href="main.php">用户管理</a></li>
                 <li class="active">添加医生</li>
             </ol>
+            <form id="add_form" action="add.php" method="post" enctype="multipart/form-data">
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">姓名</span>
+                        <input type="text" name="isbn" id="isbn" placeholder="姓名" class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">身份证号</span>
+                        <input type="text" id="book_name" name="book_name" placeholder="身份证号"
+                               class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">所在科室</span>
+                        <input type="text" id="author" name="author" placeholder="所在科室（此处应该为选择？）" class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">学历</span>
+                        <input type="text" id="price" name="price" placeholder="学历"
+                               class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">职位</span>
+                        <input type="text" id="publisher" name="publisher" placeholder="职位"
+                               class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">权限</span>
+                        <input type="text" id="book_address" name="book_address" placeholder="职能"
+                               class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+            </form>
 
         </div>
     </div>
@@ -121,7 +170,6 @@
 <div class="footer">
     <div class="row">
         <div class="col-lg-12">
-            <%--&copy; ${copy_right_year} ${copy_right}版权所有--%>
         </div>
     </div>
 </div>
