@@ -111,14 +111,9 @@
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">用户管理</li>
+                <li class="active"><a href="main.php">用户管理</a></li>
+                <li class="active">添加医生</li>
             </ol>
-
-            <a href="add_doctor.php" class="list-group-item">添加医生</a>
-            <a href="delete_doctor.php" class="list-group-item">删除医生</a>
-            <a href="modify_doctor_password.php" class="list-group-item">修改医生密码</a>
-            <a href="modify_patient_password.php" class="list-group-item">修改患者密码</a>
-
 
         </div>
     </div>

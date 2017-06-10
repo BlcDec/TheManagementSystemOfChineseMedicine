@@ -10,6 +10,8 @@ import org.nutz.mvc.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 管理员
@@ -84,5 +86,34 @@ public class AdminModule {
     public Object mainPage(){
 
         return "jsp:admin/main";
+    }
+
+    //以下为用户管理
+    /**
+     * 添加医生页面
+     * */
+    @At("admin/add_doctor")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object addDoctorPage(HttpSession session,
+                                HttpServletRequest request){
+
+        return "jsp:admin/add_doctor";
+    }
+
+    /**
+     * 添加医生
+     * */
+    @At("admin/add_doctor")
+    @Ok("json")
+    @Fail("http:500")
+    @POST
+    public Object addDoctorLogic(HttpSession session,
+                                HttpServletRequest request){
+        Map<String,String> res = new HashMap<>();
+
+
+        return res;
     }
 }
