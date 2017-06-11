@@ -41,7 +41,7 @@ public class Doctor {
      * 收款 2
      * */
     @Column("A_POSITION")
-    private String position;//职位，身份
+    private String position;//身份
 
     @Column
     private Date addTime;//进入医院时间
