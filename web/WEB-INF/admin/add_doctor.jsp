@@ -114,18 +114,41 @@
                 <li class="active"><a href="main.php">用户管理</a></li>
                 <li class="active">添加医生</li>
             </ol>
-            <form id="add_form" action="add.php" method="post" enctype="multipart/form-data">
+            <form id="add_form" action="add_doctor.php" method="post" >
                 <div class="form-group" align="left">
                     <div class="input-group">
                         <span class="input-group-addon">姓名</span>
-                        <input type="text" name="isbn" id="isbn" placeholder="姓名" class="form-control"
+                        <input type="text" name="name" id="name" placeholder="姓名" class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">性别</span>
+                        <input type="text" id="sex" name="sex" placeholder="性别"
+                               class="form-control"
                                aria-describedby="sizing-addon2">
                     </div>
                 </div>
                 <div class="form-group" align="left">
                     <div class="input-group">
                         <span class="input-group-addon">身份证号</span>
-                        <input type="text" id="book_name" name="book_name" placeholder="身份证号"
+                        <input type="text" id="id_card" name="id_card" placeholder="身份证号"
+                               class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">薪水</span>
+                        <input type="text" id="salary" name="salary" placeholder="薪资" class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">职位</span>
+                        <input type="text" id="position" name="position" placeholder="职位"
                                class="form-control"
                                aria-describedby="sizing-addon2">
                     </div>
@@ -133,33 +156,27 @@
                 <div class="form-group" align="left">
                     <div class="input-group">
                         <span class="input-group-addon">所在科室</span>
-                        <input type="text" id="author" name="author" placeholder="所在科室（此处应该为选择？）" class="form-control"
+                        <input type="text" id="department" name="department" placeholder="所在科室（此处应该为选择？）" class="form-control"
                                aria-describedby="sizing-addon2">
                     </div>
                 </div>
                 <div class="form-group" align="left">
                     <div class="input-group">
                         <span class="input-group-addon">学历</span>
-                        <input type="text" id="price" name="price" placeholder="学历"
+                        <input type="text" id="degree" name="degree" placeholder="学历"
                                class="form-control"
                                aria-describedby="sizing-addon2">
                     </div>
                 </div>
                 <div class="form-group" align="left">
-                    <div class="input-group">
-                        <span class="input-group-addon">职位</span>
-                        <input type="text" id="publisher" name="publisher" placeholder="职位"
-                               class="form-control"
-                               aria-describedby="sizing-addon2">
-                    </div>
-                </div>
-
-                <div class="form-group" align="left">
-                    <div class="input-group">
-                        <span class="input-group-addon">权限</span>
-                        <input type="text" id="book_address" name="book_address" placeholder="职能"
-                               class="form-control"
-                               aria-describedby="sizing-addon2">
+                    <div>
+                        <h4><span class="label label-success" id="success_info"
+                                  style="display: none;">${msg}</span></h4>
+                        <h4><span class="label label-warning" id="fail_info"
+                                  style="display: none;">${msg}</span></h4>
+                        <div>
+                            <button type="button" class="btn btn-primary" onclick="add()">添加</button>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -179,55 +196,51 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
-    var _department = -1;
-    function set_department(department) {
-        document.getElementById('department_info').style.display = "";
-        document.getElementById('department_info').innerText = "当前选择的科室：" + department;
-
-        _department = department;
-        document.getElementById('btn_set_department').innerText = _department;
-        document.getElementById('department').value = department;
-    }
-    function do_upload() {
-        var name = document.getElementById('name').value;
-        var sex = document.getElementById('sex').value;
-        var year = document.getElementById('year').value;
-        var phoneNum = document.getElementById('phone_num').value;
-        var apperaTime = document.getElementById('appear_time').value;
-        if (name.length == 0 ||
-            sex.length == 0 ||
-            year.length == 0 ||
-            phoneNum.length == 0 ||
-            apperaTime.length == 0) {
+    function add() {
+        var name = document.getElementById("name").value;
+        var sex = document.getElementById("sex").value;
+        var idCard = document.getElementById("id_card").value;
+        var salary = document.getElementById("salary").value;
+        var position = document.getElementById("position").value;
+        var department = document.getElementById("department").value;
+        var degree = document.getElementById("degree").value;
+        if (document.getElementById("name").value == "" ||
+            document.getElementById("sex").value == "" ||
+            document.getElementById("id_card").value == "" ||
+            document.getElementById("salary").value == "" ||
+            document.getElementById("position").value == "" ||
+            document.getElementById("department").value == "" ||
+            document.getElementById("degree").value == "") {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请完善信息后提交";
             return ;
         }
-        if(_department == -1){
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请选择预约科室后提交";
-            return ;
-        }
         $.ajax({
-            url: 'upload_appointment.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
-            type: 'GET',
+            url: 'add_doctor.php',
+            type: 'POST',
+            data:'name=' + name + '&sex=' + sex + '&id_card=' + idCard + '&salary=' + salary + '&position=' + position + '&department=' + department + '&degree=' + degree,
             async: true,
             cache: false,
-            contentType: false,
+            contentType: "application/x-www-form-urlencoded",
             processData: false,
             success: function (returndata) {
                 var json = returndata;
                 var code = json.code;
                 if(code == 0){
-                    document.getElementById('success_info').style.display = "";
-                    document.getElementById('fail_info').style.display = "none";
-                    document.getElementById('success_info').innerText = "预约成功！";
+                    alert("添加成功！");
+                    window.location.href = "main.php";
                     return ;
                 }
-                if(code == -7){
+                if(code == -1){
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
+                    document.getElementById('fail_info').innerText = "请求参数错误";
+                    return ;
+                }
+                if(code == -14){
+                    document.getElementById('fail_info').style.display = "";
+                    document.getElementById('success_info').style.display = "none";
+                    document.getElementById('fail_info').innerText = "此用户已存在";
                     return ;
                 }
             },

@@ -189,4 +189,15 @@ public class Toolkit {
     public static String getAdminName(){
         return new ConfigReader().read("admin_name");
     }
+
+    public static String getIdCardLastSixNum(String idCard){
+        if(idCard == null || idCard.equals("") || idCard.length()!=18){
+            return null;
+        }
+        String res = "";
+        for (int i = 12; i <18; i++) {
+            res += idCard.charAt(i) + "";
+        }
+        return res ;
+    }
 }
