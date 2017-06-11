@@ -211,4 +211,17 @@ public class AdminModule {
         res.put("msg","添加成功");
         return res;
     }
+
+    /**
+     * 删除医生页面
+     * */
+    @At("admin/delete_doctor")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object deleteDoctorPage(HttpSession session,
+                                HttpServletRequest request) {
+
+        return "jsp:admin/delete_doctor";
+    }
 }

@@ -100,8 +100,6 @@
         </div>
 
     </nav>
-    <!-- /. NAV SIDE  -->
-    <div class="copyrights">Collect from <a href="http://www.cssmoban.com/" title="网站模板">网站模板</a></div>
     <div id="page-wrapper">
         <div id="page-inner">
             <div class="row">
@@ -111,13 +109,76 @@
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">用户管理</li>
+                <li class="active"><a href="main.php">用户管理</a></li>
+                <li class="active">添加医生</li>
             </ol>
+            <div class="form-group" align="left">
+                <div class="input-group">
+                    <span class="input-group-addon">医生身份证号</span>
+                    <input type="text" name="id_card" id="id_card" placeholder="医生身份证号" class="form-control"
+                           aria-describedby="sizing-addon2">
+                </div>
+            </div>
+            <!-- Modal -->
+            <%//TODO %>
+            <div class="modal fade" id="MyModal_" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel">
+                <div style="left: 0%;" class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body" id="medicine_modal_body">
+                            <div id="medicine_msg">
+                                <h4><span class="label label-default" style="margin-left: 15px">选择药材剂量（单位：克）</span>
+                                </h4>
+                                <h3><span class="label label-info" id="medicine_name"
+                                          style="margin-left: 15px">test</span></h3>
+                                <div class="container">
+                                    <div class="input-group spinner" id="mmp">
+                                        <input type="text" class="form-control" value="0"
+                                               id="medicine_dosage">
+                                        <div class="input-group-btn-vertical">
+                                            <button class="btn btn-default" type="button"><i
+                                                    class="fa fa-caret-up"></i></button>
+                                            <button class="btn btn-default" type="button"><i
+                                                    class="fa fa-caret-down"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h3><span class="label label-warning" id="warning"
+                                          style="margin-left: 15px;display: none"></span></h3>
+                                <h3><span class="label label-success" id="success"
+                                          style="margin-left: 15px;display: none"></span></h3>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary"
+                                    onclick="confirm_add()">确认添加
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <a href="add_doctor.php" class="list-group-item">添加医生</a>
-            <a href="delete_doctor.php" class="list-group-item">删除医生</a>
-            <a href="modify_doctor_password.php" class="list-group-item">修改医生密码</a>
-            <a href="modify_patient_password.php" class="list-group-item">修改患者密码</a>
+            <div class="form-group" align="left">
+                <div>
+                    <h4><span class="label label-success" id="success_info"
+                              style="display: none;">${msg}</span></h4>
+                    <h4><span class="label label-warning" id="fail_info"
+                              style="display: none;">${msg}</span></h4>
+                    <div>
+                        <button type="button" class="btn btn-primary" >删除</button>
+                    </div>
+                </div>
+            </div>
+
+
 
 
         </div>
@@ -136,41 +197,19 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
-    var _department = -1;
-    function set_department(department) {
-        document.getElementById('department_info').style.display = "";
-        document.getElementById('department_info').innerText = "当前选择的科室：" + department;
-
-        _department = department;
-        document.getElementById('btn_set_department').innerText = _department;
-        document.getElementById('department').value = department;
-    }
-    function do_upload() {
-        var name = document.getElementById('name').value;
-        var sex = document.getElementById('sex').value;
-        var year = document.getElementById('year').value;
-        var phoneNum = document.getElementById('phone_num').value;
-        var apperaTime = document.getElementById('appear_time').value;
-        if (name.length == 0 ||
-            sex.length == 0 ||
-            year.length == 0 ||
-            phoneNum.length == 0 ||
-            apperaTime.length == 0) {
+    function delete_doctor() {
+        var idCard = document.getElementById('id_card').value;
+        if (document.getElementById('id_card').value.length == 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请完善信息后提交";
             return ;
         }
-        if(_department == -1){
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请选择预约科室后提交";
-            return ;
-        }
         $.ajax({
-            url: 'upload_appointment.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
-            type: 'GET',
+            url: 'delete_doctor.php?id_card=' + idCard,
+            type: 'POST',
             async: true,
             cache: false,
-            contentType: false,
+            contentType: "application/x-www-form-urlencoded",
             processData: false,
             success: function (returndata) {
                 var json = returndata;
