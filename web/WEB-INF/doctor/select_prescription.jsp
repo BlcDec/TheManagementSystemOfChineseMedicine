@@ -293,6 +293,7 @@
                     document.getElementById('success_info').style.display = "";
                     document.getElementById('fail_info').style.display = "none";
                     document.getElementById('success_info').innerText = "添加成功！";
+                    scrollTo(0,0)
                     return;
                 }
                 if (code == -1) {

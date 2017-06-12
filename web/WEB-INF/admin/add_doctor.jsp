@@ -88,13 +88,13 @@
                     <a href="main.php"><i class="glyphicon glyphicon-plus"></i>用户管理</a>
                 </li>
                 <li>
-                    <a href="#"><i class="glyphicon glyphicon-user"></i>药方管理</a>
+                    <a href="manage_medicine"><i class="glyphicon glyphicon-user"></i>药方管理</a>
                 </li>
                 <li>
-                    <a href="#"><i class="glyphicon glyphicon-search"></i>药材管理</a>
+                    <a href="manage_materials.php"><i class="glyphicon glyphicon-search"></i>药材管理</a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-home"></i>注销登录</a>
+                    <a href="logout.php"><i class="fa fa-home"></i>注销登录</a>
                 </li>
             </ul>
         </div>
