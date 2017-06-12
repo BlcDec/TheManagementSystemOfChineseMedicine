@@ -18,6 +18,22 @@ public class Medicine {
     @Column
     private String price;//价格
 
+    /**
+     * 状态
+     * 0：被删除
+     * 1：正常
+     * */
+    @Column
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getPrice() {
         return price;
     }

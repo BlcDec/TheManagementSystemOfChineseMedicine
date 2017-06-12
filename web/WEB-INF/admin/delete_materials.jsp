@@ -86,13 +86,13 @@
             <ul class="nav" id="main-menu">
 
 
-                <li class="active-link">
+                <li >
                     <a href="main.php"><i class="glyphicon glyphicon-plus"></i>用户管理</a>
                 </li>
                 <li>
                     <a href="manage_medicine.php"><i class="glyphicon glyphicon-user"></i>药方管理</a>
                 </li>
-                <li>
+                <li class="active-link">
                     <a href="manage_materials.php"><i class="glyphicon glyphicon-search"></i>药材管理</a>
                 </li>
                 <li>
@@ -106,67 +106,67 @@
         <div id="page-inner">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>用户管理</h2>
+                    <h2>药材管理</h2>
                 </div>
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active"><a href="main.php">用户管理</a></li>
-                <li class="active">添加医生</li>
+                <li class="active"><a href="manage_materials.php">药材管理</a></li>
+                <li class="active">删除药材</li>
             </ol>
             <div class="form-group" align="left">
                 <div class="input-group">
-                    <span class="input-group-addon">医生身份证号</span>
-                    <input type="text" name="id_card" id="id_card" placeholder="医生身份证号" class="form-control"
+                    <span class="input-group-addon">药材名</span>
+                    <input type="text" name="materials_name" id="materials_name" placeholder="药材名" class="form-control"
                            aria-describedby="sizing-addon2">
                 </div>
             </div>
-            <!-- Modal -->
-            <%Map<String,Doctor> doctorMap = (Map<String, Doctor>) request.getAttribute("doctorMap");%>
-            <%for(String key : doctorMap.keySet()){%>
-            <%Doctor doctor = doctorMap.get(key);%>
-            <%String position = "";%>
-            <%switch (doctor.getPosition()){
-                case"0":
-                    position = "挂号";
-                    break;
-                case"1":
-                    position = "诊断";
-                    break;
-                case"2":
-                    position = "收款";
-                    break;
-            }%>
-            <div class="modal fade" id="MyModal_<%=doctor.getUsername()%>" tabindex="-1" role="dialog"
-                 aria-labelledby="myModalLabel">
-                <div style="left: 0%;" class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"
-                                    aria-label="Close"><spanchr
-                                    aria-hidden="true">&times;</spanchr></button>
-                        </div>
-                        <div class="modal-body" id="medicine_modal_body">
-                            <div id="medicine_msg">
-                                <h2>确定要删除<%=position%>窗口的<%=doctor.getName()%>医生？</h2>
-                                <h3><span class="label label-warning" id="warning"
-                                          style="margin-left: 15px;display: none"></span></h3>
-                                <h3><span class="label label-success" id="success"
-                                          style="margin-left: 15px;display: none"></span></h3>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary"
-                                    onclick="confirm_delete(<%=doctor.getUsername()%>)">确认删除
-                            </button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">
-                                关闭
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <%}%>
+            <%--<!-- Modal -->--%>
+            <%--<%Map<String,Doctor> doctorMap = (Map<String, Doctor>) request.getAttribute("doctorMap");%>--%>
+            <%--<%for(String key : doctorMap.keySet()){%>--%>
+            <%--<%Doctor doctor = doctorMap.get(key);%>--%>
+            <%--<%String position = "";%>--%>
+            <%--<%switch (doctor.getPosition()){--%>
+                <%--case"0":--%>
+                    <%--position = "挂号";--%>
+                    <%--break;--%>
+                <%--case"1":--%>
+                    <%--position = "诊断";--%>
+                    <%--break;--%>
+                <%--case"2":--%>
+                    <%--position = "收款";--%>
+                    <%--break;--%>
+            <%--}%>--%>
+            <%--<div class="modal fade" id="MyModal_<%=doctor.getUsername()%>" tabindex="-1" role="dialog"--%>
+                 <%--aria-labelledby="myModalLabel">--%>
+                <%--<div style="left: 0%;" class="modal-dialog" role="document">--%>
+                    <%--<div class="modal-content">--%>
+                        <%--<div class="modal-header">--%>
+                            <%--<button type="button" class="close" data-dismiss="modal"--%>
+                                    <%--aria-label="Close"><spanchr--%>
+                                    <%--aria-hidden="true">&times;</spanchr></button>--%>
+                        <%--</div>--%>
+                        <%--<div class="modal-body" id="medicine_modal_body">--%>
+                            <%--<div id="medicine_msg">--%>
+                                <%--<h2>确定要删除<%=position%>窗口的<%=doctor.getName()%>医生？</h2>--%>
+                                <%--<h3><span class="label label-warning" id="warning"--%>
+                                          <%--style="margin-left: 15px;display: none"></span></h3>--%>
+                                <%--<h3><span class="label label-success" id="success"--%>
+                                          <%--style="margin-left: 15px;display: none"></span></h3>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                        <%--<div class="modal-footer">--%>
+                            <%--<button type="button" class="btn btn-primary"--%>
+                                    <%--onclick="confirm_delete(<%=doctor.getUsername()%>)">确认删除--%>
+                            <%--</button>--%>
+                            <%--<button type="button" class="btn btn-default" data-dismiss="modal">--%>
+                                <%--关闭--%>
+                            <%--</button>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+            <%--<%}%>--%>
             <div class="form-group" align="left">
                 <div>
                     <h4><span class="label label-success" id="success_info"

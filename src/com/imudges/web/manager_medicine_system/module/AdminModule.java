@@ -2,6 +2,7 @@ package com.imudges.web.manager_medicine_system.module;
 
 import com.imudges.web.manager_medicine_system.bean.Admin;
 import com.imudges.web.manager_medicine_system.bean.Doctor;
+import com.imudges.web.manager_medicine_system.bean.Medicine;
 import com.imudges.web.manager_medicine_system.bean.User;
 import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Cnd;
@@ -12,9 +13,11 @@ import org.nutz.mvc.annotation.*;
 
 import javax.print.Doc;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -221,7 +224,127 @@ public class AdminModule {
     @GET
     public Object deleteDoctorPage(HttpSession session,
                                 HttpServletRequest request) {
-
+        List<Doctor> doctorList = dao.query(Doctor.class,Cnd.where("id",">","0").and("A_USERID","not is",null));
+        Map<String,Doctor> doctorMap = new HashMap<>();
+        for(Doctor d : doctorList){
+            doctorMap.put(d.getUsername(),d);
+        }
+        request.setAttribute("doctorMap",doctorMap);
         return "jsp:admin/delete_doctor";
     }
+
+    /**
+     * 删除医生逻辑
+     * */
+    @At("admin/delete_doctor")
+    @Ok("json")
+    @Fail("http:500")
+    @POST
+    public Object deleteDoctorLogic(@Param("id_card")String idCard,
+                                    HttpSession session,
+                                    HttpServletRequest request){
+        Map<String,String> res = new HashMap<>();
+        if(idCard == null || idCard.equals("")){
+            res.put("code","-1");
+            res.put("msg","请求参数错误");
+            return res;
+        }
+        Doctor doctor = dao.fetch(Doctor.class,Cnd.where("username","=",idCard));
+        User user = dao.fetch(User.class,Cnd.where("A_USRNAME","=",idCard));
+        user.setPassword(null);
+        dao.update(user);
+        doctor.setUserId(null);
+        dao.update(doctor);
+        res.put("code","0");
+        res.put("msg","删除成功");
+        return res ;
+    }
+
+    /**
+     * 药方管理
+     * */
+    @At("admin/manage_medicine")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object manageMedicinePage(){
+
+        return "jsp:admin/manage_medicine";
+    }
+
+    /**
+     * 添加药方页面
+     * */
+    @At("admin/add_medicine")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object addMedicinePage(){
+
+        return "jsp:admin/add_medicine";
+    }
+
+    /**
+     * 删除药方页面
+     * */
+    @At("admin/delete_medicine")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object deleteMedicinePage(){
+
+        return "jsp:admin/delete_medicine";
+    }
+
+    /**
+     * 药材管理界面
+     * */
+    @At("admin/manage_materials")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object manageMaterialsPage(){
+
+        return "jsp:admin/manage_materials";
+    }
+
+    /**
+     * 添加药材页面
+     * */
+    @At("admin/add_materials")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object addMaterialsPage(){
+
+        return "jsp:admin/add_materials";
+    }
+
+    /**
+     * 删除药方页面
+     * */
+    @At("admin/delete_materials")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object deleteMaterialsPage(){
+
+        return "jsp:admin/delete_materials";
+    }
+
+    /**
+     * 注销
+     */
+    @At("admin/logout")
+    @Ok("re")
+    @Fail("http:500")
+    @Filters
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response,
+                         HttpSession session) {
+        request.setAttribute("redirect_url", "../public/admin_login.php");
+        request.setAttribute("msg", "注销成功！");
+        return "jsp:public/graph_jump";
+    }
+
 }

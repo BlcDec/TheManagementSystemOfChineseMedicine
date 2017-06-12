@@ -84,10 +84,10 @@
             <ul class="nav" id="main-menu">
 
 
-                <li class="active-link">
+                <li >
                     <a href="main.php"><i class="glyphicon glyphicon-plus"></i>用户管理</a>
                 </li>
-                <li>
+                <li class="active-link">
                     <a href="manage_medicine.php"><i class="glyphicon glyphicon-user"></i>药方管理</a>
                 </li>
                 <li>
@@ -106,18 +106,16 @@
         <div id="page-inner">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>用户管理</h2>
+                    <h2>药方管理</h2>
                 </div>
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">用户管理</li>
+                <li class="active">药方管理</li>
             </ol>
 
-            <a href="add_doctor.php" class="list-group-item">添加医生</a>
-            <a href="delete_doctor.php" class="list-group-item">删除医生</a>
-            <a href="modify_doctor_password.php" class="list-group-item">修改医生密码</a>
-            <a href="modify_patient_password.php" class="list-group-item">修改患者密码</a>
+            <a href="add_medicine.php" class="list-group-item">添加药方</a>
+            <a href="delete_medicine.php" class="list-group-item">删除药方</a>
 
 
         </div>
