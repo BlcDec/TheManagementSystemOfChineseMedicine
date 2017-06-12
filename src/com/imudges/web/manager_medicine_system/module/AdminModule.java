@@ -312,35 +312,47 @@ public class AdminModule {
     @Ok("re")
     @Fail("http:500")
     @POST
-    public Object addMaterialsPage(
+    public Object addMaterialsPage(HttpSession session, HttpServletRequest request) {
+
+        return "jsp:admin/add_materials";
+    }
+
+
+    /**
+     * 添加药材逻辑
+     */
+    @At("admin/add_materials")
+    @Ok("json")
+    @Fail("http:500")
+    @POST
+    public Object addMaterialLogic(
             @Param("materialName") String materialName,
             @Param("materialRemain") double materialRemain,
             @Param("price") double price,
             HttpSession session,
             HttpServletRequest request) {
-            Map<String, String> res = new HashMap<>();
-            if (materialName == null || materialName.equals("")) {
-                res.put("code","-1");
-                res.put("msg","请求与参数错误");
-                return res;
-            }
-            //查重
-            if(dao.count(MaterialsStore.class,Cnd.where("materialName","=",materialName)) != 0){
-                res.put("code","-14");
-                res.put("msg","药品已存在");
-                return res;
-            }
+        Map<String, String> res = new HashMap<>();
+        if (materialName == null || materialName.equals("")) {
+            res.put("code","-1");
+            res.put("msg","请求与参数错误");
+            return res;
+        }
+        //查重
+        if(dao.count(MaterialsStore.class,Cnd.where("materialName","=",materialName)) != 0){
+            res.put("code","-14");
+            res.put("msg","药品已存在");
+            return res;
+        }
 
-            MaterialsStore material = new MaterialsStore();
-            material.setMaterialName(materialName);
-            material.setMaterialRemain(materialRemain);
-            material.setPrice(price);
-            dao.insert(material);
-            res.put("code","0");
-            res.put("msg","添加成功");
-            //return res;
+        MaterialsStore material = new MaterialsStore();
+        material.setMaterialName(materialName);
+        material.setMaterialRemain(materialRemain);
+        material.setPrice(price);
+        dao.insert(material);
+        res.put("code","0");
+        res.put("msg","添加成功");
+        return res;
 
-        return "jsp:admin/add_materials";
     }
 
     /**

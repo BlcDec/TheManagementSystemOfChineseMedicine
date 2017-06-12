@@ -6,7 +6,7 @@
   User: KAI
   Date: 2017/4/7
   Time: 15:10
-  添加store的药材
+  //添加store的药材
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -100,8 +100,6 @@
         </div>
 
     </nav>
-    <!-- /. NAV SIDE  -->
-    <div class="copyrights">Collect from <a href="http://www.cssmoban.com/" title="网站模板">网站模板</a></div>
     <div id="page-wrapper">
         <div id="page-inner">
             <div class="row">
@@ -205,7 +203,7 @@
                 if(code == -14){
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "此用户已存在";
+                    document.getElementById('fail_info').innerText = "此药品已存在";
                     return ;
                 }
             },
