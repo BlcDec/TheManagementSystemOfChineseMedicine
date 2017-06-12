@@ -3,10 +3,10 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %><%--
   Created by IntelliJ IDEA.
-  User: yangyang
+  User: KAI
   Date: 2017/4/7
-  Time: 15:33
-
+  Time: 15:10
+  添加store的药材
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -114,7 +114,42 @@
                 <li class="active"><a href="manage_materials.php">药材管理</a></li>
                 <li class="active">添加药材</li>
             </ol>
-
+            <form id="add_form" action="add_materials.php" method="post" >
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">药材名</span>
+                        <input type="text" name="materialName" id="materialName" placeholder="药材名" class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">余量</span>
+                        <input type="number" id="materialRemain" name="materialRemain" placeholder="药材余量"
+                               class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+                <div class="form-group" align="left">
+                    <div class="input-group">
+                        <span class="input-group-addon">身份证号</span>
+                        <input type="number" id="price" name="price" placeholder="药材价格"
+                               class="form-control"
+                               aria-describedby="sizing-addon2">
+                    </div>
+                </div>
+                <div class="form-group" align="left">
+                    <div>
+                        <h4><span class="label label-success" id="success_info"
+                                  style="display: none;">${msg}</span></h4>
+                        <h4><span class="label label-warning" id="fail_info"
+                                  style="display: none;">${msg}</span></h4>
+                        <div>
+                            <button type="button" class="btn btn-primary" onclick="add()">添加</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
 
         </div>
@@ -133,55 +168,44 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
-    var _department = -1;
-    function set_department(department) {
-        document.getElementById('department_info').style.display = "";
-        document.getElementById('department_info').innerText = "当前选择的科室：" + department;
+    function add() {
+        var materialName = document.getElementById("materialName").value;
+        var materialRemain = document.getElementById("materialRemain").value;
+        var price = document.getElementById("price").value;
 
-        _department = department;
-        document.getElementById('btn_set_department').innerText = _department;
-        document.getElementById('department').value = department;
-    }
-    function do_upload() {
-        var name = document.getElementById('name').value;
-        var sex = document.getElementById('sex').value;
-        var year = document.getElementById('year').value;
-        var phoneNum = document.getElementById('phone_num').value;
-        var apperaTime = document.getElementById('appear_time').value;
-        if (name.length == 0 ||
-            sex.length == 0 ||
-            year.length == 0 ||
-            phoneNum.length == 0 ||
-            apperaTime.length == 0) {
+        if (document.getElementById("materialName").value == "" ||
+            document.getElementById("materialRemain").value == "" ||
+            document.getElementById("price").value == ""){
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请完善信息后提交";
             return ;
         }
-        if(_department == -1){
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请选择预约科室后提交";
-            return ;
-        }
         $.ajax({
-            url: 'upload_appointment.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
-            type: 'GET',
+            url: 'add_materials.php',
+            type: 'POST',
+            data:'materialName=' + materialName + '&materialRemain=' + materialRemain + '&price=' + price ,
             async: true,
             cache: false,
-            contentType: false,
+            contentType: "application/x-www-form-urlencoded",
             processData: false,
             success: function (returndata) {
                 var json = returndata;
                 var code = json.code;
                 if(code == 0){
-                    document.getElementById('success_info').style.display = "";
-                    document.getElementById('fail_info').style.display = "none";
-                    document.getElementById('success_info').innerText = "预约成功！";
+                    alert("添加成功！");
+                    window.location.href = "main.php";
                     return ;
                 }
-                if(code == -7){
+                if(code == -1){
+                    document.getElementById('fail_info').style.display = "";//是否显示
+                    document.getElementById('success_info').style.display = "none";
+                    document.getElementById('fail_info').innerText = "请求参数错误";
+                    return ;
+                }
+                if(code == -14){
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
+                    document.getElementById('fail_info').innerText = "此用户已存在";
                     return ;
                 }
             },

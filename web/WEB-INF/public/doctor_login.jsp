@@ -25,14 +25,14 @@
     <h1><strong>中医药管理系统（医生端）</strong></h1>
     <form method="post" action="doctor_login.php">
         <input type="text" name="username" placeholder="身份证号" value="152527199703010014"/>
-        <input placeholder="密码" name="password" type="password" value="123"/>
+        <input placeholder="密码" name="password" type="password" value="123"/>//placeholder删除后显示
         <button class="blue">登录</button>
-    </form>
+    </form>//提交表单
     <%if ((Integer) request.getAttribute("code") == 0) {%>
 
     <%} else if ((Integer) request.getAttribute("code") == -2) {%>
     <alert><%=request.getAttribute("code")%>
-    </alert>
+    </alert>//弹出窗口
     <p style="color: red;">用户名或密码错误</p>
     <%} else if ((Integer) request.getAttribute("code") == -1) {%>
     <p style="color: red;">请求参数错误</p>

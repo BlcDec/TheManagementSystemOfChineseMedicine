@@ -1,8 +1,5 @@
 package com.imudges.web.manager_medicine_system;
 
-/**
- * Created by yangyang on 2017/4/23.
- */
 
 import com.imudges.web.manager_medicine_system.bean.Admin;
 import com.imudges.web.manager_medicine_system.bean.Patient;
@@ -41,10 +38,10 @@ public class MainSetup implements Setup {
         if (dao.count(Patient.class) == 0) {
             patient = new Patient();
             patient.setAddTime(new Date(System.currentTimeMillis()));
-            patient.setIdCard("152727199704062714");
-            patient.setName("yy");
+            patient.setIdCard("370681199610066812");
+            patient.setName("wangjiakai");
             patient.setNum("999999");
-            patient.setPhoneNum("18647705052");
+            patient.setPhoneNum("15248160645");
             patient.setSex("男");
             if (user != null) {
                 patient.setUserId(user.getId() + "");
@@ -57,7 +54,7 @@ public class MainSetup implements Setup {
         if(dao.count(Admin.class) == 0){
             User u = new User();
             u.setUsername("admin");
-            u.setPassword("yydashuaibi");
+            u.setPassword("admin");
             u.setType("0");
             dao.insert(u);
             admin = new Admin();

@@ -5,7 +5,7 @@ import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
 /**
- * 成方（系统库内的）
+ * 成方（ ）
  */
 @Table("AAA_MEDICINE")
 public class Medicine {

@@ -16,7 +16,7 @@ public class MaterialsStore {
     private String materialName;
 
     @Column
-    private String materialRemain;//余量
+    private double materialRemain;//余量
 
     @Column
     private double price;//单价
@@ -37,11 +37,11 @@ public class MaterialsStore {
         this.materialName = materialName;
     }
 
-    public String getMaterialRemain() {
+    public double getMaterialRemain() {
         return materialRemain;
     }
 
-    public void setMaterialRemain(String materialRemain) {
+    public void setMaterialRemain(double materialRemain) {
         this.materialRemain = materialRemain;
     }
 

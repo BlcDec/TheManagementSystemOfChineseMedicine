@@ -87,7 +87,7 @@ public class DoctorModule {
 
         }
         if (isLogin) {
-            String url = Toolkit.getDoctorUrl((Doctor) session.getAttribute("doctor"));
+            String url = Toolkit.getDoctorUrl((Doctor) session.getAttribute("doctor"));//返回不同医生的界面
             String res = ">>:../doctor/" + url;
             return res;
         } else {

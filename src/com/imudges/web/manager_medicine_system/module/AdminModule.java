@@ -1,9 +1,6 @@
 package com.imudges.web.manager_medicine_system.module;
 
-import com.imudges.web.manager_medicine_system.bean.Admin;
-import com.imudges.web.manager_medicine_system.bean.Doctor;
-import com.imudges.web.manager_medicine_system.bean.Medicine;
-import com.imudges.web.manager_medicine_system.bean.User;
+import com.imudges.web.manager_medicine_system.bean.*;
 import com.imudges.web.manager_medicine_system.util.Toolkit;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
@@ -92,7 +89,7 @@ public class AdminModule {
     @GET
     public Object mainPage() {
 
-        return "jsp:admin/main";
+        return "jsp:admin/main";//重定向到此页面
     }
 
     //以下为用户管理
@@ -314,8 +311,34 @@ public class AdminModule {
     @At("admin/add_materials")
     @Ok("re")
     @Fail("http:500")
-    @GET
-    public Object addMaterialsPage(){
+    @POST
+    public Object addMaterialsPage(
+            @Param("materialName") String materialName,
+            @Param("materialRemain") double materialRemain,
+            @Param("price") double price,
+            HttpSession session,
+            HttpServletRequest request) {
+            Map<String, String> res = new HashMap<>();
+            if (materialName == null || materialName.equals("")) {
+                res.put("code","-1");
+                res.put("msg","请求与参数错误");
+                return res;
+            }
+            //查重
+            if(dao.count(MaterialsStore.class,Cnd.where("materialName","=",materialName)) != 0){
+                res.put("code","-14");
+                res.put("msg","药品已存在");
+                return res;
+            }
+
+            MaterialsStore material = new MaterialsStore();
+            material.setMaterialName(materialName);
+            material.setMaterialRemain(materialRemain);
+            material.setPrice(price);
+            dao.insert(material);
+            res.put("code","0");
+            res.put("msg","添加成功");
+            //return res;
 
         return "jsp:admin/add_materials";
     }

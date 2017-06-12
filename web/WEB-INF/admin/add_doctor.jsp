@@ -3,7 +3,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %><%--
   Created by IntelliJ IDEA.
-  User: yangyang
+  User: KAI
   Date: 2017/4/7
   Time: 15:33
 
@@ -192,9 +192,9 @@
 </div>
 
 
-<script src="../../theme/assets/js/jquery-1.10.2.js"></script>
-<script src="../../theme/assets/js/bootstrap.min.js"></script>
-<script src="../../theme/assets/js/custom.js"></script>
+<script src="../../theme/assets/js/jquery-1.10.2.js"></script>//js库
+<script src="../../theme/assets/js/bootstrap.min.js"></script>//前端框架
+<script src="../../theme/assets/js/custom.js"></script>//
 <script>
     function add() {
         var name = document.getElementById("name").value;
@@ -232,7 +232,7 @@
                     return ;
                 }
                 if(code == -1){
-                    document.getElementById('fail_info').style.display = "";
+                    document.getElementById('fail_info').style.display = "";//是否显示
                     document.getElementById('success_info').style.display = "none";
                     document.getElementById('fail_info').innerText = "请求参数错误";
                     return ;
