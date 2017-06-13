@@ -5,7 +5,7 @@
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Doctor" %>
 <%@ page import="java.util.Map" %><%--
   Created by IntelliJ IDEA.
-  User: yangyang
+  User: KAI
   Date: 2017/4/7
   Time: 15:33
 

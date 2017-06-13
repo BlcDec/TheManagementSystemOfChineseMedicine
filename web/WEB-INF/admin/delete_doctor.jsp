@@ -5,7 +5,7 @@
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Doctor" %>
 <%@ page import="java.util.Map" %><%--
   Created by IntelliJ IDEA.
-  User: yangyang
+  User: KAI
   Date: 2017/4/7
   Time: 15:33
 
@@ -112,7 +112,7 @@
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
                 <li class="active"><a href="main.php">用户管理</a></li>
-                <li class="active">添加医生</li>
+                <li class="active">删除医生</li>
             </ol>
             <div class="form-group" align="left">
                 <div class="input-group">

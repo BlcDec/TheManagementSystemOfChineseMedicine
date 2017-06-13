@@ -3,7 +3,8 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Doctor" %>
-<%@ page import="java.util.Map" %><%--
+<%@ page import="java.util.Map" %>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.MaterialsStore" %><%--
   Created by IntelliJ IDEA.
   User: KAI
   Date: 2017/4/7
@@ -121,52 +122,40 @@
                            aria-describedby="sizing-addon2">
                 </div>
             </div>
-            <%--<!-- Modal -->--%>
-            <%--<%Map<String,Doctor> doctorMap = (Map<String, Doctor>) request.getAttribute("doctorMap");%>--%>
-            <%--<%for(String key : doctorMap.keySet()){%>--%>
-            <%--<%Doctor doctor = doctorMap.get(key);%>--%>
-            <%--<%String position = "";%>--%>
-            <%--<%switch (doctor.getPosition()){--%>
-                <%--case"0":--%>
-                    <%--position = "挂号";--%>
-                    <%--break;--%>
-                <%--case"1":--%>
-                    <%--position = "诊断";--%>
-                    <%--break;--%>
-                <%--case"2":--%>
-                    <%--position = "收款";--%>
-                    <%--break;--%>
-            <%--}%>--%>
-            <%--<div class="modal fade" id="MyModal_<%=doctor.getUsername()%>" tabindex="-1" role="dialog"--%>
-                 <%--aria-labelledby="myModalLabel">--%>
-                <%--<div style="left: 0%;" class="modal-dialog" role="document">--%>
-                    <%--<div class="modal-content">--%>
-                        <%--<div class="modal-header">--%>
-                            <%--<button type="button" class="close" data-dismiss="modal"--%>
-                                    <%--aria-label="Close"><spanchr--%>
-                                    <%--aria-hidden="true">&times;</spanchr></button>--%>
-                        <%--</div>--%>
-                        <%--<div class="modal-body" id="medicine_modal_body">--%>
-                            <%--<div id="medicine_msg">--%>
-                                <%--<h2>确定要删除<%=position%>窗口的<%=doctor.getName()%>医生？</h2>--%>
-                                <%--<h3><span class="label label-warning" id="warning"--%>
-                                          <%--style="margin-left: 15px;display: none"></span></h3>--%>
-                                <%--<h3><span class="label label-success" id="success"--%>
-                                          <%--style="margin-left: 15px;display: none"></span></h3>--%>
-                            <%--</div>--%>
-                        <%--</div>--%>
-                        <%--<div class="modal-footer">--%>
-                            <%--<button type="button" class="btn btn-primary"--%>
-                                    <%--onclick="confirm_delete(<%=doctor.getUsername()%>)">确认删除--%>
-                            <%--</button>--%>
-                            <%--<button type="button" class="btn btn-default" data-dismiss="modal">--%>
-                                <%--关闭--%>
-                            <%--</button>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-            <%--</div>--%>
-            <%--<%}%>--%>
+            <!-- Modal -->
+            <%Map<String,MaterialsStore> materialMap = (Map<String, MaterialsStore>) request.getAttribute("materialMap");%>
+            <%for(String key : materialMap.keySet()){%>
+            <%MaterialsStore material = materialMap.get(key);%>
+            <div class="modal fade" id="MyModal_<%=material.getMaterialName()%>" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel">
+                <div style="left: 0%;" class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close"><spanchr
+                                    aria-hidden="true">&times;</spanchr></button>
+                        </div>
+                        <div class="modal-body" id="medicine_modal_body">
+                            <div id="medicine_msg">
+                                <h2>确定要删除<%=material.getMaterialName()%>药材？</h2>
+                                <h3><span class="label label-warning" id="warning"
+                                          style="margin-left: 15px;display: none"></span></h3>
+                                <h3><span class="label label-success" id="success"
+                                          style="margin-left: 15px;display: none"></span></h3>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary"
+                                    onclick="confirm_delete(<%=material.getMaterialName()%>)">确认删除
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%}%>
             <div class="form-group" align="left">
                 <div>
                     <h4><span class="label label-success" id="success_info"
@@ -199,27 +188,27 @@
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
     function do_modal() {
-        var idCard = document.getElementById('id_card');
-        if(idCard.value.length == 0){
+        var materials_name = document.getElementById('materials_name');
+        if(materials_name.value.length == 0){
             document.getElementById('fail_info').style.display = "";
             document.getElementById('success_info').style.display = "none";
             document.getElementById('fail_info').innerText = "请填写完整信息后删除";
             return ;
         }
         document.getElementById('fail_info').style.display = "none";
-        $('#MyModal_'+idCard.value).modal('show');
+        $('#MyModal_'+materials_name.value).modal('show');
     }
 
-    function confirm_delete() {
-        var idCard = document.getElementById('id_card').value;
-        if (document.getElementById('id_card').value.length == 0) {
+    function confirm_delete(materials_name) {
+        //var materials_name = document.getElementById('materials_name').value;
+        console.log(materials_name);
+        if (document.getElementById('materials_name').value.length == 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请完善信息后提交";
-
             return ;
         }
         $.ajax({
-            url: 'delete_doctor.php?id_card=' + idCard,
+            url: 'delete_materials.php?materials_name=' + materials_name,
             type: 'POST',
             async: true,
             cache: false,
@@ -241,7 +230,7 @@
                 }
             },
             fail: function (returndata) {
-                document.getElementById('fail_info').innerText = "网络错误，预约失败";
+                document.getElementById('fail_info').innerText = "网络错误，删除失败";
                 document.getElementById('fail_info').style.display = "inline";
             }
         });

@@ -3,7 +3,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %><%--
   Created by IntelliJ IDEA.
-  User: yangyang
+  User: KAI
   Date: 2017/4/7
   Time: 15:33
 

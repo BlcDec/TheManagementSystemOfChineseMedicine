@@ -7,7 +7,7 @@ import org.nutz.dao.entity.annotation.Table;
 /**
  * 药材仓库
  */
-@Table("AAA_MATERIALSSTORE")
+@Table("AAAA_MATERIALSSTORE")
 public class MaterialsStore {
     @Id
     private int id;
@@ -20,6 +20,9 @@ public class MaterialsStore {
 
     @Column
     private double price;//单价
+
+    @Column
+    private String  flag;//0表示已经删除掉，1表示生效
 
     public int getId() {
         return id;
@@ -51,5 +54,13 @@ public class MaterialsStore {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 }

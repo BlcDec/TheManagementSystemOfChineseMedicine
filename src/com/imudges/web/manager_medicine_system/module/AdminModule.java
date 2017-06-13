@@ -348,23 +348,54 @@ public class AdminModule {
         material.setMaterialName(materialName);
         material.setMaterialRemain(materialRemain);
         material.setPrice(price);
+        material.setFlag("1");
         dao.insert(material);
         res.put("code","0");
         res.put("msg","添加成功");
         return res;
-
     }
 
     /**
-     * 删除药方页面
+     * 删除药材页面
      * */
     @At("admin/delete_materials")
     @Ok("re")
     @Fail("http:500")
     @GET
-    public Object deleteMaterialsPage(){
-
+    public Object deleteMaterialsPage(HttpSession session,
+                                      HttpServletRequest request){
+        List<MaterialsStore> materialList = dao.query(MaterialsStore.class,Cnd.where("id",">","0"));
+        Map<String,MaterialsStore> materialMap = new HashMap<>();
+        for(MaterialsStore d : materialList){
+            materialMap.put(d.getMaterialName(),d);
+        }
+        request.setAttribute("materialMap",materialMap);
         return "jsp:admin/delete_materials";
+    }
+
+    /**
+     * 删除药材逻辑
+     * */
+    @At("admin/delete_materials")
+    @Ok("json")
+    @Fail("http:500")
+    @POST
+    public Object deleteMaterialsLogic(@Param("materials_name") String materials_name,
+                                    HttpSession session,
+                                    HttpServletRequest request){
+        Map<String,String> res = new HashMap<>();
+        if(materials_name == null || materials_name.equals("")){
+            res.put("code","-1");
+            res.put("msg","请求参数错误");
+            return res;
+        }
+        MaterialsStore material = dao.fetch(MaterialsStore.class,Cnd.where("materials_name","=",materials_name));
+
+        material.setFlag("0");
+        dao.update(material);
+        res.put("code","0");
+        res.put("msg","删除成功");
+        return res ;
     }
 
     /**

@@ -192,7 +192,7 @@
                 var code = json.code;
                 if(code == 0){
                     alert("添加成功！");
-                    window.location.href = "main.php";
+                    window.location.href = "add_materials.php";
                     return ;
                 }
                 if(code == -1){
