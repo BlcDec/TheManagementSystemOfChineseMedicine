@@ -380,16 +380,16 @@ public class AdminModule {
     @Ok("json")
     @Fail("http:500")
     @POST
-    public Object deleteMaterialsLogic(@Param("materials_name") String materials_name,
+    public Object deleteMaterialsLogic(@Param("materials_id") String materialsId,
                                     HttpSession session,
                                     HttpServletRequest request){
         Map<String,String> res = new HashMap<>();
-        if(materials_name == null || materials_name.equals("")){
+        if(materialsId == null || materialsId.equals("")){
             res.put("code","-1");
             res.put("msg","请求参数错误");
             return res;
         }
-        MaterialsStore material = dao.fetch(MaterialsStore.class,Cnd.where("materials_name","=",materials_name));
+        MaterialsStore material = dao.fetch(MaterialsStore.class,Cnd.where("id","=",materialsId));
 
         material.setFlag("0");
         dao.update(material);

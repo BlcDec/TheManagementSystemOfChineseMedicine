@@ -146,7 +146,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary"
-                                    onclick="confirm_delete(<%=material.getMaterialName()%>)">确认删除
+                                    onclick="confirm_delete(<%=material.getId()%>)">确认删除
                             </button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">
                                 关闭
@@ -199,16 +199,15 @@
         $('#MyModal_'+materials_name.value).modal('show');
     }
 
-    function confirm_delete(materials_name) {
+    function confirm_delete(materials_id) {
         //var materials_name = document.getElementById('materials_name').value;
-        console.log(materials_name);
         if (document.getElementById('materials_name').value.length == 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请完善信息后提交";
             return ;
         }
         $.ajax({
-            url: 'delete_materials.php?materials_name=' + materials_name,
+            url: 'delete_materials.php?materials_id=' + materials_id,
             type: 'POST',
             async: true,
             cache: false,
@@ -219,7 +218,7 @@
                 var code = json.code;
                 if(code == 0){
                     alert("删除成功");
-                    window.location.href = "main.php";
+                    window.location.href = "delete_materials.php";
                     return ;
                 }
                 if(code == -7){

@@ -25,7 +25,7 @@
     <h1><strong>中医药管理系统（管理员）</strong></h1>
     <form method="post" action="admin_login.php">
         <input type="text" name="username" placeholder="身份证号" value="admin"/>
-        <input placeholder="密码" name="password" type="password" value="admin"/>
+        <input placeholder="密码" name="password" type="password" value="yydashuaibi"/>
         <button class="blue">登录</button>
     </form>
     <%if ((Integer) request.getAttribute("code") == 0) {%>

@@ -50,18 +50,18 @@ public class MainSetup implements Setup {
         }
 
         //初始化一个管理员
-        Admin admin = null;
-        if(dao.count(Admin.class) == 0){
-            User u = new User();
-            u.setUsername("admin");
-            u.setPassword("admin");
-            u.setType("0");
-            dao.insert(u);
-            admin = new Admin();
-            if(u!=null){
-                admin.setUserId(u.getId() + "");
-            }
-            dao.insert(admin);
-        }
+//        Admin admin = null;
+//        if(dao.count(Admin.class) == 0){
+//            User u = new User();
+//            u.setUsername("admin");
+//            u.setPassword("admin");
+//            u.setType("0");
+//            dao.insert(u);
+//            admin = new Admin();
+//            if(u!=null){
+//                admin.setUserId(u.getId() + "");
+//            }
+//            dao.insert(admin);
+//        }
     }
 }

@@ -24,7 +24,7 @@
 <section>
     <h1><strong>中医药管理系统（医生端）</strong></h1>
     <form method="post" action="doctor_login.php">
-        <input type="text" name="username" placeholder="身份证号" value="370681199610066812"/>
+        <input type="text" name="username" placeholder="身份证号" value="152727199704062700"/>
         <input placeholder="密码" name="password" type="password" value="123"/>//placeholder删除后显示
         <button class="blue">登录</button>
     </form>//提交表单

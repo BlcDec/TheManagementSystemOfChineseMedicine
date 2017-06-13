@@ -724,7 +724,7 @@ public class DoctorModule {
                                       HttpServletRequest request) {
         Map<String, MaterialsStore> materialsStoreMap = new HashMap<>();
 
-        List<MaterialsStore> stores = dao.query(MaterialsStore.class, Cnd.where("id", ">", "0"));
+        List<MaterialsStore> stores = dao.query(MaterialsStore.class, Cnd.where("id", ">", "0").and("flag","=","1"));
         for (MaterialsStore m : stores) {
             materialsStoreMap.put(m.getId() + "", m);
         }
