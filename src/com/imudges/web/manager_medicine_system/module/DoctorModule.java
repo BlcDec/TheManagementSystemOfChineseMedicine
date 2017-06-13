@@ -457,8 +457,9 @@ public class DoctorModule {
                                   @Param("summary") String summary) {
         User user = (User) session.getAttribute("user");
         Doctor doctor = (Doctor) session.getAttribute("doctor");
+        String num = (String) session.getAttribute("patient_num");
         Map<String, Integer> res = new HashMap<>();
-        if (idCard == null || patientMsg == null || idCard.equals("") || patientMsg.equals("")) {
+        if (idCard == null || patientMsg == null || idCard.equals("") || patientMsg.equals("") || num == null || num.equals("")) {
             res.put("code", -1);
             return res;
         }
@@ -478,6 +479,17 @@ public class DoctorModule {
         diagnosis.setGiveMedicineOrNot(false);
         diagnosis.setStatus(1);
         dao.insert(diagnosis);
+
+
+        //储存病历
+        MedicineHistory medicineHistory = new MedicineHistory();
+        medicineHistory.setDoctorIdCard(doctor.getUsername());
+        medicineHistory.setCreateTime(new Date(System.currentTimeMillis()));
+        medicineHistory.setPatientIdCard(patient.getIdCard());
+        medicineHistory.setPatientSummary(patientMsg);
+        medicineHistory.setDoctorSummary(summary);
+        dao.insert(medicineHistory);
+
         res.put("code", 0);
         return res;
     }
@@ -724,7 +736,7 @@ public class DoctorModule {
                                       HttpServletRequest request) {
         Map<String, MaterialsStore> materialsStoreMap = new HashMap<>();
 
-        List<MaterialsStore> stores = dao.query(MaterialsStore.class, Cnd.where("id", ">", "0").and("flag","=","1"));
+        List<MaterialsStore> stores = dao.query(MaterialsStore.class, Cnd.where("id", ">", "0").and("flag", "=", "1"));
         for (MaterialsStore m : stores) {
             materialsStoreMap.put(m.getId() + "", m);
         }
@@ -1034,8 +1046,8 @@ public class DoctorModule {
     @Ok("json")
     @Fail("http:500")
     public Object closeAccountLogic(@Param("patient_num") String patientNum,
-                               HttpSession session,
-                               HttpServletRequest request) {
+                                    HttpSession session,
+                                    HttpServletRequest request) {
         Map<String, String> res = new HashMap<>();
         Doctor doctor = (Doctor) session.getAttribute("doctor");
         if (patientNum == null || patientNum.equals("")) {
@@ -1154,8 +1166,8 @@ public class DoctorModule {
     @Ok("json")
     @Fail("http:500")
     public Object findHistoryLogic(@Param("patient_num") String patientNum,
-                              HttpSession session,
-                              HttpServletRequest request) {
+                                   HttpSession session,
+                                   HttpServletRequest request) {
         Map<String, String> res = new HashMap<>();
         Doctor doctor = (Doctor) session.getAttribute("doctor");
         if (patientNum == null || patientNum.equals("")) {
@@ -1228,5 +1240,27 @@ public class DoctorModule {
         request.setAttribute("prescription", prescription);
         request.setAttribute("diagnosis", diagnosis);
         return "jsp:doctor/find_history";
+    }
+
+    @At("doctor/show_medicine_history")
+    @Ok("re")
+    @Fail("http:500")
+    @GET
+    public Object showMedicineHistory(HttpServletRequest request,
+                                      HttpSession session) {
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        List<MedicineHistory> medicineHistories = dao.query(MedicineHistory.class,Cnd.where("doctorIdCard","=",doctor.getUsername()));
+        Map<String,String> patientNameMap = new HashMap<>();
+        for(MedicineHistory medicineHistory : medicineHistories){
+            String patientIdCard = medicineHistory.getPatientIdCard();
+            Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",patientIdCard));
+            patientNameMap.put(patientIdCard,patient.getName());
+        }
+
+
+        request.setAttribute("patientNameMap",patientNameMap);
+        request.setAttribute("medicineHistories",medicineHistories);
+        request.setAttribute("code",0);
+        return "jsp:doctor/show_medicine_history";
     }
 }

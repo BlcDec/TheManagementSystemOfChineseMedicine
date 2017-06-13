@@ -2,6 +2,9 @@
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.MedicineHistory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -103,28 +106,66 @@
             </div>
             <ol class="breadcrumb">
                 <li class="active">中医药管理系统</li>
-                <li class="active">诊断窗口</li>
+                <li class="active"><a href="diagnose.php">诊断窗口</a></li>
+                <li class="active">查看已开出的病历</li>
             </ol>
 
-            <div class="row">
-                <form method="post" action="start_diagnose.php">
-                    <div class="col-lg-6">
-                        <div class="input-group">
-                            <input id="num" name="num" type="text" class="form-control"
-                                   placeholder="请输入患者挂号的号...">
-                            <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit">开始诊断</button>
-                            </span>
+            <div class="list-group">
+                <a class="list-group-item disabled">
+                    已开出的病历
+                </a>
+                <%if((Integer)request.getAttribute("code") == 0){%>
+                <%Map<String,String> patientNameMap = (Map<String, String>) request.getAttribute("patientNameMap");%>
+                <%List<MedicineHistory> medicineHistories = (List<MedicineHistory>) request.getAttribute("medicineHistories");%>
+                <%DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");%>
+                <table class="table table-striped">
+                    <div class="form-group">
+                        <thead>
+                        <tr>
+                            <th>患者姓名：</th>
+                            <th>医生身份证号：</th>
+                            <th>主诉：</th>
+                            <th>诊疗信息：</th>
+                            <th>诊断时间：</th>
+                            <th>所开药方：</th>
+                        </tr>
+                        </thead>
+                    </div>
+                    <tbody>
+                    <tr>
+                        <%for(MedicineHistory medicineHistory : medicineHistories){%>
+                        <td><%=patientNameMap.get(medicineHistory.getPatientIdCard())%></td>
+                        <td><%=medicineHistory.getDoctorIdCard()%></td>
+                        <td><%=medicineHistory.getPatientSummary()%></td>
+                        <td><%=medicineHistory.getDoctorSummary()%></td>
+                        <td><%=dateFormat.format(medicineHistory.getCreateTime())%></td>
+                        <%}%>
+                    </tr>
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal_" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>请确认是否要缴纳此次预约的费用？</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    <%--<button type="button" class="btn btn-primary" data-dismiss="modal"--%>
+                                            <%--onclick="pay_for(<%=a.getId()%>)">确认缴纳--%>
+                                    <%--</button>--%>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </form>
+                    </tbody>
+                </table>
+                <%} else {}%>
             </div>
-            <br/>
-            <a href="user.php" class="list-group-item">个人信息</a>
-            <a href="modify_password.php" class="list-group-item">修改密码</a>
-            <a href="show_medicine_history.php" class="list-group-item">查看已开出的病历</a>
-            <%--<a href="start_diagnose.php" class="list-group-item">开始诊断</a>--%>
-            <%--<a href="pay_appointment_fee.php" class="list-group-item">缴纳挂号费（为预约用户）</a>--%>
 
 
         </div>
