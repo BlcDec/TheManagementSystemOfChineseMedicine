@@ -25,25 +25,29 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
 
     <script type="text/javascript" src="http://www.daimajiayuan.com/download/jquery/jquery-1.10.2.min.js"></script>
-    <%--<script type="text/javascript"--%>
-    <%--src="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>--%>
-    <link rel="stylesheet" type="text/css"
-          href="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.css">
+    <script type="text/javascript" src="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.css">
+
 
 
     <!-- 3.0 -->
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <%--<script type="text/javascript">--%>
-        <%--$(window).on('load', function () {--%>
 
-            <%--$('.selectpicker').selectpicker({--%>
-                <%--'selectedText': 'cat'--%>
-            <%--});--%>
+    <!-- 2.3.2
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.js"></script>
+    -->
+    <script type="text/javascript">
+        $(window).on('load', function () {
 
-            <%--// $('.selectpicker').selectpicker('hide');--%>
-        <%--});--%>
-    <%--</script>--%>
+            $('.selectpicker').selectpicker({
+                'selectedText': 'cat'
+            });
+
+            // $('.selectpicker').selectpicker('hide');
+        });
+    </script>
     <style>
         @media (max-width: 768px) {
             .navbar-default {
@@ -137,7 +141,7 @@
                 <li class="active">删除药材</li>
             </ol>
             <div class="form-group" align="left">
-                <%//TODO 搜索框%>
+                <%//TODO 删除需要重写%>
                 <div class="input-group">
                         <span class="input-group-addon">药材名</span>
                         <select id="bs3Select"
@@ -216,9 +220,9 @@
 </div>
 
 
-<script src="../../theme/assets/js/jquery-1.10.2.js"></script>
-<script src="../../theme/assets/js/bootstrap.min.js"></script>
-<script src="../../theme/assets/js/custom.js"></script>
+<%--<script src="../../theme/assets/js/jquery-1.10.2.js"></script>--%>
+<%--<script src="../../theme/assets/js/bootstrap.min.js"></script>--%>
+<%--<script src="../../theme/assets/js/custom.js"></script>--%>
 <script>
     function do_modal() {
         var materials_name = document.getElementById('materials_name');

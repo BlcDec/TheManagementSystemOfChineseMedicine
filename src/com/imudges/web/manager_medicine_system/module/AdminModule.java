@@ -276,7 +276,26 @@ public class AdminModule {
     @Ok("re")
     @Fail("http:500")
     @GET
-    public Object addMedicinePage(){
+    public Object addMedicinePage(HttpServletRequest request){
+
+        Map<String, MaterialsStore> materialsStoreMap = new HashMap<>();
+
+        List<MaterialsStore> stores = dao.query(MaterialsStore.class, Cnd.where("id", ">", "0").and("flag", "=", "1"));
+        for (MaterialsStore m : stores) {
+            materialsStoreMap.put(m.getId() + "", m);
+        }
+        request.setAttribute("materials_store", materialsStoreMap);
+        request.setAttribute("code", 0);
+
+        return "jsp:admin/add_medicine";
+    }
+
+    @At("admin/add_medicine")
+    @Ok("re")
+    @Fail("http:500")
+    @POST
+    public Object addMedicineLogic(HttpServletRequest request){
+
 
         return "jsp:admin/add_medicine";
     }

@@ -1,7 +1,9 @@
 ﻿<%@ page import="java.util.List" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %><%--
+<%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.MaterialsStore" %>
+<%@ page import="java.util.Map" %><%--
   添加成方
   To change this template use File | Settings | File Templates.
 --%>
@@ -16,6 +18,32 @@
     <link href="../../theme/assets/css/font-awesome.css" rel="stylesheet"/>
     <link href="../../theme/assets/css/custom.css" rel="stylesheet"/>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+
+    <script type="text/javascript" src="http://www.daimajiayuan.com/download/jquery/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.css">
+
+
+
+    <!-- 3.0 -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+    <!-- 2.3.2
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.js"></script>
+    -->
+    <script type="text/javascript">
+        $(window).on('load', function () {
+
+            $('.selectpicker').selectpicker({
+                'selectedText': 'cat'
+            });
+
+            // $('.selectpicker').selectpicker('hide');
+        });
+    </script>
     <style>
         @media (max-width: 768px) {
             .navbar-default {
@@ -80,7 +108,7 @@
             <ul class="nav" id="main-menu">
 
 
-                <li >
+                <li>
                     <a href="main.php"><i class="glyphicon glyphicon-plus"></i>用户管理</a>
                 </li>
                 <li class="active-link">
@@ -112,6 +140,119 @@
             </ol>
 
 
+            <div class="row" align="left">
+                <form method="post" action="add_medicine.php">
+                    <%--<div class="input-group">--%>
+                    <%--<input id="search_content" name="search_content" type="text" class="form-control"--%>
+                    <%--placeholder="请输入关键字搜索你需要的药材">--%>
+                    <%--<span class="input-group-btn">--%>
+                    <%--<button class="btn btn-default" type="submit">搜索</button>--%>
+                    <%--<button type="button" class="btn btn-default" onclick="jump()">查看已提交药方</button>--%>
+                    <%--</span>--%>
+                    <%--</div>--%>
+                        <h2><span class="label label-info" style="margin-left: 15px">填写药方名并选择药材</span></h2>
+                    <div class="form-group" align="left" style="padding-left: 15px">
+                        <div class="input-group">
+                            <span class="input-group-addon">药方名</span>
+                            <input id="name" name="name" placeholder="药方名"
+                                   class="form-control"
+                                   aria-describedby="sizing-addon2">
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <%--<form class="form-horizontal" role="form">--%>
+                        <div class="row-fluid">
+                            <div class="col-lg-5">
+                                <select style="margin-top: 10px" id="bs3Select"
+                                        class="selectpicker show-tick form-control"
+                                        data-live-search="true">
+                                    <%if ((Integer) request.getAttribute("code") == 0) {%>
+                                    <%Map<String, MaterialsStore> materialsStoreMap = (Map<String, MaterialsStore>) request.getAttribute("materials_store");%>
+                                    <%for (String key : materialsStoreMap.keySet()) {%>
+                                    <option id="<%=key%>"><%=materialsStoreMap.get(key).getMaterialName()%>
+                                    </option>
+
+                                    <%}%>
+                                    <%}%>
+                                </select>
+
+                                <button style="margin-top: 10px" class="btn btn-default" type="button"
+                                        onclick="do_modal()">选择剂量
+                                </button>
+                                <%--<button style="margin-top: 10px" type="button" class="btn btn-default" onclick="jump()">--%>
+                                    <%--查看已选药方--%>
+                                <%--</button>--%>
+                                <!-- Modal -->
+                                <div class="modal fade" id="MyModal" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel">
+                                    <div style="left: 0%;" class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close"><span
+                                                        aria-hidden="true">&times;</span></button>
+                                            </div>
+                                            <div class="modal-body" id="medicine_modal_body">
+                                                <div id="medicine_msg">
+                                                    <h4><span class="label label-default" style="margin-left: 15px">选择药材剂量（单位：克）</span>
+                                                    </h4>
+                                                    <h3><span class="label label-info" id="medicine_name"
+                                                              style="margin-left: 15px">test</span></h3>
+                                                    <div class="container">
+                                                        <div class="input-group spinner" id="mmp">
+                                                            <input type="text" class="form-control" value="0"
+                                                                   id="medicine_dosage">
+                                                            <div class="input-group-btn-vertical">
+                                                                <button class="btn btn-default" type="button"><i
+                                                                        class="fa fa-caret-up"></i></button>
+                                                                <button class="btn btn-default" type="button"><i
+                                                                        class="fa fa-caret-down"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h3><span class="label label-warning" id="warning"
+                                                              style="margin-left: 15px;display: none"></span></h3>
+                                                    <h3><span class="label label-success" id="success"
+                                                              style="margin-left: 15px;display: none"></span></h3>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary"
+                                                        onclick="confirm_add()">确认添加
+                                                </button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                    关闭
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <%//TODO  使用模态框显示搜索结果%>
+
+            <div class="form-group" align="left">
+                <div>
+                    <label>药方详情：</label>
+                    <div class="form-group">
+                        <textarea name="summary" class="form-control" rows="5" id="summary"></textarea>
+                    </div>
+                    <h3><span class="label label-info" id="info">请在药材名称后的逗号后填写各药材重量，以回车隔开</span></h3>
+                    <h4><span class="label label-success" id="success_info"
+                              style="display: none;">${msg}</span></h4>
+                    <h4><span class="label label-warning" id="fail_info"
+                              style="display: none;">${msg}</span></h4>
+                    <button type="button" class="btn btn-primary" onclick="commit()">提交</button>
+                </div>
+            </div>
+
 
         </div>
     </div>
@@ -125,69 +266,108 @@
 </div>
 
 
-<script src="../../theme/assets/js/jquery-1.10.2.js"></script>
-<script src="../../theme/assets/js/bootstrap.min.js"></script>
-<script src="../../theme/assets/js/custom.js"></script>
+<%--<script src="../../theme/assets/js/jquery-1.10.2.js"></script>--%>
+<%--<script src="../../theme/assets/js/bootstrap.min.js"></script>--%>
+<%--<script src="../../theme/assets/js/custom.js"></script>--%>
 <script>
-    var _department = -1;
-    function set_department(department) {
-        document.getElementById('department_info').style.display = "";
-        document.getElementById('department_info').innerText = "当前选择的科室：" + department;
-
-        _department = department;
-        document.getElementById('btn_set_department').innerText = _department;
-        document.getElementById('department').value = department;
+    var select = document.getElementById('bs3Select');
+    var summary = document.getElementById('summary');
+    var medicine = null;
+    function do_modal() {
+        var tag = false;
+        if (select != null && typeof(select) != "undefined") {
+            for (var i = 0; i < select.options.length && !tag; i++) {
+                if (select.options[i].selected) {
+                    tag = true;
+                    medicine = select.options[i];
+                }
+            }
+        }
+        if (!tag) {
+            alert('请选择药方后添加');
+            return;
+        }
+        var medicine_name = document.getElementById('medicine_name');
+        medicine_name.innerHTML = medicine.value;
+        document.getElementById('success').style.display = 'none';
+        document.getElementById('warning').style.display = 'none';
+        $('#MyModal').modal('show');
     }
-    function do_upload() {
-        var name = document.getElementById('name').value;
-        var sex = document.getElementById('sex').value;
-        var year = document.getElementById('year').value;
-        var phoneNum = document.getElementById('phone_num').value;
-        var apperaTime = document.getElementById('appear_time').value;
-        if (name.length == 0 ||
-            sex.length == 0 ||
-            year.length == 0 ||
-            phoneNum.length == 0 ||
-            apperaTime.length == 0) {
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请完善信息后提交";
-            return ;
+
+    function confirm_add() {
+        var medicine_dosage = document.getElementById('medicine_dosage');
+        var warning = document.getElementById('warning');
+        if (medicine_dosage.value <= 0) {
+            warning.innerHTML = '请填写正确的药剂重量！';
+            warning.style.display = '';
+            return;
         }
-        if(_department == -1){
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请选择预约科室后提交";
-            return ;
+        if (medicine != null && typeof (medicine) != "undefined") {
+            summary.value += medicine.value + ',' + medicine_dosage.value + '克' + '\n';
         }
+        medicine_dosage.innerHTML = '0';
+        document.getElementById('success').innerHTML = '添加成功';
+        document.getElementById('success').style.display = '';
+    }
+
+
+    (function ($) {
+        $('.spinner .btn:first-of-type').on('click', function () {
+            $('.spinner input').val(parseInt($('.spinner input').val(), 10) + 1);
+        });
+        $('.spinner .btn:last-of-type').on('click', function () {
+            $('.spinner input').val(parseInt($('.spinner input').val(), 10) - 1);
+        });
+    })(jQuery);
+
+
+    //    function add_materials() {
+    //        //TODO
+    //        if (summary.length != 0) {
+    //            summary.value = '';
+    //        }
+    //        if (select != null && typeof(select) != "undefined") {
+    //            for (var i = 0; i < select.options.length; i++) {
+    //                if (select.options[i].selected) {
+    //                    summary.value = summary.value + select.options[i].value + ',\n';
+    //                }
+    //            }
+    //        }
+    //    }
+    function jump() {
+        window.setTimeout("window.location='selected_prescription.php'");
+    }
+    function commit() {
+        //TODO 需要添加药方名
         $.ajax({
-            url: 'upload_appointment.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
-            type: 'GET',
+            url: 'add_medicine.php',
+            data: 'summary=' + summary.value,
+            type: 'POST',
             async: true,
             cache: false,
-            contentType: false,
+            contentType: "application/x-www-form-urlencoded",
             processData: false,
             success: function (returndata) {
                 var json = returndata;
                 var code = json.code;
-                if(code == 0){
-                    document.getElementById('success_info').style.display = "";
-                    document.getElementById('fail_info').style.display = "none";
-                    document.getElementById('success_info').innerText = "预约成功！";
-                    return ;
+                if (code == 0) {
+                    alert('添加成功！');
+                    window.location.href = 'add_medicine.php';
+                    return;
                 }
-                if(code == -7){
-                    document.getElementById('fail_info').style.display = "";
-                    document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
-                    return ;
+                if (code == -1) {
+                    alert('提交参数错误，请重试');
+                    window.location.href = 'add_medicine.php';
+                    return;
                 }
             },
             fail: function (returndata) {
-                document.getElementById('fail_info').innerText = "网络错误，预约失败";
-                document.getElementById('fail_info').style.display = "inline";
+                alert('网络错误，请重试');
+                window.location.href = 'DIY_prescription.php';
             }
         });
-    }
 
+    }
 </script>
 
 </body>
