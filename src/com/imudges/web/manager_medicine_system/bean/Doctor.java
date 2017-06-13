@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * 医生
  */
-@Table("AAA_DOCTOR")
+@Table("AAAA_DOCTOR")
 public class Doctor {
     @Id
     private int id;
