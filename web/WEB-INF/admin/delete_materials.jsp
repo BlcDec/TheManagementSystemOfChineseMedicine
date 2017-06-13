@@ -215,6 +215,7 @@
         if (document.getElementById('id_card').value.length == 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请完善信息后提交";
+
             return ;
         }
         $.ajax({
