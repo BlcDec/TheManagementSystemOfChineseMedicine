@@ -311,14 +311,14 @@ public class AdminModule {
     @At("admin/add_materials")
     @Ok("re")
     @Fail("http:500")
-    @POST
+    @GET
     public Object addMaterialsPage(HttpSession session, HttpServletRequest request) {
 
         return "jsp:admin/add_materials";
     }
 
 
-    /**
+    /**；
      * 添加药材逻辑
      */
     @At("admin/add_materials")

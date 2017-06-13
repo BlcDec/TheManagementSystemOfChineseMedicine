@@ -116,13 +116,14 @@
                 <div class="form-group" align="left">
                     <div class="input-group">
                         <span class="input-group-addon">药材名</span>
-                        <input type="text" name="materialName" id="materialName" placeholder="药材名" class="form-control"
+                        <input type="text" name="materialName" id="materialName" placeholder="药材名"
+                               class="form-control"
                                aria-describedby="sizing-addon2">
                     </div>
                 </div>
                 <div class="form-group" align="left">
                     <div class="input-group">
-                        <span class="input-group-addon">余量</span>
+                        <span class="input-group-addon">余量(单位：g)</span>
                         <input type="number" id="materialRemain" name="materialRemain" placeholder="药材余量"
                                class="form-control"
                                aria-describedby="sizing-addon2">
@@ -130,7 +131,7 @@
                 </div>
                 <div class="form-group" align="left">
                     <div class="input-group">
-                        <span class="input-group-addon">身份证号</span>
+                        <span class="input-group-addon">药材价格(元/g)</span>
                         <input type="number" id="price" name="price" placeholder="药材价格"
                                class="form-control"
                                aria-describedby="sizing-addon2">
