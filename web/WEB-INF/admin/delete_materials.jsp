@@ -23,6 +23,27 @@
     <link href="../../theme/assets/css/font-awesome.css" rel="stylesheet"/>
     <link href="../../theme/assets/css/custom.css" rel="stylesheet"/>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+
+    <script type="text/javascript" src="http://www.daimajiayuan.com/download/jquery/jquery-1.10.2.min.js"></script>
+    <%--<script type="text/javascript"--%>
+    <%--src="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>--%>
+    <link rel="stylesheet" type="text/css"
+          href="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.css">
+
+
+    <!-- 3.0 -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <%--<script type="text/javascript">--%>
+        <%--$(window).on('load', function () {--%>
+
+            <%--$('.selectpicker').selectpicker({--%>
+                <%--'selectedText': 'cat'--%>
+            <%--});--%>
+
+            <%--// $('.selectpicker').selectpicker('hide');--%>
+        <%--});--%>
+    <%--</script>--%>
     <style>
         @media (max-width: 768px) {
             .navbar-default {
@@ -87,7 +108,7 @@
             <ul class="nav" id="main-menu">
 
 
-                <li >
+                <li>
                     <a href="main.php"><i class="glyphicon glyphicon-plus"></i>用户管理</a>
                 </li>
                 <li>
@@ -116,15 +137,26 @@
                 <li class="active">删除药材</li>
             </ol>
             <div class="form-group" align="left">
+                <%//TODO 搜索框%>
                 <div class="input-group">
-                    <span class="input-group-addon">药材名</span>
-                    <input type="text" name="materials_name" id="materials_name" placeholder="药材名" class="form-control"
-                           aria-describedby="sizing-addon2">
+                        <span class="input-group-addon">药材名</span>
+                        <select id="bs3Select"
+                                class="selectpicker show-tick form-control"
+                                data-live-search="true">
+                            <%if ((Integer) request.getAttribute("code") == 0) {%>
+                            <%Map<String, MaterialsStore> materialsStoreMap = (Map<String, MaterialsStore>) request.getAttribute("materialMap");%>
+                            <%for (String key : materialsStoreMap.keySet()) {%>
+                            <option id="<%=key%>"><%=materialsStoreMap.get(key).getMaterialName()%>
+                            </option>
+
+                            <%}%>
+                            <%}%>
+                        </select>
                 </div>
             </div>
             <!-- Modal -->
-            <%Map<String,MaterialsStore> materialMap = (Map<String, MaterialsStore>) request.getAttribute("materialMap");%>
-            <%for(String key : materialMap.keySet()){%>
+            <%Map<String, MaterialsStore> materialMap = (Map<String, MaterialsStore>) request.getAttribute("materialMap");%>
+            <%for (String key : materialMap.keySet()) {%>
             <%MaterialsStore material = materialMap.get(key);%>
             <div class="modal fade" id="MyModal_<%=material.getMaterialName()%>" tabindex="-1" role="dialog"
                  aria-labelledby="myModalLabel">
@@ -132,8 +164,11 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal"
-                                    aria-label="Close"><spanchr
-                                    aria-hidden="true">&times;</spanchr></button>
+                                    aria-label="Close">
+                                <spanchr
+                                        aria-hidden="true">&times;
+                                </spanchr>
+                            </button>
                         </div>
                         <div class="modal-body" id="medicine_modal_body">
                             <div id="medicine_msg">
@@ -163,12 +198,10 @@
                     <h4><span class="label label-warning" id="fail_info"
                               style="display: none;">${msg}</span></h4>
                     <div>
-                        <button type="button" class="btn btn-primary" onclick="do_modal()" >删除</button>
+                        <button type="button" class="btn btn-primary" onclick="do_modal()">删除</button>
                     </div>
                 </div>
             </div>
-
-
 
 
         </div>
@@ -189,14 +222,14 @@
 <script>
     function do_modal() {
         var materials_name = document.getElementById('materials_name');
-        if(materials_name.value.length == 0){
+        if (materials_name.value.length == 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('success_info').style.display = "none";
             document.getElementById('fail_info').innerText = "请填写完整信息后删除";
-            return ;
+            return;
         }
         document.getElementById('fail_info').style.display = "none";
-        $('#MyModal_'+materials_name.value).modal('show');
+        $('#MyModal_' + materials_name.value).modal('show');
     }
 
     function confirm_delete(materials_id) {
@@ -204,7 +237,7 @@
         if (document.getElementById('materials_name').value.length == 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请完善信息后提交";
-            return ;
+            return;
         }
         $.ajax({
             url: 'delete_materials.php?materials_id=' + materials_id,
@@ -216,16 +249,16 @@
             success: function (returndata) {
                 var json = returndata;
                 var code = json.code;
-                if(code == 0){
+                if (code == 0) {
                     alert("删除成功");
                     window.location.href = "delete_materials.php";
-                    return ;
+                    return;
                 }
-                if(code == -7){
+                if (code == -7) {
                     document.getElementById('fail_info').style.display = "";
                     document.getElementById('success_info').style.display = "none";
                     document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
-                    return ;
+                    return;
                 }
             },
             fail: function (returndata) {

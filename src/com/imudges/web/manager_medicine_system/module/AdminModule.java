@@ -364,12 +364,13 @@ public class AdminModule {
     @GET
     public Object deleteMaterialsPage(HttpSession session,
                                       HttpServletRequest request){
-        List<MaterialsStore> materialList = dao.query(MaterialsStore.class,Cnd.where("id",">","0"));
+        List<MaterialsStore> materialList = dao.query(MaterialsStore.class,Cnd.where("id",">","0").and("flag","=","1"));
         Map<String,MaterialsStore> materialMap = new HashMap<>();
         for(MaterialsStore d : materialList){
             materialMap.put(d.getMaterialName(),d);
         }
         request.setAttribute("materialMap",materialMap);
+        request.setAttribute("code", 0);
         return "jsp:admin/delete_materials";
     }
 

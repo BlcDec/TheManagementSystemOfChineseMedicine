@@ -247,6 +247,7 @@
                                     <%}%>
                                     <%}%>
                                 </select>
+
                                 <button style="margin-top: 10px" class="btn btn-default" type="button"
                                         onclick="do_modal()">选择剂量
                                 </button>
