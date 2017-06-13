@@ -1258,6 +1258,74 @@ public class DoctorModule {
         }
 
 
+        //将医生开出去的方子转化为具体的药方 (有效药方)
+        List<Prescription> prescriptionList = dao.query(Prescription.class
+                , Cnd.where("doctorIdCard","=",doctor.getUsername())
+                        .and("status", "=", "1"));
+        List<Medicine> medicineList = new LinkedList<>();//系统库内部的药方
+        List<MedicineCombine> medicineCombineList = new LinkedList<>();//自己调配的药方
+        //存放每一个药方所包含的每一味药材
+        Map<String, List<Materials>> materialsMap = new HashMap<>();//存放系统库内部药方的材料
+        Map<String, List<MaterialsCombine>> combineMaterialsMap = new HashMap<>();//存放自己调配的药方的材料
+        for (Prescription prescription : prescriptionList) {
+
+
+            if (!prescription.isCombine()) {
+                //使用系统库的药方
+
+                //把每个药方返回
+                Medicine medicine = dao.fetch(Medicine.class, Cnd.where("id", "=", prescription.getMedicineId()));
+                medicineList.add(medicine);
+
+                //把每个药方的每味材料返回
+                List<Materials> materials = new LinkedList<>();
+                //药方材料的关系
+                List<MedicineList> medicineLists = dao.query(MedicineList.class, Cnd.where("medicineId", "=", medicine.getId()));
+                //每一味药材，加入到list里
+                for (MedicineList medicineList1 : medicineLists) {
+                    Materials materials1 = dao.fetch(Materials.class, Cnd.where("id", "=", medicineList1.getMaterialsId()));
+                    materials.add(materials1);
+                }
+                //TODO 需要修改，需要修改显示的内容，即不能为id + 内容
+                materialsMap.put(medicine.getId() + "", materials);
+            } else {
+                //自己调配的药方
+
+                //把每个药方返回
+                MedicineCombine medicineCombine = dao.fetch(MedicineCombine.class, Cnd.where("id", "=", prescription.getMedicineId()));
+                medicineCombineList.add(medicineCombine);
+
+                //把每个药方的每味药材返回
+                List<MaterialsCombine> materialsCombines = new LinkedList<>();
+                //药方材料的关系
+                List<MedicineCombineList> medicineCombineLists = dao.query(MedicineCombineList.class, Cnd.where("medicineId", "=", medicineCombine.getId()));
+                //每一味药材，加入到list里
+                for (MedicineCombineList m : medicineCombineLists) {
+                    MaterialsStore materialsStore = dao.fetch(MaterialsStore.class, Cnd.where("id", "=", m.getMaterialId()));
+                    MaterialsCombine materialsCombine = dao.fetch(MaterialsCombine.class, Cnd.where("materialName", "=", materialsStore.getMaterialName()));
+//                    Materials materials = dao.fetch(Materials.class,Cnd.where("id","=",m.getMaterialId()));
+                    materialsCombines.add(materialsCombine);
+                }
+                //TODO 需要修改，需要修改显示的内容，即不能为id + 内容
+                combineMaterialsMap.put(medicineCombine.getId() + "", materialsCombines);
+
+            }
+        }
+
+        //把search信息写入request
+        //把系统内部药方及药材信息返回
+        request.setAttribute("materials", materialsMap);
+        request.setAttribute("medicine_list", medicineList);
+
+        //把自己添加的药方己药材信息返回
+        request.setAttribute("medicine_combine_materials", combineMaterialsMap);
+        request.setAttribute("medicine_combine_list", medicineCombineList);
+
+        request.setAttribute("doctor", doctor);
+        //request.setAttribute("code", 0);
+
+
+
         request.setAttribute("patientNameMap",patientNameMap);
         request.setAttribute("medicineHistories",medicineHistories);
         request.setAttribute("code",0);

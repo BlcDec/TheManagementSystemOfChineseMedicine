@@ -1,10 +1,9 @@
 ﻿<%@ page import="java.util.List" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="com.imudges.web.manager_medicine_system.bean.Patient" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
-<%@ page import="com.imudges.web.manager_medicine_system.bean.MedicineHistory" %>
+<%@ page import="com.imudges.web.manager_medicine_system.bean.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -114,9 +113,10 @@
                 <a class="list-group-item disabled">
                     已开出的病历
                 </a>
-                <%if((Integer)request.getAttribute("code") == 0){%>
-                <%Map<String,String> patientNameMap = (Map<String, String>) request.getAttribute("patientNameMap");%>
-                <%List<MedicineHistory> medicineHistories = (List<MedicineHistory>) request.getAttribute("medicineHistories");%>
+                <%if ((Integer) request.getAttribute("code") == 0) {%>
+                <%Map<String, String> patientNameMap = (Map<String, String>) request.getAttribute("patientNameMap");%>
+                <%
+                    List<MedicineHistory> medicineHistories = (List<MedicineHistory>) request.getAttribute("medicineHistories");%>
                 <%DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");%>
                 <table class="table table-striped">
                     <div class="form-group">
@@ -133,38 +133,126 @@
                     </div>
                     <tbody>
                     <tr>
-                        <%for(MedicineHistory medicineHistory : medicineHistories){%>
-                        <td><%=patientNameMap.get(medicineHistory.getPatientIdCard())%></td>
-                        <td><%=medicineHistory.getDoctorIdCard()%></td>
-                        <td><%=medicineHistory.getPatientSummary()%></td>
-                        <td><%=medicineHistory.getDoctorSummary()%></td>
-                        <td><%=dateFormat.format(medicineHistory.getCreateTime())%></td>
-                        <%}%>
+                        <%for (MedicineHistory medicineHistory : medicineHistories) {%>
+                        <td><%=patientNameMap.get(medicineHistory.getPatientIdCard())%>
+                        </td>
+                        <td><%=medicineHistory.getDoctorIdCard()%>
+                        </td>
+                        <td><%=medicineHistory.getPatientSummary()%>
+                        </td>
+                        <td><%=medicineHistory.getDoctorSummary()%>
+                        </td>
+                        <td><%=dateFormat.format(medicineHistory.getCreateTime())%>
+                        </td>
+                        <td>
+                            <button class="btn btn-info" data-toggle="modal" style="margin-top: 0px"
+                                    data-target="#MyModal_<%=medicineHistory.getPatientIdCard()%>">点击查看药方详细信息
+                            </button>
+                        </td>
                     </tr>
                     <!-- Modal -->
-                    <div class="modal fade" id="myModal_" tabindex="-1" role="dialog"
-                         aria-labelledby="myModalLabel">
+                    <div class="modal fade" id="MyModal_<%=medicineHistory.getPatientIdCard()%>" tabindex="-1"
+                         aria-labelledby="myLargeModalLabel"
+                         role="dialog">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close"><span
                                             aria-hidden="true">&times;</span></button>
                                 </div>
+
                                 <div class="modal-body">
-                                    <p>请确认是否要缴纳此次预约的费用？</p>
+                                    <%--<h1>test</h1>--%>
+                                    <%//TODO%>
+                                    <%--<table class="table table-responsive">--%>
+                                        <%--<div class="form-group">--%>
+                                            <%--<thead>--%>
+                                            <%--<tr>--%>
+                                                <%--&lt;%&ndash;<th>医生姓名：</th>&ndash;%&gt;--%>
+                                                <%--&lt;%&ndash;<th>患者姓名：</th>&ndash;%&gt;--%>
+                                                <%--<th>药方名：</th>--%>
+                                                <%--<th>药方类型：</th>--%>
+                                                <%--<th>详情：</th>--%>
+                                            <%--</tr>--%>
+                                            <%--</thead>--%>
+                                        <%--</div>--%>
+
+                                        <%--<tbody class="table table-striped">--%>
+                                        <%--&lt;%&ndash;加载系统库内部的药方&ndash;%&gt;--%>
+                                            <%--<%Doctor doctor = (Doctor) request.getAttribute("doctor");%>--%>
+                                        <%--&lt;%&ndash;<%Patient patient = (Patient) request.getAttribute("patient");%>&ndash;%&gt;--%>
+                                            <%--<%--%>
+                                            <%--List<Medicine> medicineList = (List<Medicine>) request.getAttribute("medicine_list");%>--%>
+                                            <%--<%--%>
+                                            <%--Map<String, List<Materials>> materialsMap = (Map<String, List<Materials>>) request.getAttribute("materials");%>--%>
+                                        <%--<tbody>--%>
+                                        <%--<%for (Medicine medicine : medicineList) {%>--%>
+                                        <%--<tr>--%>
+                                            <%--&lt;%&ndash;<td><%=doctor.getName()%>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</td>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<td><%=patientNameMap.get(medicineHistory.getPatientIdCard())%>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</td>&ndash;%&gt;--%>
+                                            <%--<td><%=medicine.getName()%>--%>
+                                            <%--</td>--%>
+                                            <%--<td><span class="label label-info">成方</span>--%>
+                                            <%--</td>--%>
+                                            <%--<td>--%>
+                                                <%--<a href="javascript:void(0);" class="btn " data-toggle="modal"--%>
+                                                   <%--data-target="#myModal_<%=medicine.getId()%>">查看详细信息</a>--%>
+                                            <%--</td>--%>
+                                        <%--</tr>--%>
+                                        <%--</tbody>--%>
+                                        <%--<%List<Materials> materialsList = materialsMap.get(medicine.getId() + "");%>--%>
+                                        <%--&lt;%&ndash;Modal&ndash;%&gt;--%>
+                                        <%--<div class="modal fade" id="myModal_<%=medicine.getId()%>" tabindex="-1"--%>
+                                             <%--role="dialog"--%>
+                                             <%--aria-labelledby="myModalLabel">--%>
+                                            <%--<div class="modal-dialog" role="document">--%>
+                                                <%--<div class="modal-content">--%>
+                                                    <%--<div class="modal-header">--%>
+                                                        <%--<button type="button" class="close" data-dismiss="modal"--%>
+                                                                <%--aria-label="Close"><span--%>
+                                                                <%--aria-hidden="true">&times;</span></button>--%>
+                                                    <%--</div>--%>
+                                                    <%--<div class="modal-body">--%>
+                                                        <%--<p><%=medicine.getName()%>由以下药材组成：</p>--%>
+                                                        <%--<p><%for (Materials m : materialsList) {%>--%>
+                                                            <%--<%=m.getId() + "号：" + m.getMedicineName() + m.getDosage() + '克' + ",   "%>--%>
+                                                            <%--<%}%></p>--%>
+                                                    <%--</div>--%>
+                                                    <%--<div class="modal-footer">--%>
+                                                        <%--<button type="button" class="btn btn-default"--%>
+                                                                <%--data-dismiss="modal">关闭--%>
+                                                        <%--</button>--%>
+                                                    <%--</div>--%>
+                                                <%--</div>--%>
+                                            <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--<%}%>--%>
+                                    <%--</table>--%>
                                 </div>
+
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                    </button>
                                     <%--<button type="button" class="btn btn-primary" data-dismiss="modal"--%>
-                                            <%--onclick="pay_for(<%=a.getId()%>)">确认缴纳--%>
+                                    <%--onclick="pay_for(<%=a.getId()%>)">确认缴纳--%>
                                     <%--</button>--%>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <%}%>
+
+
                     </tbody>
                 </table>
-                <%} else {}%>
+                <%
+                    } else {
+                    }
+                %>
             </div>
 
 
