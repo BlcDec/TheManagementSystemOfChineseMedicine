@@ -29,7 +29,7 @@
         <button class="blue">登录</button>
     </form>
     <%if ((Integer) request.getAttribute("code") == 0) {%>
-
+    //
     <%} else if ((Integer) request.getAttribute("code") == -2) {%>
     <alert><%=request.getAttribute("code")%>
     </alert>
