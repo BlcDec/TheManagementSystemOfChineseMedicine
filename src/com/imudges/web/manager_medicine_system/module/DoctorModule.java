@@ -385,15 +385,20 @@ public class DoctorModule {
         Department department = dao.fetch(Department.class, Cnd.where("id", "=", doctor.getDepartmentId()));
         request.setAttribute("name", doctor.getName());
         request.setAttribute("doctor", doctor);
+        String patientNum = (String) session.getAttribute("patient_num");
         /*if (session.getAttribute("patient_num") != null && !session.getAttribute("patient_num").equals("")) {
             num = (String) session.getAttribute("patient_num");
         }*/
         //请求参数错误
-        if (num == null || num.equals("")) {
+        if ((patientNum == null || patientNum.equals("")) && (num == null || num.equals(""))) {
             request.setAttribute("code", -1);
             request.setAttribute("msg", "请求参数错误");
             request.setAttribute("redirect_url", "diagnose.php");
             return "jsp:doctor/start_diagnose";
+        }
+
+        if (num == null || num.equals("")) {
+            num = patientNum;
         }
 
         //获取挂号号码失败
@@ -422,7 +427,7 @@ public class DoctorModule {
         }
 
         //成功
-        Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",appointmentOrRegistration.getPatientIdCard()));
+        Patient patient = dao.fetch(Patient.class, Cnd.where("A_IDCARD", "=", appointmentOrRegistration.getPatientIdCard()));
         session.setAttribute("patient_num", patient.getId() + "");
 
         if (dao.count(Diagnosis.class, Cnd.where("patientIdCard", "=", patient.getIdCard())
@@ -1250,18 +1255,108 @@ public class DoctorModule {
     public Object showMedicineHistory(HttpServletRequest request,
                                       HttpSession session) {
         Doctor doctor = (Doctor) session.getAttribute("doctor");
-        List<MedicineHistory> medicineHistories = dao.query(MedicineHistory.class,Cnd.where("doctorIdCard","=",doctor.getUsername()));
-        Map<String,String> patientNameMap = new HashMap<>();
-        for(MedicineHistory medicineHistory : medicineHistories){
+        List<MedicineHistory> medicineHistories = dao.query(MedicineHistory.class, Cnd.where("doctorIdCard", "=", doctor.getUsername()));
+        Map<String, String> patientNameMap = new HashMap<>();
+        for (MedicineHistory medicineHistory : medicineHistories) {
             String patientIdCard = medicineHistory.getPatientIdCard();
-            Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",patientIdCard));
-            patientNameMap.put(patientIdCard,patient.getName());
+            Patient patient = dao.fetch(Patient.class, Cnd.where("A_IDCARD", "=", patientIdCard));
+            patientNameMap.put(patientIdCard, patient.getName());
         }
 
 
+//        //将医生开出去的方子转化为具体的药方 (有效药方)
+//        List<Prescription> prescriptionList = dao.query(Prescription.class
+//                , Cnd.where("doctorIdCard", "=", doctor.getUsername())
+//                        .and("status", "=", "1"));
+//        List<Medicine> medicineList = new LinkedList<>();//系统库内部的药方
+//        List<MedicineCombine> medicineCombineList = new LinkedList<>();//自己调配的药方
+//        //存放每一个药方所包含的每一味药材
+//        Map<String, List<Materials>> materialsMap = new HashMap<>();//存放系统库内部药方的材料
+//        Map<String, List<MaterialsCombine>> combineMaterialsMap = new HashMap<>();//存放自己调配的药方的材料
+//        for (Prescription prescription : prescriptionList) {
+//
+//
+//            if (!prescription.isCombine()) {
+//                //使用系统库的药方
+//
+//                //把每个药方返回
+//                Medicine medicine = dao.fetch(Medicine.class, Cnd.where("id", "=", prescription.getMedicineId()));
+//                medicineList.add(medicine);
+//
+//                //把每个药方的每味材料返回
+//                List<Materials> materials = new LinkedList<>();
+//                //药方材料的关系
+//                List<MedicineList> medicineLists = dao.query(MedicineList.class, Cnd.where("medicineId", "=", medicine.getId()));
+//                //每一味药材，加入到list里
+//                for (MedicineList medicineList1 : medicineLists) {
+//                    Materials materials1 = dao.fetch(Materials.class, Cnd.where("id", "=", medicineList1.getMaterialsId()));
+//                    materials.add(materials1);
+//                }
+//                //TODO 需要修改，需要修改显示的内容，即不能为id + 内容
+//                materialsMap.put(medicine.getId() + "", materials);
+//            } else {
+//                //自己调配的药方
+//
+//                //把每个药方返回
+//                MedicineCombine medicineCombine = dao.fetch(MedicineCombine.class, Cnd.where("id", "=", prescription.getMedicineId()));
+//                medicineCombineList.add(medicineCombine);
+//
+//                //把每个药方的每味药材返回
+//                List<MaterialsCombine> materialsCombines = new LinkedList<>();
+//                //药方材料的关系
+//                List<MedicineCombineList> medicineCombineLists = dao.query(MedicineCombineList.class, Cnd.where("medicineId", "=", medicineCombine.getId()));
+//                //每一味药材，加入到list里
+//                for (MedicineCombineList m : medicineCombineLists) {
+//                    MaterialsStore materialsStore = dao.fetch(MaterialsStore.class, Cnd.where("id", "=", m.getMaterialId()));
+//                    MaterialsCombine materialsCombine = dao.fetch(MaterialsCombine.class, Cnd.where("materialName", "=", materialsStore.getMaterialName()));
+////                    Materials materials = dao.fetch(Materials.class,Cnd.where("id","=",m.getMaterialId()));
+//                    materialsCombines.add(materialsCombine);
+//                }
+//                //TODO 需要修改，需要修改显示的内容，即不能为id + 内容
+//                combineMaterialsMap.put(medicineCombine.getId() + "", materialsCombines);
+//
+//            }
+//        }
+//
+//        //把search信息写入request
+//        //把系统内部药方及药材信息返回
+//        request.setAttribute("materials", materialsMap);
+//        request.setAttribute("medicine_list", medicineList);
+//
+//        //把自己添加的药方己药材信息返回
+//        request.setAttribute("medicine_combine_materials", combineMaterialsMap);
+//        request.setAttribute("medicine_combine_list", medicineCombineList);
+//
+//        request.setAttribute("doctor", doctor);
+        //request.setAttribute("code", 0);
+
+
+        request.setAttribute("patientNameMap", patientNameMap);
+        request.setAttribute("medicineHistories", medicineHistories);
+        request.setAttribute("code", 0);
+        return "jsp:doctor/show_medicine_history";
+    }
+
+    @At("doctor/medicine_history_detail")
+    @Ok("re")
+    @Fail("http:500")
+    public Object medicineHistoryDetailPage(@Param("patient_id_card")String patientIdCard,
+                                         HttpServletRequest request,
+                                         HttpSession session){
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        if(patientIdCard == null || patientIdCard.equals("")){
+            request.setAttribute("code","-1");
+            request.setAttribute("msg","请求参数错误！");
+            request.setAttribute("redirect_url","diagnose.php");
+            return "jsp:doctor/graph_jump";
+        }
+
+
+        Map<String,Prescription> prescriptionMap = new HashMap<>();
+
         //将医生开出去的方子转化为具体的药方 (有效药方)
         List<Prescription> prescriptionList = dao.query(Prescription.class
-                , Cnd.where("doctorIdCard","=",doctor.getUsername())
+                , Cnd.where("patientIdCard", "=", patientIdCard)
                         .and("status", "=", "1"));
         List<Medicine> medicineList = new LinkedList<>();//系统库内部的药方
         List<MedicineCombine> medicineCombineList = new LinkedList<>();//自己调配的药方
@@ -1270,7 +1365,7 @@ public class DoctorModule {
         Map<String, List<MaterialsCombine>> combineMaterialsMap = new HashMap<>();//存放自己调配的药方的材料
         for (Prescription prescription : prescriptionList) {
 
-
+            prescriptionMap.put(prescription.getMedicineId(),prescription);
             if (!prescription.isCombine()) {
                 //使用系统库的药方
 
@@ -1313,7 +1408,10 @@ public class DoctorModule {
             }
         }
 
+
+
         //把search信息写入request
+        request.setAttribute("prescriptionMap",prescriptionMap);
         //把系统内部药方及药材信息返回
         request.setAttribute("materials", materialsMap);
         request.setAttribute("medicine_list", medicineList);
@@ -1323,13 +1421,11 @@ public class DoctorModule {
         request.setAttribute("medicine_combine_list", medicineCombineList);
 
         request.setAttribute("doctor", doctor);
-        //request.setAttribute("code", 0);
+        request.setAttribute("code", 0);
 
 
 
-        request.setAttribute("patientNameMap",patientNameMap);
-        request.setAttribute("medicineHistories",medicineHistories);
-        request.setAttribute("code",0);
-        return "jsp:doctor/show_medicine_history";
+        return "jsp:doctor/medicine_history_detail";
     }
+
 }

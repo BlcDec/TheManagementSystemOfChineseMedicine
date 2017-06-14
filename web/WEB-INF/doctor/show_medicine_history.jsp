@@ -79,16 +79,9 @@
             <ul class="nav" id="main-menu">
 
 
-                <%--<li >--%>
-                <%--<a href="windows.php"><i class="glyphicon glyphicon-plus"></i>挂号窗口</a>--%>
-                <%--</li>--%>
                 <li class="active-link">
                     <a href="diagnose.php"><i class="glyphicon glyphicon-user"></i>诊断窗口</a>
                 </li>
-                <%--&lt;%&ndash;/收款窗口是指收取药品费用的窗口&ndash;%&gt;--%>
-                <%--<li>--%>
-                <%--<a href="collection.php"><i class="glyphicon glyphicon-search"></i>收款窗口</a>--%>
-                <%--</li>--%>
                 <li>
                     <a href="logout.php"><i class="fa fa-home"></i>注销登录</a>
                 </li>
@@ -115,8 +108,7 @@
                 </a>
                 <%if ((Integer) request.getAttribute("code") == 0) {%>
                 <%Map<String, String> patientNameMap = (Map<String, String>) request.getAttribute("patientNameMap");%>
-                <%
-                    List<MedicineHistory> medicineHistories = (List<MedicineHistory>) request.getAttribute("medicineHistories");%>
+                <%List<MedicineHistory> medicineHistories = (List<MedicineHistory>) request.getAttribute("medicineHistories");%>
                 <%DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");%>
                 <table class="table table-striped">
                     <div class="form-group">
@@ -145,11 +137,11 @@
                         <td><%=dateFormat.format(medicineHistory.getCreateTime())%>
                         </td>
                         <td>
-                            <button class="btn btn-info" data-toggle="modal" style="margin-top: 0px"
-                                    data-target="#MyModal_<%=medicineHistory.getPatientIdCard()%>">点击查看药方详细信息
-                            </button>
+                            <button class="btn btn-info" onclick="show_detail('<%=medicineHistory.getPatientIdCard()%>')" style="margin-top: 0px">点击查看药方详细信息</button>
                         </td>
                     </tr>
+                    <input type="text" id="<%=medicineHistory.getPatientIdCard()%>" value="<%=medicineHistory.getPatientIdCard()%>"  style="display: none"/>
+
                     <!-- Modal -->
                     <div class="modal fade" id="MyModal_<%=medicineHistory.getPatientIdCard()%>" tabindex="-1"
                          aria-labelledby="myLargeModalLabel"
@@ -163,74 +155,7 @@
                                 </div>
 
                                 <div class="modal-body">
-                                    <%--<h1>test</h1>--%>
-                                    <%//TODO%>
-                                    <%--<table class="table table-responsive">--%>
-                                        <%--<div class="form-group">--%>
-                                            <%--<thead>--%>
-                                            <%--<tr>--%>
-                                                <%--&lt;%&ndash;<th>医生姓名：</th>&ndash;%&gt;--%>
-                                                <%--&lt;%&ndash;<th>患者姓名：</th>&ndash;%&gt;--%>
-                                                <%--<th>药方名：</th>--%>
-                                                <%--<th>药方类型：</th>--%>
-                                                <%--<th>详情：</th>--%>
-                                            <%--</tr>--%>
-                                            <%--</thead>--%>
-                                        <%--</div>--%>
 
-                                        <%--<tbody class="table table-striped">--%>
-                                        <%--&lt;%&ndash;加载系统库内部的药方&ndash;%&gt;--%>
-                                            <%--<%Doctor doctor = (Doctor) request.getAttribute("doctor");%>--%>
-                                        <%--&lt;%&ndash;<%Patient patient = (Patient) request.getAttribute("patient");%>&ndash;%&gt;--%>
-                                            <%--<%--%>
-                                            <%--List<Medicine> medicineList = (List<Medicine>) request.getAttribute("medicine_list");%>--%>
-                                            <%--<%--%>
-                                            <%--Map<String, List<Materials>> materialsMap = (Map<String, List<Materials>>) request.getAttribute("materials");%>--%>
-                                        <%--<tbody>--%>
-                                        <%--<%for (Medicine medicine : medicineList) {%>--%>
-                                        <%--<tr>--%>
-                                            <%--&lt;%&ndash;<td><%=doctor.getName()%>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</td>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<td><%=patientNameMap.get(medicineHistory.getPatientIdCard())%>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</td>&ndash;%&gt;--%>
-                                            <%--<td><%=medicine.getName()%>--%>
-                                            <%--</td>--%>
-                                            <%--<td><span class="label label-info">成方</span>--%>
-                                            <%--</td>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="javascript:void(0);" class="btn " data-toggle="modal"--%>
-                                                   <%--data-target="#myModal_<%=medicine.getId()%>">查看详细信息</a>--%>
-                                            <%--</td>--%>
-                                        <%--</tr>--%>
-                                        <%--</tbody>--%>
-                                        <%--<%List<Materials> materialsList = materialsMap.get(medicine.getId() + "");%>--%>
-                                        <%--&lt;%&ndash;Modal&ndash;%&gt;--%>
-                                        <%--<div class="modal fade" id="myModal_<%=medicine.getId()%>" tabindex="-1"--%>
-                                             <%--role="dialog"--%>
-                                             <%--aria-labelledby="myModalLabel">--%>
-                                            <%--<div class="modal-dialog" role="document">--%>
-                                                <%--<div class="modal-content">--%>
-                                                    <%--<div class="modal-header">--%>
-                                                        <%--<button type="button" class="close" data-dismiss="modal"--%>
-                                                                <%--aria-label="Close"><span--%>
-                                                                <%--aria-hidden="true">&times;</span></button>--%>
-                                                    <%--</div>--%>
-                                                    <%--<div class="modal-body">--%>
-                                                        <%--<p><%=medicine.getName()%>由以下药材组成：</p>--%>
-                                                        <%--<p><%for (Materials m : materialsList) {%>--%>
-                                                            <%--<%=m.getId() + "号：" + m.getMedicineName() + m.getDosage() + '克' + ",   "%>--%>
-                                                            <%--<%}%></p>--%>
-                                                    <%--</div>--%>
-                                                    <%--<div class="modal-footer">--%>
-                                                        <%--<button type="button" class="btn btn-default"--%>
-                                                                <%--data-dismiss="modal">关闭--%>
-                                                        <%--</button>--%>
-                                                    <%--</div>--%>
-                                                <%--</div>--%>
-                                            <%--</div>--%>
-                                        <%--</div>--%>
-                                        <%--<%}%>--%>
-                                    <%--</table>--%>
                                 </div>
 
                                 <div class="modal-footer">
@@ -254,7 +179,9 @@
                     }
                 %>
             </div>
-
+            <form action="medicine_history_detail.php" method="GET" id="form" style="display: none;">
+                <input type="text" name="patient_id_card" id="patient_id_card">
+            </form>
 
         </div>
     </div>
@@ -272,63 +199,14 @@
 <script src="../../theme/assets/js/bootstrap.min.js"></script>
 <script src="../../theme/assets/js/custom.js"></script>
 <script>
-    var _department = -1;
-    function set_department(department) {
-        document.getElementById('department_info').style.display = "";
-        document.getElementById('department_info').innerText = "当前选择的科室：" + department;
-
-        _department = department;
-        document.getElementById('btn_set_department').innerText = _department;
-        document.getElementById('department').value = department;
-    }
-    function do_upload() {
-        var name = document.getElementById('name').value;
-        var sex = document.getElementById('sex').value;
-        var year = document.getElementById('year').value;
-        var phoneNum = document.getElementById('phone_num').value;
-        var apperaTime = document.getElementById('appear_time').value;
-        if (name.length == 0 ||
-            sex.length == 0 ||
-            year.length == 0 ||
-            phoneNum.length == 0 ||
-            apperaTime.length == 0) {
+    function show_detail(patientIdCard) {
+        if (patientIdCard.length === 0) {
             document.getElementById('fail_info').style.display = "";
             document.getElementById('fail_info').innerText = "请完善信息后提交";
             return;
         }
-        if (_department == -1) {
-            document.getElementById('fail_info').style.display = "";
-            document.getElementById('fail_info').innerText = "请选择预约科室后提交";
-            return;
-        }
-        $.ajax({
-            url: 'upload_appointment.php?name=' + name + '&sex=' + sex + '&year=' + year + '&phone_num=' + phoneNum + '&appear_time=' + apperaTime + '&department=' + _department,
-            type: 'GET',
-            async: true,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (returndata) {
-                var json = returndata;
-                var code = json.code;
-                if (code == 0) {
-                    document.getElementById('success_info').style.display = "";
-                    document.getElementById('fail_info').style.display = "none";
-                    document.getElementById('success_info').innerText = "预约成功！";
-                    return;
-                }
-                if (code == -7) {
-                    document.getElementById('fail_info').style.display = "";
-                    document.getElementById('success_info').style.display = "none";
-                    document.getElementById('fail_info').innerText = "预约失败，每个用户只可预约一次";
-                    return;
-                }
-            },
-            fail: function (returndata) {
-                document.getElementById('fail_info').innerText = "网络错误，预约失败";
-                document.getElementById('fail_info').style.display = "inline";
-            }
-        });
+        document.getElementById('patient_id_card').value = patientIdCard;
+        document.getElementById('form').submit();
     }
 
 </script>

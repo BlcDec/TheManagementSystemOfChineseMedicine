@@ -291,6 +291,8 @@
                     document.getElementById('fail_info').style.display = "none";
                     document.getElementById('success_info').innerText = "添加成功！";
                     scrollTo(0,0)
+                    alert('添加成功，点击跳转');
+                    window.location.href = 'start_diagnose.php';
                     return;
                 }
                 if (code == -1) {

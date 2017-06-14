@@ -416,8 +416,8 @@
                 var json = returndata;
                 var code = json.code;
                 if (code == 0) {
-                    alert('添加成功！');
-                    window.location.href = 'DIY_prescription.php';
+                    alert('添加成功，点击跳转');
+                    window.location.href = 'start_diagnose.php';
                     return;
                 }
                 if (code == -1) {
