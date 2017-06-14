@@ -385,9 +385,9 @@ public class DoctorModule {
         Department department = dao.fetch(Department.class, Cnd.where("id", "=", doctor.getDepartmentId()));
         request.setAttribute("name", doctor.getName());
         request.setAttribute("doctor", doctor);
-        if (session.getAttribute("patient_num") != null && !session.getAttribute("patient_num").equals("")) {
+        /*if (session.getAttribute("patient_num") != null && !session.getAttribute("patient_num").equals("")) {
             num = (String) session.getAttribute("patient_num");
-        }
+        }*/
         //请求参数错误
         if (num == null || num.equals("")) {
             request.setAttribute("code", -1);
@@ -422,8 +422,8 @@ public class DoctorModule {
         }
 
         //成功
-        session.setAttribute("patient_num", num);
-        Patient patient = dao.fetch(Patient.class, Cnd.where("A_IDCARD", "=", appointmentOrRegistration.getPatientIdCard()));
+        Patient patient = dao.fetch(Patient.class,Cnd.where("A_IDCARD","=",appointmentOrRegistration.getPatientIdCard()));
+        session.setAttribute("patient_num", patient.getId() + "");
 
         if (dao.count(Diagnosis.class, Cnd.where("patientIdCard", "=", patient.getIdCard())
                 .and("status", "=", 1)) > 0) {
@@ -846,6 +846,7 @@ public class DoctorModule {
             return res;
         }
         Patient patient = dao.fetch(Patient.class, Cnd.where("id", "=", patientNum));
+
         Medicine medicine = dao.fetch(Medicine.class, Cnd.where("id", "=", medicineId));
         if (patient == null || medicine == null) {
             res.put("code", "-1");
