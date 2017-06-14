@@ -381,6 +381,10 @@ public class DoctorModule {
     public Object startDiagnose(HttpServletRequest request,
                                 HttpSession session,
                                 @Param("num") String num) {
+        if(num !=null && !num.equals("")){
+            session.setAttribute("num",num);
+        }
+
         //num是患者挂号的号
         if(num == null || num.equals("")){
             num = (String) session.getAttribute("num");
