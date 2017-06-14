@@ -381,25 +381,34 @@ public class DoctorModule {
     public Object startDiagnose(HttpServletRequest request,
                                 HttpSession session,
                                 @Param("num") String num) {
-        Doctor doctor = (Doctor) session.getAttribute("doctor");
-        Department department = dao.fetch(Department.class, Cnd.where("id", "=", doctor.getDepartmentId()));
-        request.setAttribute("name", doctor.getName());
-        request.setAttribute("doctor", doctor);
-        String patientNum = (String) session.getAttribute("patient_num");
-        /*if (session.getAttribute("patient_num") != null && !session.getAttribute("patient_num").equals("")) {
-            num = (String) session.getAttribute("patient_num");
-        }*/
-        //请求参数错误
-        if ((patientNum == null || patientNum.equals("")) && (num == null || num.equals(""))) {
+        //num是患者挂号的号
+        if(num == null || num.equals("")){
+            num = (String) session.getAttribute("num");
+        }
+
+        if(num == null || num.equals("")){
             request.setAttribute("code", -1);
             request.setAttribute("msg", "请求参数错误");
             request.setAttribute("redirect_url", "diagnose.php");
             return "jsp:doctor/start_diagnose";
         }
 
-        if (num == null || num.equals("")) {
-            num = patientNum;
-        }
+        Doctor doctor = (Doctor) session.getAttribute("doctor");
+        Department department = dao.fetch(Department.class, Cnd.where("id", "=", doctor.getDepartmentId()));
+        request.setAttribute("name", doctor.getName());
+        request.setAttribute("doctor", doctor);
+        //patient_num是患者id
+//        String patientNum = (String) session.getAttribute("patient_num");
+//        /*if (session.getAttribute("patient_num") != null && !session.getAttribute("patient_num").equals("")) {
+//            num = (String) session.getAttribute("patient_num");
+//        }*/
+//        //请求参数错误
+//        if ((patientNum == null || patientNum.equals("")) && (num == null || num.equals(""))) {
+//            request.setAttribute("code", -1);
+//            request.setAttribute("msg", "请求参数错误");
+//            request.setAttribute("redirect_url", "diagnose.php");
+//            return "jsp:doctor/start_diagnose";
+//        }
 
         //获取挂号号码失败
         AppointmentOrRegistration appointmentOrRegistration = dao.fetch(AppointmentOrRegistration.class, Cnd.where("id", "=", num));
