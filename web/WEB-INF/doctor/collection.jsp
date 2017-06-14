@@ -118,7 +118,7 @@
                                    placeholder="请输入患者挂号的号">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button" onclick="commit()">搜索</button>
-                                <button type="button" class="btn btn-default" onclick="create_prescription()">生成病历</button>
+                                <%--<button type="button" class="btn btn-default" onclick="create_prescription()">生成病历</button>--%>
                                 <button type="button" class="btn btn-default" onclick="find_history()">查看历史</button>
                         </span>
                         </div>
